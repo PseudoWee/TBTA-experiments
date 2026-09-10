@@ -1,0 +1,112 @@
+{
+  "n": 200,
+  "status_counts": {
+    "ok": 55,
+    "error": 95,
+    "warning": 50
+  },
+  "clean": 57,
+  "verses_with_errors": 93,
+  "verses_with_warnings": 103,
+  "total_errors": 282,
+  "total_warnings": 287,
+  "transport_errors": 0,
+  "top_rules": [
+    {
+      "rule": "checker:built-in:1 - Check Verb argument structure/case frame",
+      "count": 154,
+      "by_label": {
+        "error": 103,
+        "warning": 51
+      }
+    },
+    {
+      "rule": "checker:built-in:8 - Check for words with ambiguous parts of speech",
+      "count": 93,
+      "by_label": {
+        "error": 0,
+        "warning": 93
+      }
+    },
+    {
+      "rule": "checker:built-in:7 - Check ontology status",
+      "count": 84,
+      "by_label": {
+        "error": 1,
+        "warning": 83
+      }
+    },
+    {
+      "rule": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate",
+      "count": 83,
+      "by_label": {
+        "error": 83,
+        "warning": 0
+      }
+    },
+    {
+      "rule": "token:syntax",
+      "count": 23,
+      "by_label": {
+        "error": 23,
+        "warning": 0
+      }
+    },
+    {
+      "rule": "checker:built-in:2 - Check argument structure/case frame",
+      "count": 23,
+      "by_label": {
+        "error": 15,
+        "warning": 8
+      }
+    },
+    {
+      "rule": "checker:built-in:3 - Check if a Verb has no theta grid information",
+      "count": 20,
+      "by_label": {
+        "error": 0,
+        "warning": 20
+      }
+    },
+    {
+      "rule": "checker:35 - Use 'all of' rather than 'all' for non-generic Nouns",
+      "count": 15,
+      "by_label": {
+        "error": 15,
+        "warning": 0
+      }
+    },
+    {
+      "rule": "clause:nesting_depth",
+      "count": 11,
+      "by_label": {
+        "error": 0,
+        "warning": 11
+      }
+    },
+    {
+      "rule": "checker:built-in:6 - Warn user if the word's complexity is ambiguous",
+      "count": 11,
+      "by_label": {
+        "error": 0,
+        "warning": 11
+      }
+    },
+    {
+      "rule": "checker:built-in:0 - Check capitalization for first word in a sentence or quote",
+      "count": 9,
+      "by_label": {
+        "error": 9,
+        "warning": 0
+      }
+    },
+    {
+      "rule": "checker:48 - Don't allow negatives with 'purpose' adverbial clauses",
+      "count": 6,
+      "by_label": {
+        "error": 0,
+        "warning": 6
+      }
+    }
+  ]
+}

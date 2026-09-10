@@ -1,0 +1,9 @@
+{
+  "items": [
+    {
+      "date": "2026-09-10T12:18",
+      "skill": "phase1-encoding-review",
+      "note": "Add 'let' to the documented cascade-source list alongside the 'where' relativizer and glued-bracket faults: 'let X touch/do Y' without bracketing the embedded action (i.e. 'let [X to Verb Y]') gets read as a second main-clause verb, producing 'Cannot have multiple verbs in the same clause' plus 'Incorrect usage of let-A'/'Unexpected patient for let-A' -- three error messages from one missing bracket (confirmed on Matthew 14:36: bracketing the embedded clause alone cleared all three). Worth a one-line entry so reviewers bracket 'let''s complement first instead of re-picking a verb sense."
+    }
+  ]
+}

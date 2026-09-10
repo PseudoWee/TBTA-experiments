@@ -1,0 +1,908 @@
+{
+  "date": "2026-09-10T12:18",
+  "seed": 202609101218,
+  "n": 200,
+  "status_counts": {
+    "ok": 55,
+    "warning": 50,
+    "error": 95
+  },
+  "clean": 57,
+  "verses_with_errors": 93,
+  "verses_with_warnings": 103,
+  "total_errors": 282,
+  "total_warnings": 287,
+  "transport_errors": 0,
+  "top_rules": [
+    {
+      "rule": "checker:built-in:1 - Check Verb argument structure/case frame",
+      "count": 154,
+      "by_label": {
+        "error": 103,
+        "warning": 51
+      }
+    },
+    {
+      "rule": "checker:built-in:8 - Check for words with ambiguous parts of speech",
+      "count": 93,
+      "by_label": {
+        "error": 0,
+        "warning": 93
+      }
+    },
+    {
+      "rule": "checker:built-in:7 - Check ontology status",
+      "count": 84,
+      "by_label": {
+        "error": 1,
+        "warning": 83
+      }
+    },
+    {
+      "rule": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate",
+      "count": 83,
+      "by_label": {
+        "error": 83,
+        "warning": 0
+      }
+    },
+    {
+      "rule": "token:syntax",
+      "count": 23,
+      "by_label": {
+        "error": 23,
+        "warning": 0
+      }
+    },
+    {
+      "rule": "checker:built-in:2 - Check argument structure/case frame",
+      "count": 23,
+      "by_label": {
+        "error": 15,
+        "warning": 8
+      }
+    },
+    {
+      "rule": "checker:built-in:3 - Check if a Verb has no theta grid information",
+      "count": 20,
+      "by_label": {
+        "error": 0,
+        "warning": 20
+      }
+    },
+    {
+      "rule": "checker:35 - Use 'all of' rather than 'all' for non-generic Nouns",
+      "count": 15,
+      "by_label": {
+        "error": 15,
+        "warning": 0
+      }
+    },
+    {
+      "rule": "clause:nesting_depth",
+      "count": 11,
+      "by_label": {
+        "error": 0,
+        "warning": 11
+      }
+    },
+    {
+      "rule": "checker:built-in:6 - Warn user if the word's complexity is ambiguous",
+      "count": 11,
+      "by_label": {
+        "error": 0,
+        "warning": 11
+      }
+    },
+    {
+      "rule": "checker:built-in:0 - Check capitalization for first word in a sentence or quote",
+      "count": 9,
+      "by_label": {
+        "error": 9,
+        "warning": 0
+      }
+    },
+    {
+      "rule": "checker:48 - Don't allow negatives with 'purpose' adverbial clauses",
+      "count": 6,
+      "by_label": {
+        "error": 0,
+        "warning": 6
+      }
+    }
+  ],
+  "worst": [
+    {
+      "ref": "1 Kings 10:12",
+      "status": "error",
+      "errors": 16,
+      "warnings": 5,
+      "enc": "The king made beams with the wood-almug.  And the king used those beams [in-order-to make the temple of Yahweh and the royal house of the king].  And those structures were strong because of those beams.  The king also made harps and lyres for people[who played music] with the wood-almug.  (alt) The king also made instruments[that had strings] for people[who played music] with the wood-almug.  The amount of wood-almug[that Hiram's ships brought to Judah] is more-than any amount of wood-almug[that people have brought to Judah since that time].  And people have not seen that amount of wood-almug in Judah since that time.",
+      "bt": "The king made beams with the wood almug. And the king used those beams in order to make the temple of the LORD and the royal house of the king. And those structures were strong because of those beams. The king also made harps and lyres for people[ that who played music with the wood almug. (alt) The king also made instruments[ that that had strings for people[ that who played music with the wood almug. The amount of wood-almug[ that Hiram's ships brought to Judah is more than any amount of wood-almug[ that that people have brought to Judah since that time. And people have not seen that amount of wood almug in Judah since that time.",
+      "msgs": [
+        {
+          "token": "beams",
+          "label": "error",
+          "severity": 0,
+          "message": "Word must be a level 0 or 1. Hover over the word to get pairing or explication hints.",
+          "rule_id": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate"
+        },
+        {
+          "token": "beams",
+          "label": "error",
+          "severity": 0,
+          "message": "Word must be a level 0 or 1. Hover over the word to get pairing or explication hints.",
+          "rule_id": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate"
+        },
+        {
+          "token": "temple",
+          "label": "warning",
+          "severity": 1,
+          "message": "This word has multiple senses and ambiguous complexity. Consider including the sense (e.g. temple-A).",
+          "rule_id": "checker:built-in:6 - Warn user if the word's complexity is ambiguous"
+        },
+        {
+          "token": "beams",
+          "label": "error",
+          "severity": 0,
+          "message": "Word must be a level 0 or 1. Hover over the word to get pairing or explication hints.",
+          "rule_id": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate"
+        },
+        {
+          "token": "made",
+          "label": "error",
+          "severity": 0,
+          "message": "This use of 'make' does not match any sense in the Ontology. Check other errors and warnings for more information.",
+          "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+        },
+        {
+          "token": "harps",
+          "label": "error",
+          "severity": 0,
+          "message": "Word must be a level 0 or 1. Hover over the word to get pairing or explication hints.",
+          "rule_id": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate"
+        },
+        {
+          "token": "lyres",
+          "label": "error",
+          "severity": 0,
+          "message": "Word must be a level 0 or 1. Hover over the word to get pairing or explication hints.",
+          "rule_id": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate"
+        },
+        {
+          "token": "for",
+          "label": "error",
+          "severity": 0,
+          "message": "This use of 'for' does not match any sense in the Ontology. Check other errors and warnings for more information.",
+          "rule_id": "checker:built-in:2 - Check argument structure/case frame"
+        }
+      ]
+    },
+    {
+      "ref": "1 Kings 8:34",
+      "status": "error",
+      "errors": 14,
+      "warnings": 3,
+      "enc": "(imp) [If your(Yahweh's) people do all these things] then you(Yahweh)[who are in Heaven] listen to your(Yahweh's) people. (imp) You(Yahweh) forgive the bad actions of your(Yahweh's) people -name Israel. (imp) You(Yahweh) return your(Yahweh's) people to the land[that you(Yahweh) gave to the ancestors of your(Yahweh's) people].",
+      "bt": "(imp) If your people do all these things, then you(Yahweh)[ who are in Heaven listen to your people. (imp) You forgive the bad actions of your people -name Israel. (imp) You return your people to the land[ that that you gave to the ancestors of your people.",
+      "msgs": [
+        {
+          "token": "of",
+          "label": "error",
+          "severity": 0,
+          "message": "Use 'all of', unless the modified Noun is generic. See P1 Checklist 0.17.",
+          "rule_id": "checker:35 - Use 'all of' rather than 'all' for non-generic Nouns"
+        },
+        {
+          "token": "you(Yahweh)[",
+          "label": "error",
+          "severity": 0,
+          "message": "Missing a space before [.",
+          "rule_id": "token:syntax"
+        },
+        {
+          "token": "you(Yahweh)[",
+          "label": "error",
+          "severity": 0,
+          "message": "'listen' cannot be used with an agent clause. Consult the Verb's Theta Grid usage.",
+          "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+        },
+        {
+          "token": "are",
+          "label": "warning",
+          "severity": 1,
+          "message": "'be-Y' has no theta grid information to check with. Double check the expected arguments with a colleague.",
+          "rule_id": "checker:built-in:3 - Check if a Verb has no theta grid information"
+        },
+        {
+          "token": "in",
+          "label": "error",
+          "severity": 0,
+          "message": "This use of 'in' does not match any sense in the Ontology. Check other errors and warnings for more information.",
+          "rule_id": "checker:built-in:2 - Check argument structure/case frame"
+        },
+        {
+          "token": "Heaven",
+          "label": "warning",
+          "severity": 1,
+          "message": "'Heaven' is not recognized. Consult the How-To document or consider using a different word.",
+          "rule_id": "checker:built-in:7 - Check ontology status"
+        },
+        {
+          "token": "Heaven",
+          "label": "warning",
+          "severity": 1,
+          "message": "WARNING: Because this word is not recognized, errors and warnings within the same clause may not be accurate.",
+          "rule_id": "checker:built-in:7 - Check ontology status"
+        },
+        {
+          "token": "listen",
+          "label": "error",
+          "severity": 0,
+          "message": "This use of 'listen' does not match any sense in the Ontology. Check other errors and warnings for more information.",
+          "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+        }
+      ]
+    },
+    {
+      "ref": "Luke 19:37",
+      "status": "error",
+      "errors": 11,
+      "warnings": 6,
+      "enc": "Jesus came close to the place [where the road leads to Jerusalem from the Mount of Olives]. Many disciples were with Jesus. And these disciples were happy. The disciples began to praise God loudly. And the disciples began to tell each-other(disciples) about all the powerful things [that the disciples had seen [God do]].",
+      "bt": "Jesus came close to the place that where the road leads to Jerusalem from the Mount of Olives. Many disciples were with Jesus. And these disciples were happy. The disciples began to praise God loudly. And the disciples began to tell each-other about all the powerful things that the disciples had seen God do.",
+      "msgs": [
+        {
+          "token": "came",
+          "label": "error",
+          "severity": 0,
+          "message": "This use of 'come' does not match any sense in the Ontology. Check other errors and warnings for more information.",
+          "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+        },
+        {
+          "token": "came",
+          "label": "error",
+          "severity": 0,
+          "message": "'come' cannot be used with a different-participant patient clause. Consult the Verb's Theta Grid usage.",
+          "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+        },
+        {
+          "token": "[",
+          "label": "error",
+          "severity": 0,
+          "message": "'come' cannot be used with a different-participant patient clause. Consult the Verb's Theta Grid usage.",
+          "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+        },
+        {
+          "token": "where",
+          "label": "error",
+          "severity": 0,
+          "message": "Cannot use 'where' as a relativizer. Use 'the place [that...]' instead.",
+          "rule_id": "checker:32 - Don't allow 'where' as a relativizer"
+        },
+        {
+          "token": "Mount",
+          "label": "warning",
+          "severity": 1,
+          "message": "'Mount' is not recognized. Consult the How-To document or consider using a different word.",
+          "rule_id": "checker:built-in:7 - Check ontology status"
+        },
+        {
+          "token": "Mount",
+          "label": "warning",
+          "severity": 1,
+          "message": "WARNING: Because this word is not recognized, errors and warnings within the same clause may not be accurate.",
+          "rule_id": "checker:built-in:7 - Check ontology status"
+        },
+        {
+          "token": "Olives",
+          "label": "warning",
+          "severity": 1,
+          "message": "'Olives' is not recognized. Consult the How-To document or consider using a different word.",
+          "rule_id": "checker:built-in:7 - Check ontology status"
+        },
+        {
+          "token": "Olives",
+          "label": "warning",
+          "severity": 1,
+          "message": "WARNING: Because this word is not recognized, errors and warnings within the same clause may not be accurate.",
+          "rule_id": "checker:built-in:7 - Check ontology status"
+        }
+      ]
+    },
+    {
+      "ref": "Luke 24:29",
+      "status": "error",
+      "errors": 9,
+      "warnings": 0,
+      "enc": "So these disciples tried [to persuade Jesus [to stay with these disciples]]. These disciples said to Jesus, \"[The sky is becoming dark]. And the time is evening. So you(Jesus) (imp) stay with us(disciples).\" So Jesus stayed with these disciples.",
+      "bt": "So these disciples tried to persuade Jesus to stay with these disciples. These disciples said to Jesus, \"that The sky is becoming dark. And the time is evening. So stay with us.\" So Jesus stayed with these disciples.",
+      "msgs": [
+        {
+          "token": "disciples",
+          "label": "error",
+          "severity": 0,
+          "message": "Word must be a level 0 or 1. Hover over the word to get pairing or explication hints.",
+          "rule_id": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate"
+        },
+        {
+          "token": "persuade",
+          "label": "error",
+          "severity": 0,
+          "message": "This use of 'persuade' does not match any sense in the Ontology. Check other errors and warnings for more information.",
+          "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+        },
+        {
+          "token": "persuade",
+          "label": "error",
+          "severity": 0,
+          "message": "'persuade' cannot be used with a same-participant patient clause. This likely should be '[in-order-to...]' or '[so-that...]' instead.",
+          "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+        },
+        {
+          "token": "[",
+          "label": "error",
+          "severity": 0,
+          "message": "'persuade' cannot be used with a same-participant patient clause. This likely should be '[in-order-to...]' or '[so-that...]' instead.",
+          "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+        },
+        {
+          "token": "disciples",
+          "label": "error",
+          "severity": 0,
+          "message": "Word must be a level 0 or 1. Hover over the word to get pairing or explication hints.",
+          "rule_id": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate"
+        },
+        {
+          "token": "disciples",
+          "label": "error",
+          "severity": 0,
+          "message": "Word must be a level 0 or 1. Hover over the word to get pairing or explication hints.",
+          "rule_id": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate"
+        },
+        {
+          "token": "[",
+          "label": "error",
+          "severity": 0,
+          "message": "Missing bracket before an opening quote",
+          "rule_id": "checker:19 - Expect a [ before a quote"
+        },
+        {
+          "token": "disciples",
+          "label": "error",
+          "severity": 0,
+          "message": "Word must be a level 0 or 1. Hover over the word to get pairing or explication hints.",
+          "rule_id": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate"
+        }
+      ]
+    },
+    {
+      "ref": "1 Samuel 23:6",
+      "status": "error",
+      "errors": 8,
+      "warnings": 1,
+      "enc": "(Abiathar [who was the son of Ahimelek] ran/fled to David [who was at Keilah].  And Abiathar brought the special clothes [that priests wore] to David. David and Ahimelek (implicit-info) previously used those special clothes [when David and Ahimelek talked to Yahweh at Nob].)",
+      "bt": "(Abiathar who was the son of Ahimelek fled to David, who was at Keilah. And Abiathar brought the special clothes that priests wore to David. David and Ahimelek (implicit-info) previously used those special clothes when David and Ahimelek talked to the LORD at Nob.)",
+      "msgs": [
+        {
+          "token": "(Abiathar",
+          "label": "error",
+          "severity": 0,
+          "message": "Missing a closing parenthesis.",
+          "rule_id": "token:syntax"
+        },
+        {
+          "token": "[",
+          "label": "error",
+          "severity": 0,
+          "message": "'run' cannot be used with an agent clause. Consult the Verb's Theta Grid usage.",
+          "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+        },
+        {
+          "token": "who",
+          "label": "error",
+          "severity": 0,
+          "message": "The first word of each sentence should be capitalized.",
+          "rule_id": "checker:built-in:0 - Check capitalization for first word in a sentence or quote"
+        },
+        {
+          "token": "was",
+          "label": "warning",
+          "severity": 1,
+          "message": "'be-Y' has no theta grid information to check with. Double check the expected arguments with a colleague.",
+          "rule_id": "checker:built-in:3 - Check if a Verb has no theta grid information"
+        },
+        {
+          "token": "ran",
+          "label": "error",
+          "severity": 0,
+          "message": "This use of 'run' does not match any sense in the Ontology. Check other errors and warnings for more information.",
+          "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+        },
+        {
+          "token": "ran",
+          "label": "error",
+          "severity": 0,
+          "message": "'run' cannot be used with an agent clause. Consult the Verb's Theta Grid usage.",
+          "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+        },
+        {
+          "token": "(implicit-info)",
+          "label": "error",
+          "severity": 0,
+          "message": "This clause notation is not recognized.",
+          "rule_id": "token:syntax"
+        },
+        {
+          "token": ".)",
+          "label": "error",
+          "severity": 0,
+          "message": "Missing an opening parenthesis.",
+          "rule_id": "token:syntax"
+        }
+      ]
+    },
+    {
+      "ref": "Mark 5:40",
+      "status": "error",
+      "errors": 8,
+      "warnings": 0,
+      "enc": "But those people laughed at Jesus. (paragraph) Then Jesus told all of those people [to go-out from the house _implicit]. Jesus took the girl's father, the girl's mother, and Jesus's 3 disciples into the place [where the girl was].",
+      "bt": "But those people laughed at Jesus. (paragraph) Then Jesus told all of those people to go out from <<the house>>. Jesus took the girl's father, the girl's mother, and Jesus's three disciples into the place that where the girl was.",
+      "msgs": [
+        {
+          "token": "told",
+          "label": "error",
+          "severity": 0,
+          "message": "This use of 'tell' does not match any sense in the Ontology. Check other errors and warnings for more information.",
+          "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+        },
+        {
+          "token": "told",
+          "label": "error",
+          "severity": 0,
+          "message": "'tell' cannot be used with a same-participant patient clause. This likely should be '[in-order-to...]' or '[so-that...]' instead.",
+          "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+        },
+        {
+          "token": "[",
+          "label": "error",
+          "severity": 0,
+          "message": "'tell' cannot be used with a same-participant patient clause. This likely should be '[in-order-to...]' or '[so-that...]' instead.",
+          "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+        },
+        {
+          "token": "took",
+          "label": "error",
+          "severity": 0,
+          "message": "This use of 'take' does not match any sense in the Ontology. Check other errors and warnings for more information.",
+          "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+        },
+        {
+          "token": "took",
+          "label": "error",
+          "severity": 0,
+          "message": "'take' cannot be used with a different-participant patient clause. Consult the Verb's Theta Grid usage.",
+          "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+        },
+        {
+          "token": "disciples",
+          "label": "error",
+          "severity": 0,
+          "message": "Word must be a level 0 or 1. Hover over the word to get pairing or explication hints.",
+          "rule_id": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate"
+        },
+        {
+          "token": "[",
+          "label": "error",
+          "severity": 0,
+          "message": "'take' cannot be used with a different-participant patient clause. Consult the Verb's Theta Grid usage.",
+          "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+        },
+        {
+          "token": "where",
+          "label": "error",
+          "severity": 0,
+          "message": "Cannot use 'where' as a relativizer. Use 'the place [that...]' instead.",
+          "rule_id": "checker:32 - Don't allow 'where' as a relativizer"
+        }
+      ]
+    },
+    {
+      "ref": "1 Kings 6:23",
+      "status": "error",
+      "errors": 7,
+      "warnings": 5,
+      "enc": "For the most-holy-place, those workers made two statues[that looked like cherubim]. Those workers made the statues from wood-olive. Each statue was 5 meters tall. (footnote) In Hebrew, this distance is 10 cubits tall.",
+      "bt": "For the most holy place, those workers made two statues[ that that looked like cherubim. Those workers made the statues from wood olive. Each statue was five meters tall. (footnote) In Hebrew, this distance is 10 cubits tall.",
+      "msgs": [
+        {
+          "token": "For",
+          "label": "warning",
+          "severity": 1,
+          "message": "The editor cannot determine which part of speech this word is, so some errors and warnings within the same clause may not be accurate.",
+          "rule_id": "checker:built-in:8 - Check for words with ambiguous parts of speech"
+        },
+        {
+          "token": "most-holy-place",
+          "label": "warning",
+          "severity": 1,
+          "message": "'most-holy-place' is not recognized. Consult the How-To document or consider using a different word.",
+          "rule_id": "checker:built-in:7 - Check ontology status"
+        },
+        {
+          "token": "most-holy-place",
+          "label": "warning",
+          "severity": 1,
+          "message": "WARNING: Because this word is not recognized, errors and warnings within the same clause may not be accurate.",
+          "rule_id": "checker:built-in:7 - Check ontology status"
+        },
+        {
+          "token": "workers",
+          "label": "error",
+          "severity": 0,
+          "message": "Word must be a level 0 or 1. Hover over the word to get pairing or explication hints.",
+          "rule_id": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate"
+        },
+        {
+          "token": "two",
+          "label": "warning",
+          "severity": 1,
+          "message": "The Adjective 'two' is not recognized. Consult the How-To document or consider using a different word.",
+          "rule_id": "checker:built-in:7 - Check ontology status"
+        },
+        {
+          "token": "statues[",
+          "label": "error",
+          "severity": 0,
+          "message": "Missing a space before [.",
+          "rule_id": "token:syntax"
+        },
+        {
+          "token": "looked",
+          "label": "error",
+          "severity": 0,
+          "message": "This use of 'appear' does not match any sense in the Ontology. Check other errors and warnings for more information.",
+          "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+        },
+        {
+          "token": "like",
+          "label": "warning",
+          "severity": 1,
+          "message": "The editor cannot determine which part of speech this word is, so some errors and warnings within the same clause may not be accurate.",
+          "rule_id": "checker:built-in:8 - Check for words with ambiguous parts of speech"
+        }
+      ]
+    },
+    {
+      "ref": "1 Kings 2:31",
+      "status": "error",
+      "errors": 7,
+      "warnings": 2,
+      "enc": "Then the king told Benaiah, [\"You(Benaiah) (imp) do the thing[that Joab says]]. You(Benaiah) (imp) kill Joab.  And you(Benaiah) (imp) bury Joab. Then I(Solomon) and my(Solomon's) family will not be guilty [because Joab killed people[who were not guilty]].",
+      "bt": "Then the king told Benaiah, \"Do the thing[ that that Joab says. Kill Joab. And bury Joab. Then I and my family will not be guilty because Joab killed people[ that who were not guilty.",
+      "msgs": [
+        {
+          "token": "do",
+          "label": "error",
+          "severity": 0,
+          "message": "Incorrect usage of do-A. Check other errors and warnings for more information, and consult the Ontology.",
+          "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+        },
+        {
+          "token": "thing[",
+          "label": "error",
+          "severity": 0,
+          "message": "Missing a space before [.",
+          "rule_id": "token:syntax"
+        },
+        {
+          "token": "thing[",
+          "label": "error",
+          "severity": 0,
+          "message": "do-A cannot be used with a different-participant patient clause. Consult the Verb's Theta Grid usage.",
+          "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+        },
+        {
+          "token": "says",
+          "label": "error",
+          "severity": 0,
+          "message": "This use of 'say' does not match any sense in the Ontology. Check other errors and warnings for more information.",
+          "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+        },
+        {
+          "token": "not",
+          "label": "warning",
+          "severity": 1,
+          "message": "Avoid using a negative verb outside a clause expressing cause or purpose, as the scope of the 'not' is ambiguous. See P1 Checklist 27 for suggestions.",
+          "rule_id": "checker:48 - Don't allow negatives with 'purpose' adverbial clauses"
+        },
+        {
+          "token": "killed",
+          "label": "error",
+          "severity": 0,
+          "message": "Incorrect usage of kill-A. Check other errors and warnings for more information, and consult the Ontology.",
+          "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+        },
+        {
+          "token": "people[",
+          "label": "error",
+          "severity": 0,
+          "message": "Missing a space before [.",
+          "rule_id": "token:syntax"
+        },
+        {
+          "token": "people[",
+          "label": "error",
+          "severity": 0,
+          "message": "kill-A cannot be used with a different-participant patient clause. Consult the Verb's Theta Grid usage.",
+          "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+        }
+      ]
+    },
+    {
+      "ref": "Genesis 38:12",
+      "status": "error",
+      "errors": 7,
+      "warnings": 2,
+      "enc": "Judah's wife [who was the daughter of Shua] died many years Later. [After Judah finished mourning Judah's wife] Judah went to a city named Timnah [where Judah's men were cutting the hair from Judah's sheep]. Judah's friend named Hirah [who lived in Adullam] went with Judah to Timnah.",
+      "bt": "Judah's wife who was the daughter of Shua died many years Later. After Judah finished mourning Judah's wife, Judah went to a city of Timnah that where Judah's men were cutting the hair from Judah's sheep. Judah's friend named Hirah, who lived in Adullam, went with Judah to Timnah.",
+      "msgs": [
+        {
+          "token": "died",
+          "label": "error",
+          "severity": 0,
+          "message": "Incorrect usage of die-A. Check other errors and warnings for more information, and consult the Ontology.",
+          "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+        },
+        {
+          "token": "years",
+          "label": "error",
+          "severity": 0,
+          "message": "Unexpected patient for die-A. Consult the Verb's Theta Grid usage.",
+          "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+        },
+        {
+          "token": "Later",
+          "label": "warning",
+          "severity": 1,
+          "message": "'Later' is not recognized. Consult the How-To document or consider using a different word.",
+          "rule_id": "checker:built-in:7 - Check ontology status"
+        },
+        {
+          "token": "Later",
+          "label": "warning",
+          "severity": 1,
+          "message": "WARNING: Because this word is not recognized, errors and warnings within the same clause may not be accurate.",
+          "rule_id": "checker:built-in:7 - Check ontology status"
+        },
+        {
+          "token": "mourning",
+          "label": "error",
+          "severity": 0,
+          "message": "Word must be a level 0 or 1. Hover over the word to get pairing or explication hints.",
+          "rule_id": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate"
+        },
+        {
+          "token": "went",
+          "label": "error",
+          "severity": 0,
+          "message": "This use of 'go' does not match any sense in the Ontology. Check other errors and warnings for more information.",
+          "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+        },
+        {
+          "token": "went",
+          "label": "error",
+          "severity": 0,
+          "message": "'go' cannot be used with a different-participant patient clause. Consult the Verb's Theta Grid usage.",
+          "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+        },
+        {
+          "token": "[",
+          "label": "error",
+          "severity": 0,
+          "message": "'go' cannot be used with a different-participant patient clause. Consult the Verb's Theta Grid usage.",
+          "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+        }
+      ]
+    },
+    {
+      "ref": "Ezra 9:7",
+      "status": "error",
+      "errors": 7,
+      "warnings": 1,
+      "enc": "Since the time [when our(Ezra's) ancestors lived] until this time, we(Ezra) are guilty [of doing many bad-B things]. Because of our(Ezra's) bad-B actions, we(Ezra), our(Ezra's) kings, and our(Ezra's) priests were killed with swords by enemies _implicitActveAgent. And we(Ezra), our(Ezra's) kings, and our(Ezra's) priests were take-away/captured by enemies _implicitActiveAgent. Our(Israelites') land and our(Israelites') possessions were take-away by enemies _implicitActiveAgent. And we(Israelites) were caused [to be ashamed] by enemies _implictActiveAgent. These things were done by the hand of _litearlExpansion other/foreign kings. These things are the same things today.",
+      "bt": "Since the time when our ancestors lived until this time, we are guilty of doing many bad things. Because of our bad actions, we, our kings, and our priests were killed with swords <<by enemies>>. And we, our kings, and our priests were captured <<by enemies>>. Our land and our possessions were take away <<by enemies>>. And we were caused to be ashamed by enemies. These things were done by the hand of foreign kings. These things are the same things today.",
+      "msgs": [
+        {
+          "token": "when",
+          "label": "error",
+          "severity": 0,
+          "message": "Cannot use 'when' as a relativizer. Use 'the time [that...]' instead. See P1 Checklist 0.8.",
+          "rule_id": "checker:33 - Don't allow 'when' as a relativizer"
+        },
+        {
+          "token": "ancestors",
+          "label": "error",
+          "severity": 0,
+          "message": "Word must be a level 0 or 1. Hover over the word to get pairing or explication hints.",
+          "rule_id": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate"
+        },
+        {
+          "token": "Israelites",
+          "label": "error",
+          "severity": 0,
+          "message": "Unexpected patient for 'cause'. Consult the Verb's Theta Grid usage.",
+          "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+        },
+        {
+          "token": "caused",
+          "label": "error",
+          "severity": 0,
+          "message": "This use of 'cause' does not match any sense in the Ontology. Check other errors and warnings for more information.",
+          "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+        },
+        {
+          "token": "caused",
+          "label": "error",
+          "severity": 0,
+          "message": "'cause' cannot be used with a same-participant patient clause. This likely should be '[in-order-to...]' or '[so-that...]' instead.",
+          "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+        },
+        {
+          "token": "caused",
+          "label": "error",
+          "severity": 0,
+          "message": "Unexpected patient for 'cause'. Consult the Verb's Theta Grid usage.",
+          "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+        },
+        {
+          "token": "[",
+          "label": "error",
+          "severity": 0,
+          "message": "'cause' cannot be used with a same-participant patient clause. This likely should be '[in-order-to...]' or '[so-that...]' instead.",
+          "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+        },
+        {
+          "token": "today",
+          "label": "warning",
+          "severity": 1,
+          "message": "The editor cannot determine which part of speech this word is, so some errors and warnings within the same clause may not be accurate.",
+          "rule_id": "checker:built-in:8 - Check for words with ambiguous parts of speech"
+        }
+      ]
+    },
+    {
+      "ref": "1 Kings 20:33",
+      "status": "error",
+      "errors": 6,
+      "warnings": 8,
+      "enc": "The officials thought [that word was good news]. So the officials quickly used the same word[that Ahab had used].  The officials said, [\"Yes]!  The friend of you(king) -name Ben-Hadad!\"  The king said, [\"you(officials) (imp) go]. And you(officials) (imp) get Ben-Hadad.\" Ben-Hadad came from the secret room. Then Ahab caused [Ben-Hadad  to come to Ahab in Ahab's vehicle of war].",
+      "bt": "The officials thought that that word was good news. So the officials quickly used the same word[ that that Ahab had used. The officials said, \"Yes! The friend of you -name Ben Hadad!\" The king said, \"Go. And get Ben Hadad.\" Ben Hadad came from the secret room. Then Ahab caused Ben Hadad to come to Ahab in Ahab's vehicle of war.",
+      "msgs": [
+        {
+          "token": "same",
+          "label": "error",
+          "severity": 0,
+          "message": "Incorrect usage of same-A. Check other errors and warnings for more information, and consult the Ontology.",
+          "rule_id": "checker:built-in:2 - Check argument structure/case frame"
+        },
+        {
+          "token": "word[",
+          "label": "error",
+          "severity": 0,
+          "message": "Missing a space before [.",
+          "rule_id": "token:syntax"
+        },
+        {
+          "token": "word[",
+          "label": "error",
+          "severity": 0,
+          "message": "same-A cannot be used with a different-participant patient clause. Consult the Adjective's Theta Grid usage.",
+          "rule_id": "checker:built-in:2 - Check argument structure/case frame"
+        },
+        {
+          "token": "-name",
+          "label": "error",
+          "severity": 0,
+          "message": "Incorrect usage of -Name-A. Check other errors and warnings for more information, and consult the Ontology.",
+          "rule_id": "checker:built-in:2 - Check argument structure/case frame"
+        },
+        {
+          "token": "Ben-Hadad",
+          "label": "warning",
+          "severity": 1,
+          "message": "'Ben-Hadad' is not recognized. Consult the How-To document or consider using a different word.",
+          "rule_id": "checker:built-in:7 - Check ontology status"
+        },
+        {
+          "token": "Ben-Hadad",
+          "label": "warning",
+          "severity": 1,
+          "message": "WARNING: Because this word is not recognized, errors and warnings within the same clause may not be accurate.",
+          "rule_id": "checker:built-in:7 - Check ontology status"
+        },
+        {
+          "token": "Ben-Hadad",
+          "label": "warning",
+          "severity": 1,
+          "message": "'Ben-Hadad' is not recognized. Consult the How-To document or consider using a different word.",
+          "rule_id": "checker:built-in:7 - Check ontology status"
+        },
+        {
+          "token": "Ben-Hadad",
+          "label": "warning",
+          "severity": 1,
+          "message": "WARNING: Because this word is not recognized, errors and warnings within the same clause may not be accurate.",
+          "rule_id": "checker:built-in:7 - Check ontology status"
+        }
+      ]
+    },
+    {
+      "ref": "Hebrews 1:14",
+      "status": "error",
+      "errors": 6,
+      "warnings": 3,
+      "enc": "(yesrhetorical) Are the servants/angels spirits-B [who serve God]? (statement) All servants/angels are spirits-B [who serve God]. (complex) God sends the servants/angels [to serve the people [who will receive/inherit salvation]]. (simple) God sends the servants/angels [to serve the people [whom God will save from bad-B actions _implicit [so that (implicit-situational) those people would receive-B life [that never ends] with God]]].",
+      "bt": "(yesrhetorical) Are the angels spirits who serve God? (statement) All angels are spirits who serve God. (complex) God sends the angels to serve the people who will inherit salvation. (simple) God sends the angels to serve the people whom God will save <<from bad actions so that those people would receive life that that never ends with God>>.",
+      "msgs": [
+        {
+          "token": "sends",
+          "label": "error",
+          "severity": 0,
+          "message": "This use of 'send' does not match any sense in the Ontology. Check other errors and warnings for more information.",
+          "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+        },
+        {
+          "token": "sends",
+          "label": "error",
+          "severity": 0,
+          "message": "'send' cannot be used with a same-participant patient clause. This likely should be '[in-order-to...]' or '[so-that...]' instead.",
+          "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+        },
+        {
+          "token": "[",
+          "label": "error",
+          "severity": 0,
+          "message": "'send' cannot be used with a same-participant patient clause. This likely should be '[in-order-to...]' or '[so-that...]' instead.",
+          "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+        },
+        {
+          "token": "sends",
+          "label": "error",
+          "severity": 0,
+          "message": "This use of 'send' does not match any sense in the Ontology. Check other errors and warnings for more information.",
+          "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+        },
+        {
+          "token": "sends",
+          "label": "error",
+          "severity": 0,
+          "message": "'send' cannot be used with a same-participant patient clause. This likely should be '[in-order-to...]' or '[so-that...]' instead.",
+          "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+        },
+        {
+          "token": "[",
+          "label": "error",
+          "severity": 0,
+          "message": "'send' cannot be used with a same-participant patient clause. This likely should be '[in-order-to...]' or '[so-that...]' instead.",
+          "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+        },
+        {
+          "token": "life",
+          "label": "warning",
+          "severity": 1,
+          "message": "The editor cannot determine which part of speech this word is, so some errors and warnings within the same clause may not be accurate.",
+          "rule_id": "checker:built-in:8 - Check for words with ambiguous parts of speech"
+        },
+        {
+          "token": "[",
+          "label": "warning",
+          "severity": 1,
+          "message": "Clause nesting depth exceeds 3 levels. Consider reworking the sentence for clarity.",
+          "rule_id": "clause:nesting_depth"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,2640 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Phase 1 Encoding Watch</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --paper:#e9edf4; --surface:#ffffff; --surface-2:#f4f6fa;
+  --ink:#161a23; --muted:#5a6379; --line:#c9d1e0; --line-soft:#dde3ee;
+  --accent:#2f4b99;
+  --err:#a32f26; --err-soft:#f0d9d6;
+  --warn:#8a6a12; --warn-soft:#f0e6cb;
+  --ok:#1e6b4d; --ok-soft:#d4e8dd;
+  --add1:#0f7a8c; --add1-soft:#d7eef1;
+  --add2:#6a3fa0; --add2-soft:#e8dff3;
+  --add3:#a3266b; --add3-soft:#f5dbe9;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --serif:"Newsreader",Georgia,"Times New Roman",serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#10131a; --surface:#181c25; --surface-2:#1f2430;
+    --ink:#e4e8f1; --muted:#98a1b6; --line:#333b4c; --line-soft:#272e3c;
+    --accent:#8fa8f5;
+    --err:#e58279; --err-soft:#3a2320;
+    --warn:#dbb352; --warn-soft:#332a15;
+    --ok:#6cc59b; --ok-soft:#16302489;
+    --add1:#5fc9dc; --add1-soft:#133238;
+    --add2:#c39ce8; --add2-soft:#2b2038;
+    --add3:#e88fbd; --add3-soft:#3a2030;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#10131a; --surface:#181c25; --surface-2:#1f2430;
+  --ink:#e4e8f1; --muted:#98a1b6; --line:#333b4c; --line-soft:#272e3c;
+  --accent:#8fa8f5;
+  --err:#e58279; --err-soft:#3a2320;
+  --warn:#dbb352; --warn-soft:#332a15;
+  --ok:#6cc59b; --ok-soft:#163024;
+  --add1:#5fc9dc; --add1-soft:#133238;
+  --add2:#c39ce8; --add2-soft:#2b2038;
+  --add3:#e88fbd; --add3-soft:#3a2030;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.55;
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:1120px;margin:0 auto;padding:28px 22px 64px;display:flex;flex-direction:column;gap:26px}
+
+/* masthead */
+.masthead{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:14px;
+  border-bottom:2px solid var(--ink);padding-bottom:14px}
+h1{font-family:var(--serif);font-weight:600;font-size:2.35rem;line-height:1.08;margin:0;
+  letter-spacing:-.015em;text-wrap:balance}
+.sub{color:var(--muted);font-size:.9rem;margin:5px 0 0;max-width:62ch}
+.stamp{font-family:var(--mono);font-size:.72rem;text-align:right;color:var(--muted);
+  letter-spacing:.04em;line-height:1.7;white-space:nowrap}
+.stamp b{display:block;color:var(--ink);font-weight:500;font-size:.86rem}
+
+/* readouts */
+.readouts{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));
+  border:1px solid var(--line);background:var(--surface)}
+.ro{padding:13px 15px;border-right:1px solid var(--line-soft);display:flex;flex-direction:column;gap:2px}
+.ro:last-child{border-right:0}
+.ro .k{font-size:.66rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:600}
+.ro .v{font-family:var(--mono);font-size:1.5rem;font-variant-numeric:tabular-nums;line-height:1.2}
+.ro .n{font-size:.74rem;color:var(--muted)}
+.ro.is-err .v{color:var(--err)} .ro.is-warn .v{color:var(--warn)} .ro.is-ok .v{color:var(--ok)}
+
+/* status bar */
+.bar{display:flex;height:11px;border:1px solid var(--line);background:var(--surface);overflow:hidden}
+.bar span{display:block}
+.barkey{display:flex;flex-wrap:wrap;gap:16px;font-size:.76rem;color:var(--muted);margin-top:-14px}
+.barkey i{display:inline-block;width:9px;height:9px;margin-right:6px;font-style:normal;vertical-align:baseline}
+
+/* columns */
+.cols{display:grid;grid-template-columns:minmax(0,1fr);gap:26px}
+@media(min-width:900px){.cols{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr)}}
+section > h2{font-family:var(--serif);font-size:1.15rem;font-weight:600;margin:0 0 3px;letter-spacing:-.01em}
+section > .hint{font-size:.78rem;color:var(--muted);margin:0 0 12px}
+
+/* rule ledger */
+.ledger{display:flex;flex-direction:column}
+.rule{display:grid;grid-template-columns:1fr auto;gap:2px 12px;padding:10px 0;border-top:1px solid var(--line-soft)}
+.rule:first-child{border-top:1px solid var(--line)}
+.rule .name{font-size:.86rem}
+.rule .id{font-family:var(--mono);font-size:.7rem;color:var(--accent);letter-spacing:.01em}
+.rule .ct{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:.95rem;align-self:center}
+.rule .track{grid-column:1/-1;display:flex;height:5px;background:var(--line-soft);margin-top:5px}
+.rule .track span{display:block}
+
+/* verse list */
+.verses{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+details.verse{border-bottom:1px solid var(--line-soft);background:var(--surface)}
+details.verse[open]{background:var(--surface-2)}
+summary{display:grid;grid-template-columns:4px 1fr auto;align-items:center;gap:12px;
+  padding:9px 12px 9px 0;cursor:pointer;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.stripe{align-self:stretch;background:var(--warn)}
+.verse.sev-error .stripe{background:var(--err)}
+.verse.sev-ok .stripe{background:var(--ok)}
+.ref{font-family:var(--serif);font-size:1rem}
+.tally{display:flex;gap:7px;font-family:var(--mono);font-size:.72rem;font-variant-numeric:tabular-nums}
+.pill{padding:1px 7px;border:1px solid var(--line);white-space:nowrap}
+.pill.e{color:var(--err);border-color:var(--err);background:var(--err-soft)}
+.pill.w{color:var(--warn);border-color:var(--warn);background:var(--warn-soft)}
+.body{padding:2px 14px 16px 16px;display:flex;flex-direction:column;gap:12px}
+.lbl{font-size:.64rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:600;
+  margin-bottom:4px}
+.enc{font-family:var(--mono);font-size:.775rem;line-height:1.75;white-space:pre-wrap;word-break:break-word;
+  background:var(--surface);border:1px solid var(--line-soft);padding:10px 12px}
+.enc b{font-weight:500;color:var(--accent)}
+.bt{font-family:var(--serif);font-size:.95rem;color:var(--muted)}
+.msgs{display:flex;flex-direction:column;gap:6px}
+.msg{display:grid;grid-template-columns:auto 1fr;gap:10px;font-size:.8rem;align-items:baseline}
+.msg .tok{font-family:var(--mono);font-size:.75rem;padding:0 5px;border:1px solid var(--line)}
+.msg.e .tok{color:var(--err);border-color:var(--err)}
+.msg.w .tok{color:var(--warn);border-color:var(--warn)}
+.msg .rid{font-family:var(--mono);font-size:.68rem;color:var(--muted);display:block;margin-top:1px}
+
+footer{border-top:1px solid var(--line);padding-top:14px;font-size:.76rem;color:var(--muted);
+  display:flex;flex-wrap:wrap;gap:6px 18px;justify-content:space-between}
+footer code{font-family:var(--mono);font-size:.72rem}
+
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--line)}
+.tab-btn{font:inherit;font-family:var(--sans);font-size:.86rem;font-weight:500;color:var(--muted);
+  background:none;border:none;border-bottom:2px solid transparent;padding:9px 4px 10px;margin-right:20px;
+  cursor:pointer}
+.tab-btn:hover{color:var(--ink)}
+.tab-btn.active{color:var(--ink);border-bottom-color:var(--accent)}
+.view{display:flex;flex-direction:column;gap:26px}
+
+.pill.ok{color:var(--ok);border-color:var(--ok);background:var(--ok-soft)}
+.pill.was{color:var(--muted);border-color:var(--line);background:transparent}
+
+.suggest-date{font-family:var(--serif);font-size:1.05rem;font-weight:600;margin:22px 0 8px;
+  padding-top:16px;border-top:2px solid var(--ink)}
+.suggest-date:first-child{margin-top:0;padding-top:0;border-top:0}
+.suggest-systemic{font-size:.82rem;line-height:1.55;color:var(--ink);background:var(--surface-2);
+  border:1px solid var(--line-soft);border-left:3px solid var(--accent);padding:9px 12px;margin:0 0 12px}
+.suggest-systemic .lbl{margin-bottom:3px}
+
+.changes{display:flex;flex-direction:column}
+.change{padding:11px 0;border-top:1px solid var(--line-soft)}
+.change:first-child{border-top:0}
+.cwn{display:grid;grid-template-columns:auto 1fr;gap:3px 10px;align-items:start}
+.cwn .k{font-size:.62rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);
+  font-weight:600;padding-top:3px;white-space:nowrap}
+.cwn .was,.cwn .now{font-family:var(--mono);font-size:.76rem;line-height:1.65;word-break:break-word;
+  background:var(--surface);border:1px solid var(--line-soft);padding:5px 8px}
+.cwn .was{color:var(--muted)}
+.cwn .now{color:var(--ink);border-color:var(--accent)}
+.change .reason{font-size:.81rem;line-height:1.6;margin-top:8px}
+.suggest-note{font-size:.8rem;line-height:1.6;color:var(--muted);background:var(--surface-2);
+  border:1px solid var(--line-soft);padding:9px 12px;margin-top:4px}
+.suggest-empty{padding:34px 16px;text-align:center;color:var(--muted);font-size:.88rem}
+
+.sugg-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:10px 22px;margin-top:2px}
+@media(min-width:760px){.sugg-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+.sugg-col{display:flex;flex-direction:column;gap:12px;min-width:0;padding-top:10px}
+@media(min-width:760px){.sugg-col+.sugg-col{border-left:1px solid var(--line-soft);padding-left:20px}}
+.sugg-col-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;
+  font-size:.64rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:600}
+.sugg-col-head .src{font-family:var(--mono);font-size:.9em;letter-spacing:.02em;color:var(--accent);
+  text-transform:none}
+.ai-notes{display:flex;flex-direction:column;gap:5px;margin:0;padding:0;list-style:none}
+.ai-notes li{font-size:.81rem;line-height:1.55;padding-left:13px;position:relative}
+.ai-notes li::before{content:"\2013";position:absolute;left:0;color:var(--muted)}
+.ai-check{display:flex;gap:8px;align-items:baseline}
+.ai-collapsed{font-size:.76rem;color:var(--muted)}
+.ai-empty{font-size:.81rem;color:var(--muted);padding:6px 0 2px}
+
+.sn-list{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.sn-item{padding:12px 2px;border-bottom:1px solid var(--line-soft)}
+.sn-head{display:flex;gap:10px;align-items:baseline;font-family:var(--mono);font-size:.68rem;
+  letter-spacing:.02em;color:var(--muted);margin-bottom:5px}
+.sn-skill{color:var(--accent);font-weight:600}
+.sn-note{font-size:.85rem;line-height:1.6}
+
+/* ontology ruleset + iteration highlights */
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:.78rem;color:var(--ink);
+  background:var(--surface);border:1px solid var(--line);padding:10px 13px;margin:0 0 18px}
+.legend-item{display:flex;align-items:center;gap:7px}
+.legend-swatch{width:11px;height:11px;flex:none;border:1px solid var(--line)}
+.legend-swatch.base{background:var(--surface-2)}
+.legend-swatch.a1{background:var(--add1-soft);border-color:var(--add1)}
+.legend-swatch.a2{background:var(--add2-soft);border-color:var(--add2)}
+.legend-swatch.a3{background:var(--add3-soft);border-color:var(--add3)}
+
+.rule-list{display:grid;grid-template-columns:1fr;gap:0;border-top:1px solid var(--line);margin-top:4px}
+@media(min-width:760px){.rule-list{grid-template-columns:1fr 1fr;gap:0 20px}}
+.rule-list-item{display:grid;grid-template-columns:auto 1fr;gap:9px;padding:6px 0;
+  border-bottom:1px solid var(--line-soft);font-size:.79rem;line-height:1.5;align-items:baseline}
+.rule-list-item .rn{font-family:var(--mono);font-size:.72rem;color:var(--accent);white-space:nowrap}
+.rule-note{font-size:.78rem;color:var(--muted);line-height:1.6;margin-top:10px}
+
+.add-block{border-left:3px solid var(--add1);background:var(--surface-2);padding:11px 14px 13px;margin:16px 0}
+.add-block.a2{border-left-color:var(--add2)}
+.add-block.a3{border-left-color:var(--add3)}
+.add-block-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.add-block-head h3{font-family:var(--serif);font-size:1rem;font-weight:600;margin:0;color:var(--ink)}
+.add-tag{font-family:var(--mono);font-size:.63rem;text-transform:uppercase;letter-spacing:.07em;
+  padding:2px 7px;border:1px solid var(--add1);color:var(--add1);background:var(--add1-soft)}
+.add-block.a2 .add-tag{border-color:var(--add2);color:var(--add2);background:var(--add2-soft)}
+.add-block.a3 .add-tag{border-color:var(--add3);color:var(--add3);background:var(--add3-soft)}
+.add-list{display:flex;flex-direction:column;gap:10px}
+.add-item{font-size:.82rem;line-height:1.6}
+.add-item b{font-weight:600;color:var(--ink)}
+.add-item .ex{font-family:var(--mono);font-size:.74rem;color:var(--muted);display:block;margin-top:3px}
+.add-item .refit{font-family:var(--mono);font-size:.68rem;color:var(--muted)}
+.was-now-mini{display:grid;grid-template-columns:auto 1fr;gap:2px 8px;font-size:.78rem;margin-top:4px}
+.was-now-mini .k{font-size:.6rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);
+  font-weight:600;padding-top:2px}
+
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="masthead">
+    <div>
+      <h1>Phase 1 Encoding Watch</h1>
+      <p class="sub">A 200-verse sample of the TaBiThA <span style="font-family:var(--mono);font-size:.85em">Sources</span> corpus, run through the editor's rule checker at <span style="font-family:var(--mono);font-size:.85em">editor.tabitha.bible/check</span> roughly once an hour. Errors and warnings are the checker's, not the encoder's verdict — recurring rules are the signal worth chasing.</p>
+    </div>
+    <div class="stamp" id="stamp"></div>
+  </header>
+
+  <nav class="tabs" id="tabs">
+    <button class="tab-btn active" data-view="overview" type="button">Overview</button>
+    <button class="tab-btn" data-view="runs" type="button">Sample runs</button>
+    <button class="tab-btn" data-view="suggestions" type="button">Suggested changes</button>
+    <button class="tab-btn" data-view="skillnotes" type="button">Skill notes</button>
+    <button class="tab-btn" data-view="changelog" type="button">Changelog</button>
+  </nav>
+
+  <div id="view-overview" class="view">
+    <div>
+      <div class="readouts" id="ov-readouts"></div>
+      <p class="hint" style="margin-top:8px">Sampled so far is the sum of each run's random 200-verse draw — the same verse can recur across the 40-slice cycle, so this measures sampling effort, not unique verse coverage.</p>
+    </div>
+
+    <div>
+      <div class="bar" id="ov-bar"></div>
+      <p class="barkey" id="ov-barkey" style="margin-top:10px"></p>
+    </div>
+
+    <div class="cols">
+      <section>
+        <h2>Which rules fire, across all runs</h2>
+        <p class="hint">Message count summed across every stored run. A rule that keeps dominating run after run is a systematic gap, not a per-verse slip.</p>
+        <div class="ledger" id="ov-ledger"></div>
+      </section>
+
+      <section>
+        <h2>Verses carrying the most, across all runs</h2>
+        <p class="hint">Ranked by total error count over every run a verse appeared in that run's worst list, then warnings. Open one for the encoding and messages from its most recent flagged appearance.</p>
+        <div class="verses" id="ov-verses"></div>
+      </section>
+    </div>
+  </div>
+
+  <div id="view-runs" class="view" hidden>
+    <div>
+      <div class="readouts" id="readouts"></div>
+    </div>
+
+    <div>
+      <div class="bar" id="bar"></div>
+      <p class="barkey" id="barkey" style="margin-top:10px"></p>
+    </div>
+
+    <div class="cols">
+      <section>
+        <h2>Which rules fire</h2>
+        <p class="hint">Message count across the sample, split by severity. A rule that dominates every run is a systematic gap, not a per-verse slip.</p>
+        <div class="ledger" id="ledger"></div>
+      </section>
+
+      <section>
+        <h2>Verses carrying the most</h2>
+        <p class="hint">Sorted by error count, then warnings. Open one for its encoding, back-translation, and the messages the checker attached.</p>
+        <div class="verses" id="verses"></div>
+      </section>
+    </div>
+  </div>
+
+  <div id="view-suggestions" class="view" hidden>
+    <section>
+      <h2>Suggested corrections</h2>
+      <p class="hint">Every correction the run proposes, kept running across runs, shown two ways side by side: a reviewed fix (<span style="font-family:var(--mono);font-size:.85em">phase1-encoding-review</span>) with the corrected encoding and a Was / Now / Reason breakdown naming the specific rule behind each change — re-run through <span style="font-family:var(--mono);font-size:.85em">/check</span> and confirmed to clear the named error — next to an unedited AI-assisted first draft of the same verse (<span style="font-family:var(--mono);font-size:.85em">phase1-ai-assist</span>), with its own comments and check result, for comparison.</p>
+      <div id="suggest-list"></div>
+      <div class="suggest-empty" id="suggest-empty" hidden>No suggestions logged yet — the next scheduled run will add to this table.</div>
+    </section>
+  </div>
+
+  <div id="view-skillnotes" class="view" hidden>
+    <section>
+      <h2>Skill notes</h2>
+      <p class="hint">Patterns the automated runs noticed that might warrant a change to the <span style="font-family:var(--mono);font-size:.85em">niv-to-phase1</span> or <span style="font-family:var(--mono);font-size:.85em">phase1-encoding-review</span> skill — logged here rather than proposed automatically, since a proposal inside one run's own session is easy to miss before the next run replaces it. Review these on your own schedule and ask Claude to fold any of them into the skill.</p>
+      <div class="sn-list" id="sn-list"></div>
+      <div class="suggest-empty" id="sn-empty" hidden>No pending skill notes — nothing has warranted a change yet.</div>
+    </section>
+  </div>
+
+  <div id="view-changelog" class="view" hidden>
+    <nav class="tabs" id="changelog-tabs" style="margin-bottom:-4px">
+      <button class="tab-btn active" data-clview="niv" type="button">niv-to-phase1</button>
+      <button class="tab-btn" data-clview="review" type="button">phase1-encoding-review</button>
+      <button class="tab-btn" data-clview="ontology" type="button">Ontology &amp; structure</button>
+    </nav>
+
+    <div id="clview-niv" class="view">
+      <section>
+        <h2>Version history — niv-to-phase1</h2>
+        <p class="hint">How the raw-NIV-to-Phase-1 conversion skill has evolved — reconstructed from project notes, newest first.</p>
+
+        <div class="suggest-date">2026-09-09</div>
+        <div class="sn-list">
+          <div class="sn-item">
+            <div class="sn-head"><span class="sn-skill">Skill</span></div>
+            <div class="sn-note"><b><span style="font-family:var(--mono);font-size:.85em">niv-to-phase1</span> started.</b> Began building a Claude skill to convert raw NIV Bible verses into TBTA/TaBiThA "Phase 1" encoding — with a lighter "He1" shorthand variant — for Bible translation work.</div>
+          </div>
+          <div class="sn-item">
+            <div class="sn-head"><span class="sn-skill">Ontology API</span></div>
+            <div class="sn-note"><b>Wired to the TaBiThA ontology app.</b> Uses the ontology web app at <span style="font-family:var(--mono);font-size:.85em">ontology.tabitha.bible</span>, calling its <span style="font-family:var(--mono);font-size:.85em">/search</span>, <span style="font-family:var(--mono);font-size:.85em">/simplification_hints</span>, and <span style="font-family:var(--mono);font-size:.85em">/examples</span> endpoints to check word complexity levels.</div>
+          </div>
+          <div class="sn-item">
+            <div class="sn-head"><span class="sn-skill">Corpus</span></div>
+            <div class="sn-note"><b>Calibration corpus adopted.</b> <span style="font-family:var(--mono);font-size:.85em">Sources_2026-07-27.tabitha.sqlite</span> — roughly 18,830 rows of verified <span style="font-family:var(--mono);font-size:.85em">phase_1_encoding</span>, plus <span style="font-family:var(--mono);font-size:.85em">semantic_encoding</span> and grammatical feature data — kept as a project file for training and calibrating the skill.</div>
+          </div>
+          <div class="sn-item">
+            <div class="sn-head"><span class="sn-skill">Project</span></div>
+            <div class="sn-note"><b>Source text kept on hand.</b> <span style="font-family:var(--mono);font-size:.85em">NIV1984 - original.doc</span>, the raw NIV source text, kept as a project file rather than re-uploaded each session.</div>
+          </div>
+          <div class="sn-item">
+            <div class="sn-head"><span class="sn-skill">Reference docs</span></div>
+            <div class="sn-note"><b>Ruleset gaps identified — still outstanding.</b> Three companion reference docs are still needed to fully cover the ruleset: "How to handle complex terms," "Intro to TBTA grammar," and "Summary of specialized notation."</div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div id="clview-review" class="view" hidden>
+    <section>
+      <h2>Version history — phase1-encoding-review</h2>
+      <p class="hint">How <span style="font-family:var(--mono);font-size:.85em">phase1-encoding-review</span> and the dashboard it feeds have evolved — reconstructed from project notes, newest first.</p>
+
+      <div class="suggest-date">2026-09-10</div>
+      <div class="sn-list">
+        <div class="sn-item">
+          <div class="sn-head"><span class="sn-skill">Skill file</span></div>
+          <div class="sn-note"><b>"let" bracketing cascade folded into the skill.</b> A pending skill note from the 12:18 calibration run (Matthew 14:36 — an unbracketed <span style="font-family:var(--mono);font-size:.85em">let</span> clause producing 3 misleading word-choice errors) was folded into <span style="font-family:var(--mono);font-size:.85em">phase1-encoding-review</span>'s "Cascade sources" section as a fourth pattern alongside <span style="font-family:var(--mono);font-size:.85em">where</span>, glued brackets, and the distributive. Mirrored on this page's Ontology &amp; structure sub-tab.</div>
+        </div>
+        <div class="sn-item">
+          <div class="sn-head"><span class="sn-skill">Suggested changes</span></div>
+          <div class="sn-note"><b>Reviewed fixes get an AI-assisted companion.</b> Every verse in the Suggested changes tab now shows two columns side by side: the reviewed correction (<span style="font-family:var(--mono);font-size:.85em">phase1-encoding-review</span> — Was/Now/Reason, re-checked to clear the named error) next to an unedited first draft from <span style="font-family:var(--mono);font-size:.85em">phase1-ai-assist</span>, with its own comments and check result, for comparison. Backfilled onto all 15 verses across the 4 suggestions docs recorded so far; the scheduled task now generates the AI-assisted column for every new run as well.</div>
+        </div>
+        <div class="sn-item">
+          <div class="sn-head"><span class="sn-skill">Scheduled task</span></div>
+          <div class="sn-note"><b>Timestamps down to the minute.</b> <span style="font-family:var(--mono);font-size:.85em">doc_id</span> and <span style="font-family:var(--mono);font-size:.85em">date</span> on the <span style="font-family:var(--mono);font-size:.85em">runs</span> and <span style="font-family:var(--mono);font-size:.85em">suggestions</span> collections switched from a plain <span style="font-family:var(--mono);font-size:.85em">YYYY-MM-DD</span> to <span style="font-family:var(--mono);font-size:.85em">YYYY-MM-DDTHH:MM</span> once the task moved off a once-daily cadence, so multiple same-day runs stop colliding. Slice selection followed suit, switching from whole-days-since-anchor to whole-hours-since-anchor (anchor 2026-09-09T00:00 UTC) mod 40.</div>
+        </div>
+        <div class="sn-item">
+          <div class="sn-head"><span class="sn-skill">Dashboard</span></div>
+          <div class="sn-note"><b>Overview tab added.</b> Now the default landing tab — aggregates cumulative sample size, coverage against the 18,830-verse corpus, summed ok/warning/error counts, and top rules and worst verses merged across every stored run, computed client-side so it grows on its own as new runs land.</div>
+        </div>
+        <div class="sn-item">
+          <div class="sn-head"><span class="sn-skill">Dashboard</span></div>
+          <div class="sn-note"><b>Suggested changes tab added.</b> Accumulates every run's proposed corrections into a per-verse detail view at the same depth as Sample runs: full corrected encoding, status, and a Was/Now/Reason breakdown per change.</div>
+        </div>
+        <div class="sn-item">
+          <div class="sn-head"><span class="sn-skill">Skill notes</span></div>
+          <div class="sn-note"><b>Skill notes tab and the "pending" accumulator.</b> Decided the scheduled task should not call <span style="font-family:var(--mono);font-size:.85em">propose_skills</span> directly, since each firing starts a fresh session and a proposal card is easy to miss before the next run replaces it. Runs instead append a short note to an accumulating "pending" doc, shown on this tab, for review and folding into the skill on Yu Hui's own schedule.</div>
+        </div>
+        <div class="sn-item">
+          <div class="sn-head"><span class="sn-skill">Corpus</span></div>
+          <div class="sn-note"><b>Verse corpus moved to the cloud.</b> Parked the 18,830-row <span style="font-family:var(--mono);font-size:.85em">Sources_2026-07-27</span> corpus in this dashboard's own artifact database (40 shuffled slices) rather than binding the scheduled task to the local machine, so runs don't depend on a computer being on. Also mirrored in the public <span style="font-family:var(--mono);font-size:.85em">presciencelabs/tabitha-databases</span> repo.</div>
+        </div>
+      </div>
+
+      <div class="suggest-date">2026-09-09</div>
+      <div class="sn-list">
+        <div class="sn-item">
+          <div class="sn-head"><span class="sn-skill">Scheduled task</span></div>
+          <div class="sn-note"><b>Sampling cadence settled.</b> Started as a daily 9am (SGT) run, briefly tried hourly, then settled on roughly every 3 hours: sample 200 random verses, check them against the editor API, report the rules firing most and the worst verses, and suggest fixes for 3.</div>
+        </div>
+        <div class="sn-item">
+          <div class="sn-head"><span class="sn-skill">Skill</span></div>
+          <div class="sn-note"><b><span style="font-family:var(--mono);font-size:.85em">phase1-encoding-review</span> saved as a skill.</b> The review-and-suggest workflow — compare an existing encoding against the editor API and propose corrections — saved as its own skill, presenting every suggested change as a Was/Now/Reason table with each reason naming the specific rule behind it.</div>
+        </div>
+        <div class="sn-item">
+          <div class="sn-head"><span class="sn-skill">Project</span></div>
+          <div class="sn-note"><b>Project started.</b> Began building a Claude skill to convert raw NIV verses into TBTA/TaBiThA "Phase 1" encoding (with a lighter "He1" shorthand variant) for Bible translation work, using the TaBiThA ontology app's REST API (<span style="font-family:var(--mono);font-size:.85em">/search</span>, <span style="font-family:var(--mono);font-size:.85em">/simplification_hints</span>, <span style="font-family:var(--mono);font-size:.85em">/examples</span>) and the Sources_2026-07-27 corpus (~18,830 rows) for calibration.</div>
+        </div>
+      </div>
+    </section>
+    </div>
+    <div id="clview-ontology" class="view" hidden>
+      <section>
+        <h2>Version history — ontology &amp; structure</h2>
+        <p class="hint">What it actually takes to get a Phase 1 encoding through <span style="font-family:var(--mono);font-size:.85em">/check</span> clean — the original 54-point checklist, laid out first, then everything learned on top of it. Reconstructed from the skills' own reference material rather than dated project notes, so entries below are grouped by how the understanding was gained (which skill, which pattern), not by date.</p>
+
+        <div class="legend">
+          <div class="legend-item"><span class="legend-swatch base"></span>Baseline — P1 Checklist, unchanged</div>
+          <div class="legend-item"><span class="legend-swatch a1"></span>Cascade sources — non-obvious error cascades</div>
+          <div class="legend-item"><span class="legend-swatch a2"></span>Recurring failure patterns &amp; mechanics</div>
+          <div class="legend-item"><span class="legend-swatch a3"></span>Corrected understanding</div>
+        </div>
+
+        <h3 style="font-family:var(--serif);font-size:1.02rem;font-weight:600;margin:4px 0 2px">Baseline — the P1 Checklist (0.1–0.54)</h3>
+        <p class="hint" style="margin-bottom:6px">The original ruleset, verbatim in substance from <span style="font-family:var(--mono);font-size:.85em">niv-to-phase1</span>'s <span style="font-family:var(--mono);font-size:.85em">phase1-rules.md</span>. Unhighlighted — this is the fixed starting point everything below builds on.</p>
+        <div class="rule-list">
+          <div class="rule-list-item"><span class="rn">0.1</span><span>No third-person pronouns (except "each-other"); 1st/2nd-person pronouns get a parenthetical referent — "I(John)".</span></div>
+          <div class="rule-list-item"><span class="rn">0.2</span><span>Level 2/3 ontology words only via pairing, explication, or a "(complex)" alternate — never bare.</span></div>
+          <div class="rule-list-item"><span class="rn">0.3</span><span>Hyphenated ontology words stay hyphenated; default tense is "discourse", override with underscore notation.</span></div>
+          <div class="rule-list-item"><span class="rn">0.3b</span><span>One verb per clause; subordinate clauses in square brackets; left and right bracket counts must match.</span></div>
+          <div class="rule-list-item"><span class="rn">0.4</span><span>No more than four levels of embedded brackets — simplify or split the sentence instead.</span></div>
+          <div class="rule-list-item"><span class="rn">0.5</span><span>Place subordinate clauses/adverbial PPs so the sentence has the intended scope.</span></div>
+          <div class="rule-list-item"><span class="rn">0.6</span><span>A prepositional phrase that modifies a noun goes in a relative clause on that noun, not left dangling.</span></div>
+          <div class="rule-list-item"><span class="rn">0.7</span><span>Start every relative clause with "that"/"who"/"whom" — never with "that" on an object-complement clause.</span></div>
+          <div class="rule-list-item"><span class="rn">0.8</span><span>Never use "when"/"where" as a relativizer — "the place [that... in]", not "the place [where...]".</span></div>
+          <div class="rule-list-item"><span class="rn">0.9</span><span>Avoid repeating a noun across main and object-complement clause; put it once, in the patient clause.</span></div>
+          <div class="rule-list-item"><span class="rn">0.10</span><span>Use "that" rather than "the" when re-referring to a previously mentioned noun.</span></div>
+          <div class="rule-list-item"><span class="rn">0.11</span><span>Mark implicit info with parentheses (clauses) or underscore (phrase before the underscore) — don't hide a head if its modifiers aren't also implicit.</span></div>
+          <div class="rule-list-item"><span class="rn">0.12</span><span>Precede quotations with speaker + verb ("say"/"ask"); mark both implicit with "_implicitNecessary" on each.</span></div>
+          <div class="rule-list-item"><span class="rn">0.13</span><span>Passives include the agent with "by" — mark it "_implicitActiveAgent" if the agent itself is implicit.</span></div>
+          <div class="rule-list-item"><span class="rn">0.14</span><span>Rhetorical questions get "(rhetorical)"/"(yesrhetorical)"/"(norhetorical)" plus a "(statement)" paraphrase.</span></div>
+          <div class="rule-list-item"><span class="rn">0.15</span><span>Perfect tense only where simple past + "recently"/"previously" would also work.</span></div>
+          <div class="rule-list-item"><span class="rn">0.16</span><span>Don't use "even", "any", or "own" (as in "John's own house").</span></div>
+          <div class="rule-list-item"><span class="rn">0.17</span><span>"all of" rather than bare "all", unless the noun is generic.</span></div>
+          <div class="rule-list-item"><span class="rn">0.18</span><span>Imperatives show the agent and "(imp)" — "You(John) (imp) go to the town."</span></div>
+          <div class="rule-list-item"><span class="rn">0.19</span><span>"begin"/"stop"/"finish"/"continue to" + verb is a feature on that verb, not its own clause.</span></div>
+          <div class="rule-list-item"><span class="rn">0.20</span><span>A modifier meant to apply across a coordinate noun phrase is either repeated per noun or uses "_coordinate".</span></div>
+          <div class="rule-list-item"><span class="rn">0.21</span><span>No isolated noun phrases with no sentence function — every noun needs a verb argument or a relation.</span></div>
+          <div class="rule-list-item"><span class="rn">0.22</span><span>"and" before a subordinate-looking clause is valid only as the final clause of a matching preceding type.</span></div>
+          <div class="rule-list-item"><span class="rn">0.23</span><span>English "of" meaning "named" — "nation named Israel", not "nation of Israel".</span></div>
+          <div class="rule-list-item"><span class="rn">0.24</span><span>Don't use "can" — normally becomes "is able [to ...]".</span></div>
+          <div class="rule-list-item"><span class="rn">0.25</span><span>"to" only starts a same-agent patient clause or a PP whose verb takes a destination — no generic "to" relation.</span></div>
+          <div class="rule-list-item"><span class="rn">0.26</span><span>Don't inflect hyphenated words — "John stand-up", not "John stood-up".</span></div>
+          <div class="rule-list-item"><span class="rn">0.27</span><span>Verbs take exactly one direct object — "gave a gift to Mary", not "gave Mary a gift".</span></div>
+          <div class="rule-list-item"><span class="rn">0.28</span><span>Future is "will", never "going to".</span></div>
+          <div class="rule-list-item"><span class="rn">0.29</span><span>No double negatives.</span></div>
+          <div class="rule-list-item"><span class="rn">0.30</span><span>A pairing/explication must read correctly on either its simple or complex side — target vocabulary is unknown in advance.</span></div>
+          <div class="rule-list-item"><span class="rn">0.31</span><span>No participles or gerunds — reword as a bracketed clause instead.</span></div>
+          <div class="rule-list-item"><span class="rn">0.32</span><span>"only" as adverb ("only-A", exclusivity) is now allowed — distinct from adjective "only" (3 senses: identity, exclusivity, low esteem).</span></div>
+          <div class="rule-list-item"><span class="rn">0.33</span><span>Avoid negative polarity on a verb combined with a causal clause ("because"/"so-A"/"so-C") — scope is ambiguous in this system.</span></div>
+          <div class="rule-list-item"><span class="rn">0.34</span><span>Avoid vague back-references like "did that action//thing" — be concrete unless genuinely necessary not to be.</span></div>
+          <div class="rule-list-item"><span class="rn">0.36</span><span>Write a given noun the same way everywhere within a sentence — no swapping in a synonym on the second mention.</span></div>
+          <div class="rule-list-item"><span class="rn">0.37</span><span>No passive that couldn't convert back to active without breaking another rule (e.g. the in-order-to same-agent requirement).</span></div>
+          <div class="rule-list-item"><span class="rn">0.38</span><span>"in prison//court" is English-specific — use "in a//the//that prison//court".</span></div>
+          <div class="rule-list-item"><span class="rn">0.39</span><span>English "when" that really means "after" should be written "after".</span></div>
+          <div class="rule-list-item"><span class="rn">0.40</span><span>No apposition except for addressees ("Lord, my(David's) God, ...").</span></div>
+          <div class="rule-list-item"><span class="rn">0.41</span><span>"which X" for interrogative arguments — prefer "which thing" plus the intended sense over bare "thing-A".</span></div>
+          <div class="rule-list-item"><span class="rn">0.42</span><span>Commas: before/after addressees, after "X said" + quote, and in coordinate lists (Oxford comma) — optional elsewhere.</span></div>
+          <div class="rule-list-item"><span class="rn">0.43</span><span>Avoid "let"/"allow" with God as the subordinate agent, even where English would use a natural passive.</span></div>
+          <div class="rule-list-item"><span class="rn">0.44</span><span>Use only the senses the system's words actually support — don't stretch a word to an unsupported sense.</span></div>
+          <div class="rule-list-item"><span class="rn">0.45</span><span>No "make" sense of causing an adjectival state — use "X caused [Y to be good]", not "X made Y good".</span></div>
+          <div class="rule-list-item"><span class="rn">0.47</span><span>"Both A and B" with two separate nouns isn't supported — "both" only goes with a dual noun.</span></div>
+          <div class="rule-list-item"><span class="rn">0.48</span><span>Only a verb with a patient noun can be passivized; the patient becomes the passive's agent.</span></div>
+          <div class="rule-list-item"><span class="rn">0.49</span><span>"obey"/"obey-submit" for laws and instructions — "follow-B" is reserved for following people.</span></div>
+          <div class="rule-list-item"><span class="rn">0.50</span><span>"give" for offering sacrifices — "offer" means asking if someone wants something.</span></div>
+          <div class="rule-list-item"><span class="rn">0.51</span><span>Imperatives with epistemic verbs (know, understand, realize) or emotion verbs are now allowed — previously discouraged.</span></div>
+          <div class="rule-list-item"><span class="rn">0.52</span><span>Nouns that take a noun argument ("faith in X") should use that construction rather than a relative clause.</span></div>
+          <div class="rule-list-item"><span class="rn">0.53</span><span>Poetry: "(begin-poetry)"/"(end-poetry)" and "(blank-line)"; "(title)" is always followed by "(paragraph)".</span></div>
+          <div class="rule-list-item"><span class="rn">0.54</span><span>Where units can't be used for "a short/long time", write "for a time-short-&lt;units&gt;" / "for a time-long-&lt;units&gt;".</span></div>
+        </div>
+        <p class="rule-note">No 0.35 or 0.46 — gaps in the source checklist's own numbering. Two entries are themselves self-noted amendments within this baseline file: <b>0.32</b> ("only" as an adverb) is marked "new," and <b>0.51</b> (imperatives with epistemic/emotion verbs) is marked "previously discouraged" — evidence the checklist had already been revised once before any of the iterations below. The checklist also references three companion documents — "How to handle complex terms", "Intro to TBTA grammar", "Summary of specialized notation" — that are still not bundled with the skill; the ontology's <span style="font-family:var(--mono);font-size:.85em">/simplification_hints</span> endpoint stands in as a partial substitute.</p>
+
+        <div class="add-block">
+          <div class="add-block-head"><h3>Cascade sources that aren't unrecognized words</h3><span class="add-tag">phase1-encoding-review</span></div>
+          <p class="hint" style="margin:0 0 8px">The single most useful habit the review skill added: separate root causes from cascades before touching anything, because "because this word is not recognized, errors and warnings within the same clause may not be accurate" is the checker's own caveat. These patterns generate cascades without any word being unrecognized at all.</p>
+          <div class="add-list">
+            <div class="add-item"><b>"where" as a relativizer (checker:32).</b> A malformed relative gets parsed as a patient clause, producing 3–4 cascaded errors from one root cause. Fix: the "that … &lt;adposition&gt;" form, preposition clause-final.<span class="ex">Joshua 4:5, Luke 5:18, Genesis 36:43 — but not guaranteed (Luke 12:18 is a counter-example): always confirm by isolating the clause.</span></div>
+            <div class="add-item"><b>A glued bracket ("Missing a space before [", token:syntax).</b> One missing space can register as several separate messages.<span class="ex">1 Kings 20:13 — two glued brackets produced 5 spurious errors; 7 total messages cleared by adding the two spaces.</span></div>
+            <div class="add-item"><b>Distributive "each … one &lt;noun&gt;".</b> No tag fixes this one — it needs a plural rewrite as a workaround, which narrows the meaning slightly (flagged for review, not a clean fix).<span class="ex">"Each of you(man) should carry one stone..." — Joshua 4:5</span></div>
+            <div class="add-item"><b>"let" without a bracket around its embedded action.</b> Unbracketed, the embedded action reads as a second main-clause verb, so the checker reports it as a 'let' word-choice fault — "Incorrect usage of let-A" / "Unexpected patient for let-A" — plus "Cannot have multiple verbs in the same clause," all from the one missing bracket. Fix: <span style="font-family:var(--mono);font-size:.9em">let [X to Verb Y]</span>.<span class="ex">Matthew 14:36 — bracketing the embedded clause alone cleared all 3 messages, 4 errors → 0, with no change to 'let' itself.</span></div>
+          </div>
+        </div>
+
+        <div class="add-block a2">
+          <div class="add-block-head"><h3>Recurring failure patterns &amp; notation mechanics</h3><span class="add-tag">phase1-encoding-review + niv-to-phase1</span></div>
+          <p class="hint" style="margin:0 0 8px">Patterns that show up again and again across the sampled corpus rather than once per verse — worth knowing by heart rather than looking up each time.</p>
+          <div class="add-list">
+            <div class="add-item"><b>Bare level 2/3 word (rule 0.2) is by far the most common single error</b> — 85 of 241 errors in the 2026-09-09 200-verse sample. Repeat offenders: prophet, donkey (110 corpus rows), lamb (27), firstborn-X (21), angel, region, kingdom, holy, bull, ox, mat, righteous, neighbor, paralyzed-X, statue, disciple, teacher, redeem, ancestor, descendant, vision, apostle, scripture, chariot, sacrifice, arrest, and more. Three mechanics that trip people up: pairing order is simple/complex ("donkey/animal" fails, "animal/donkey" works); a hyphenated particle verb stays uninflected on the simple side ("take-away/arrested" works, "took-away/arrested" fails); and the rule applies inside pronoun-referent parens too — "I(prophet)" errors exactly like bare "prophet".</div>
+            <div class="add-item"><b>"all" before a non-generic noun (checker:35, rule 0.17)</b> is a top-10 rule on its own — 12–14 errors per 200 verses in the review sample, and 15 errors across just 5 verses in niv-to-phase1's calibration sample. The generic-noun exception is real: "all his(man's) grain" passes, "all the tools" fails.</div>
+            <div class="add-item"><b>Ambiguous part of speech — tag it, don't ignore it.</b> The "_noun"/"_verb"/"_adj"/"_adv"/"_adp"/"_conj" tags are a confirmed real fix, not noise — the tag must be space-preceded, never attached directly to the word.<span class="ex">Exodus 13:13: "first" → "first _adv" — same pattern later confirmed on "low _adv" in 1 Kings 6:6, and on "gold _noun" in 1 Kings 10:16.</span></div>
+            <div class="add-item"><b>Adjective "not used" is a different failure mode from level 2/3.</b> Shows as <span style="font-family:var(--mono)">ontology_status: not used</span>, <span style="font-family:var(--mono)">level: -1</span> — the explication is just the replacement word (e.g. "large" → "Use 'big'"), not a pairing.</div>
+            <div class="add-item"><b>Missing comma before a quote (checker:20).</b> Travels together with the built-in:0 capitalization rule — "Expect a , before a quote_begin clause."</div>
+            <div class="add-item"><b>Hyphenated pseudo-ontology nouns aren't entries.</b> "man-of-God", "river-Habor", "valley-Arnon" look like single ontology terms but the checker looks up the whole hyphenated string — unhyphenate to fix.</div>
+            <div class="add-item"><b>A verb used with a role outside its theta grid.</b> "take-away" is Agent, Patient, (Source) only — never a Destination sense — so "deported X to Assyria" must decompose into two separate events (taken from Israel; forced to go to Assyria).</div>
+            <div class="add-item"><b>Patient must sit immediately after some verbs</b> (buy, give) — Source/Destination/Instrument come after that, not before.</div>
+            <div class="add-item"><b>An unknown proper noun directly after an adposition breaks the adposition itself.</b> Fix with rule 0.23's "named" form and a generic head noun — "in Halah" → "in a town named Halah".</div>
+            <div class="add-item"><b>An over-nested clause inside a patient clause.</b> Some verbs (e.g. "live") reject a different-participant patient clause — lift the descriptive relative out into its own sentence instead.</div>
+            <div class="add-item"><b>"could" outside a so-that clause</b> needs "be able [to ...]" (P1 Checklist 2.1 in the review skill's own numbering — a different scheme from the 0.x checklist above, not yet reconciled).</div>
+            <div class="add-item"><b>Referent drift across a passage (rule 0.36).</b><span class="ex">1 Kings 13:14 vs. 13:16 used different referents for the same person two verses apart.</span></div>
+            <div class="add-item"><b>Notation hygiene, from niv-to-phase1's mechanical pass:</b> a space before every "[", a space after "]"/"."/")"; "_" notes are space-preceded; "|" for literal pairings; only recognized clause notations; brackets balanced.</div>
+          </div>
+        </div>
+
+        <div class="add-block a3">
+          <div class="add-block-head"><h3>Corrected understanding</h3><span class="add-tag">phase1-encoding-review</span></div>
+          <p class="hint" style="margin:0 0 8px">Cases where the working understanding itself turned out to be wrong and had to be revised — not new rules, but corrections to previously-held beliefs about what's fixable.</p>
+          <div class="add-list">
+            <div class="add-item">
+              <b>"Acceptable residual warnings" narrowed from three items to two.</b>
+              <div class="was-now-mini">
+                <span class="k">Was</span><span>Treated the ambiguous-part-of-speech warning as permanently unfixable, alongside absent proper nouns and no-theta-grid-info verbs.</span>
+                <span class="k">Now</span><span>Turned out fixable with a "_adv"-style tag (see the ambiguous-part-of-speech pattern above) — removed from the acceptable-residual list. Only two genuinely unfixable categories remain: real Bible proper nouns absent from the ontology (Halah, Gozan, Habor), and verbs with no theta grid information to check against ("bring-D", "be-Y").</span>
+              </div>
+            </div>
+            <div class="add-item"><b>A quirk worth remembering:</b> the top-level <span style="font-family:var(--mono);font-size:.9em">status</span> field can read "error" even with no error or warning messages actually present in the response — judge by the message list, not the status string alone.</div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+  </div>
+
+  <footer>
+    <span>Corpus: <code>Sources_2026-07-27.tabitha.sqlite</code> — 18,830 rows with a phase&nbsp;1 encoding, held in 40 shuffled slices.</span>
+    <span id="src">Showing the seeded run</span>
+    <span id="picker" hidden></span>
+  </footer>
+</div>
+
+<script id="seed" type="application/json">{
+ "date": "2026-09-09",
+ "seed": 20260909,
+ "n": 200,
+ "status_counts": {
+  "error": 97,
+  "warning": 38,
+  "ok": 65
+ },
+ "clean": 68,
+ "total_errors": 241,
+ "total_warnings": 262,
+ "verses_with_errors": 92,
+ "verses_with_warnings": 89,
+ "transport_errors": 0,
+ "top_rules": [
+  {
+   "rule": "checker:built-in:1 - Check Verb argument structure/case frame",
+   "count": 129,
+   "by_label": {
+    "error": 95,
+    "warning": 34
+   }
+  },
+  {
+   "rule": "checker:built-in:8 - Check for words with ambiguous parts of speech",
+   "count": 97,
+   "by_label": {
+    "warning": 97
+   }
+  },
+  {
+   "rule": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate",
+   "count": 85,
+   "by_label": {
+    "error": 85
+   }
+  },
+  {
+   "rule": "checker:built-in:7 - Check ontology status",
+   "count": 71,
+   "by_label": {
+    "warning": 67,
+    "error": 4
+   }
+  },
+  {
+   "rule": "checker:built-in:2 - Check argument structure/case frame",
+   "count": 30,
+   "by_label": {
+    "warning": 13,
+    "error": 17
+   }
+  },
+  {
+   "rule": "checker:built-in:3 - Check if a Verb has no theta grid information",
+   "count": 27,
+   "by_label": {
+    "warning": 27
+   }
+  },
+  {
+   "rule": "token:syntax",
+   "count": 15,
+   "by_label": {
+    "error": 15
+   }
+  },
+  {
+   "rule": "checker:built-in:6 - Warn user if the word's complexity is ambiguous",
+   "count": 10,
+   "by_label": {
+    "warning": 10
+   }
+  },
+  {
+   "rule": "checker:35 - Use 'all of' rather than 'all' for non-generic Nouns",
+   "count": 6,
+   "by_label": {
+    "error": 6
+   }
+  },
+  {
+   "rule": "checker:32 - Don't allow 'where' as a relativizer",
+   "count": 6,
+   "by_label": {
+    "error": 6
+   }
+  },
+  {
+   "rule": "clause:nesting_depth",
+   "count": 4,
+   "by_label": {
+    "warning": 4
+   }
+  },
+  {
+   "rule": "checker:built-in:9 - Check for a relative clause that might supposed to be a complement clause",
+   "count": 3,
+   "by_label": {
+    "warning": 3
+   }
+  }
+ ],
+ "worst": [
+  {
+   "ref": "1 Kings 10:22",
+   "status": "error",
+   "errors": 11,
+   "warnings": 4,
+   "enc": "Solomon had many ships[that carried goods[that people traded]]. Solomon's ships went to sea with Hiram's ships.  The ships returned to Solomon every three years. The ships brought gold, silver, ivory, apes, and peacocks.",
+   "bt": "Solomon had many ships[ that that carried goods[ that that people traded. Solomon's ships went to sea with Hiram's ships. The ships returned to Solomon every three years. The ships brought gold, silver, ivory, apes, and peacocks.",
+   "msgs": [
+    {
+     "token": "had",
+     "label": "error",
+     "severity": 0,
+     "message": "This use of 'have' does not match any sense in the Ontology. Check other errors and warnings for more information.",
+     "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+    },
+    {
+     "token": "had",
+     "label": "error",
+     "severity": 0,
+     "message": "'have' can never be used with a predicate adjective. Consider using something like 'cause [X to be...]'. Consult its usage in the Ontology.",
+     "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+    },
+    {
+     "token": "many",
+     "label": "error",
+     "severity": 0,
+     "message": "'have' can never be used with a predicate adjective. Consider using something like 'cause [X to be...]'. Consult its usage in the Ontology.",
+     "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+    },
+    {
+     "token": "many",
+     "label": "error",
+     "severity": 0,
+     "message": "Incorrect usage of much-many-A. Check other errors and warnings for more information, and consult the Ontology.",
+     "rule_id": "checker:built-in:2 - Check argument structure/case frame"
+    },
+    {
+     "token": "ships[",
+     "label": "error",
+     "severity": 0,
+     "message": "Missing a space before [.",
+     "rule_id": "token:syntax"
+    },
+    {
+     "token": "ships[",
+     "label": "error",
+     "severity": 0,
+     "message": "much-many-A cannot be used with a different-participant patient clause. Consult the Adjective's Theta Grid usage.",
+     "rule_id": "checker:built-in:2 - Check argument structure/case frame"
+    },
+    {
+     "token": "carried",
+     "label": "error",
+     "severity": 0,
+     "message": "This use of 'carry' does not match any sense in the Ontology. Check other errors and warnings for more information.",
+     "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+    },
+    {
+     "token": "carried",
+     "label": "error",
+     "severity": 0,
+     "message": "'carry' cannot be used with a different-participant patient clause. Consult the Verb's Theta Grid usage.",
+     "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+    }
+   ]
+  },
+  {
+   "ref": "Exodus 20:17",
+   "status": "error",
+   "errors": 9,
+   "warnings": 0,
+   "enc": "You(Israelites) (imp) do not want your(Israelites') neighbor's house. You(Israelites) (imp) do not want your(Israelites') neighbor's wife, your(Israelites') neighbor's male servant, or your(Israelites') neighbor's female servant. You(Israelites) (imp) do not want your(Israelites') neighbor's ox, or your(Israelites') neighbor's donkey, or a thing [that belongs to your(Israelites') neighbor].\"",
+   "bt": "Do not want your neighbor's house. Do not want your neighbor's wife, your neighbor's male servant, or your neighbor's female servant. Do not want your neighbor's ox, or your neighbor's donkey, or a thing that belongs to your neighbor.\"",
+   "msgs": [
+    {
+     "token": "neighbor's",
+     "label": "error",
+     "severity": 0,
+     "message": "Word must be a level 0 or 1. Hover over the word to get pairing or explication hints.",
+     "rule_id": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate"
+    },
+    {
+     "token": "neighbor's",
+     "label": "error",
+     "severity": 0,
+     "message": "Word must be a level 0 or 1. Hover over the word to get pairing or explication hints.",
+     "rule_id": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate"
+    },
+    {
+     "token": "neighbor's",
+     "label": "error",
+     "severity": 0,
+     "message": "Word must be a level 0 or 1. Hover over the word to get pairing or explication hints.",
+     "rule_id": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate"
+    },
+    {
+     "token": "neighbor's",
+     "label": "error",
+     "severity": 0,
+     "message": "Word must be a level 0 or 1. Hover over the word to get pairing or explication hints.",
+     "rule_id": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate"
+    },
+    {
+     "token": "neighbor's",
+     "label": "error",
+     "severity": 0,
+     "message": "Word must be a level 0 or 1. Hover over the word to get pairing or explication hints.",
+     "rule_id": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate"
+    },
+    {
+     "token": "ox",
+     "label": "error",
+     "severity": 0,
+     "message": "Word must be a level 0 or 1. Hover over the word to get pairing or explication hints.",
+     "rule_id": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate"
+    },
+    {
+     "token": "neighbor's",
+     "label": "error",
+     "severity": 0,
+     "message": "Word must be a level 0 or 1. Hover over the word to get pairing or explication hints.",
+     "rule_id": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate"
+    },
+    {
+     "token": "donkey",
+     "label": "error",
+     "severity": 0,
+     "message": "Word must be a level 0 or 1. Hover over the word to get pairing or explication hints.",
+     "rule_id": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate"
+    }
+   ]
+  },
+  {
+   "ref": "Matthew 8:12",
+   "status": "error",
+   "errors": 8,
+   "warnings": 1,
+   "enc": "(complex) But many _implicit sons of the kingdom-B of heaven will be forced by God _implicitActiveAgent [to leave the kingdom-B _implicit]. (simple) But God will refuse [to accept many _implicit Jews [who should be God's people] [(implicit-situational) and who refused [to accept those people’s king [_descriptive who is God]]]]. (literal) Those people will be sent by God _implicitActiveAgent to the dark place [where people _generic will cry/weep] [and where people _generic will bite those people's teeth because of those people's terrible pain _implicit]. (dynamic) Those people will be sent by God _implicitActiveAgent to the dark place [where people _generic will cry/weep] [and where people _generic will much suffer].\"",
+   "bt": "(complex) But <<many>> sons of the kingdom of heaven will be forced <<by God>> to leave <<the kingdom>>. (simple) But God will refuse to accept <<many>> Jews, who should be God's people, <<and who refused to accept those people's king, who is God,>>. (literal) Those people will be sent <<by God>> to the dark place that where people will weep and that where people will bite those people's teeth <<because of those people's terrible pain>>. (dynamic) Those people will be sent <<by God>> to the dark place that where people will weep and that where people will much suffer.\"",
+   "msgs": [
+    {
+     "token": "[",
+     "label": "warning",
+     "severity": 1,
+     "message": "Clause nesting depth exceeds 3 levels. Consider reworking the sentence for clarity.",
+     "rule_id": "clause:nesting_depth"
+    },
+    {
+     "token": "sent",
+     "label": "error",
+     "severity": 0,
+     "message": "This use of 'send' does not match any sense in the Ontology. Check other errors and warnings for more information.",
+     "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+    },
+    {
+     "token": "sent",
+     "label": "error",
+     "severity": 0,
+     "message": "'send' cannot be used with a different-participant patient clause. Consult the Verb's Theta Grid usage.",
+     "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+    },
+    {
+     "token": "[",
+     "label": "error",
+     "severity": 0,
+     "message": "'send' cannot be used with a different-participant patient clause. Consult the Verb's Theta Grid usage.",
+     "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+    },
+    {
+     "token": "where",
+     "label": "error",
+     "severity": 0,
+     "message": "Cannot use 'where' as a relativizer. Use 'the place [that...]' instead.",
+     "rule_id": "checker:32 - Don't allow 'where' as a relativizer"
+    },
+    {
+     "token": "sent",
+     "label": "error",
+     "severity": 0,
+     "message": "This use of 'send' does not match any sense in the Ontology. Check other errors and warnings for more information.",
+     "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+    },
+    {
+     "token": "sent",
+     "label": "error",
+     "severity": 0,
+     "message": "'send' cannot be used with a different-participant patient clause. Consult the Verb's Theta Grid usage.",
+     "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+    },
+    {
+     "token": "[",
+     "label": "error",
+     "severity": 0,
+     "message": "'send' cannot be used with a different-participant patient clause. Consult the Verb's Theta Grid usage.",
+     "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+    }
+   ]
+  },
+  {
+   "ref": "Proverbs 15:19",
+   "status": "error",
+   "errors": 7,
+   "warnings": 0,
+   "enc": "_paragraphOrIndent1 (literal) The path of a lazy person _1 is-X a row of bushes [that have sharp points]. (dynamic) The life of a lazy person _2 is like a path of bushes [that have sharp points]. (literal) But the path of good-B _/righteous people _3 is-X a wide road. (dynamic) But the lives of righteous people _4 are like a wide road [that people _5 (implicit-situational) easily travel on].",
+   "bt": "(literal) The path of a lazy person is a row of bushes that have sharp points. (dynamic) The life of a lazy person is like a path of bushes that have sharp points. (literal) But the path of good people is a wide road. (dynamic) But the lives of righteous people are like a wide road <<that people easily travel on>>.",
+   "msgs": [
+    {
+     "token": "wide",
+     "label": "error",
+     "severity": 0,
+     "message": "This use of 'wide' does not match any sense in the Ontology. Check other errors and warnings for more information.",
+     "rule_id": "checker:built-in:2 - Check argument structure/case frame"
+    },
+    {
+     "token": "wide",
+     "label": "error",
+     "severity": 0,
+     "message": "'wide' cannot be used attributively. Consult the Adjective's Theta Grid usage.",
+     "rule_id": "checker:built-in:2 - Check argument structure/case frame"
+    },
+    {
+     "token": "road",
+     "label": "error",
+     "severity": 0,
+     "message": "'wide' cannot be used attributively. Consult the Adjective's Theta Grid usage.",
+     "rule_id": "checker:built-in:2 - Check argument structure/case frame"
+    },
+    {
+     "token": "righteous",
+     "label": "error",
+     "severity": 0,
+     "message": "Word must be a level 0 or 1. Hover over the word to get pairing or explication hints.",
+     "rule_id": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate"
+    },
+    {
+     "token": "wide",
+     "label": "error",
+     "severity": 0,
+     "message": "This use of 'wide' does not match any sense in the Ontology. Check other errors and warnings for more information.",
+     "rule_id": "checker:built-in:2 - Check argument structure/case frame"
+    },
+    {
+     "token": "wide",
+     "label": "error",
+     "severity": 0,
+     "message": "'wide' cannot be used attributively. Consult the Adjective's Theta Grid usage.",
+     "rule_id": "checker:built-in:2 - Check argument structure/case frame"
+    },
+    {
+     "token": "road",
+     "label": "error",
+     "severity": 0,
+     "message": "'wide' cannot be used attributively. Consult the Adjective's Theta Grid usage.",
+     "rule_id": "checker:built-in:2 - Check argument structure/case frame"
+    }
+   ]
+  },
+  {
+   "ref": "Luke 5:18",
+   "status": "error",
+   "errors": 7,
+   "warnings": 0,
+   "enc": "Some men brought a man [that was not able [to move the man's legs]] to Jesus. These men carried the paralyzed man on a mat to the house [where Jesus was teaching people about God]. These men tried [to carry the paralyzed man into the house] [so that Jesus could see the man].",
+   "bt": "Some men brought a man that was not able to move the man's legs to Jesus. These men carried the paralyzed man on a mat to the house that where Jesus was teaching people about God. These men tried to carry the paralyzed man into the house so that Jesus could see the man.",
+   "msgs": [
+    {
+     "token": "carried",
+     "label": "error",
+     "severity": 0,
+     "message": "This use of 'carry' does not match any sense in the Ontology. Check other errors and warnings for more information.",
+     "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+    },
+    {
+     "token": "carried",
+     "label": "error",
+     "severity": 0,
+     "message": "'carry' cannot be used with a different-participant patient clause. Consult the Verb's Theta Grid usage.",
+     "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+    },
+    {
+     "token": "paralyzed",
+     "label": "error",
+     "severity": 0,
+     "message": "Word must be a level 0 or 1. Hover over the word to get pairing or explication hints.",
+     "rule_id": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate"
+    },
+    {
+     "token": "mat",
+     "label": "error",
+     "severity": 0,
+     "message": "Word must be a level 0 or 1. Hover over the word to get pairing or explication hints.",
+     "rule_id": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate"
+    },
+    {
+     "token": "[",
+     "label": "error",
+     "severity": 0,
+     "message": "'carry' cannot be used with a different-participant patient clause. Consult the Verb's Theta Grid usage.",
+     "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+    },
+    {
+     "token": "where",
+     "label": "error",
+     "severity": 0,
+     "message": "Cannot use 'where' as a relativizer. Use 'the place [that...]' instead.",
+     "rule_id": "checker:32 - Don't allow 'where' as a relativizer"
+    },
+    {
+     "token": "paralyzed",
+     "label": "error",
+     "severity": 0,
+     "message": "Word must be a level 0 or 1. Hover over the word to get pairing or explication hints.",
+     "rule_id": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate"
+    }
+   ]
+  },
+  {
+   "ref": "1 Kings 10:25",
+   "status": "error",
+   "errors": 6,
+   "warnings": 8,
+   "enc": "For many years, every person[who came to Solomon] brought a gift to Solomon. Those people brought gifts[that were made of silver] and gifts[that were made of gold]. Those people brought robes, weapons, and powder [that people put in food [so that the food would taste good]].  Those people also brought horses and mules.",
+   "bt": "For many years, every person[ who came to Solomon brought a gift to Solomon. Those people brought gifts[ that that were made of silver and gifts[ that that were made of gold. Those people brought robes, weapons, and powder that people put in food so that the food would taste good. Those people also brought horses and mules.",
+   "msgs": [
+    {
+     "token": "For",
+     "label": "warning",
+     "severity": 1,
+     "message": "The editor cannot determine which part of speech this word is, so some errors and warnings within the same clause may not be accurate.",
+     "rule_id": "checker:built-in:8 - Check for words with ambiguous parts of speech"
+    },
+    {
+     "token": "person[",
+     "label": "error",
+     "severity": 0,
+     "message": "Missing a space before [.",
+     "rule_id": "token:syntax"
+    },
+    {
+     "token": "came",
+     "label": "error",
+     "severity": 0,
+     "message": "This use of 'come' does not match any sense in the Ontology. Check other errors and warnings for more information.",
+     "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+    },
+    {
+     "token": "brought",
+     "label": "warning",
+     "severity": 1,
+     "message": "'bring-D' has no theta grid information to check with. Double check the expected arguments with a colleague.",
+     "rule_id": "checker:built-in:3 - Check if a Verb has no theta grid information"
+    },
+    {
+     "token": "brought",
+     "label": "warning",
+     "severity": 1,
+     "message": "'bring-D' has no theta grid information to check with. Double check the expected arguments with a colleague.",
+     "rule_id": "checker:built-in:3 - Check if a Verb has no theta grid information"
+    },
+    {
+     "token": "gifts[",
+     "label": "error",
+     "severity": 0,
+     "message": "Missing a space before [.",
+     "rule_id": "token:syntax"
+    },
+    {
+     "token": "were",
+     "label": "warning",
+     "severity": 1,
+     "message": "'be-Y' has no theta grid information to check with. Double check the expected arguments with a colleague.",
+     "rule_id": "checker:built-in:3 - Check if a Verb has no theta grid information"
+    },
+    {
+     "token": "silver",
+     "label": "warning",
+     "severity": 1,
+     "message": "The editor cannot determine which part of speech this word is, so some errors and warnings within the same clause may not be accurate.",
+     "rule_id": "checker:built-in:8 - Check for words with ambiguous parts of speech"
+    }
+   ]
+  },
+  {
+   "ref": "Luke 3:1",
+   "status": "error",
+   "errors": 6,
+   "warnings": 6,
+   "enc": "About twenty years later a man named Tiberius was the emperor of the Roman kingdom. Another man named Pilate was the governor of Judea. A man named Herod was the governor of Galilee. And Herod's brother named Philip was the governor of Iturea and Traconitis. And a man named Lysanias was the governor of Abilene.",
+   "bt": "About twenty years later a man named Tiberius was the emperor of the Roman kingdom. Another man named Pilate was the governor of Judea. A man named Herod was the governor of Galilee. And Herod's brother named Philip was the governor of Iturea and Traconitis. And a man named Lysanias was the governor of Abilene.",
+   "msgs": [
+    {
+     "token": "twenty",
+     "label": "warning",
+     "severity": 1,
+     "message": "The Adjective 'twenty' is not recognized. Consult the How-To document or consider using a different word.",
+     "rule_id": "checker:built-in:7 - Check ontology status"
+    },
+    {
+     "token": "named",
+     "label": "warning",
+     "severity": 1,
+     "message": "The editor cannot determine which part of speech this word is, so some errors and warnings within the same clause may not be accurate.",
+     "rule_id": "checker:built-in:8 - Check for words with ambiguous parts of speech"
+    },
+    {
+     "token": "Tiberius",
+     "label": "warning",
+     "severity": 1,
+     "message": "'Tiberius' is not recognized. Consult the How-To document or consider using a different word.",
+     "rule_id": "checker:built-in:7 - Check ontology status"
+    },
+    {
+     "token": "Tiberius",
+     "label": "warning",
+     "severity": 1,
+     "message": "WARNING: Because this word is not recognized, errors and warnings within the same clause may not be accurate.",
+     "rule_id": "checker:built-in:7 - Check ontology status"
+    },
+    {
+     "token": "was",
+     "label": "warning",
+     "severity": 1,
+     "message": "'be-Y' has no theta grid information to check with. Double check the expected arguments with a colleague.",
+     "rule_id": "checker:built-in:3 - Check if a Verb has no theta grid information"
+    },
+    {
+     "token": "emperor",
+     "label": "error",
+     "severity": 0,
+     "message": "Word must be a level 0 or 1. Hover over the word to get pairing or explication hints.",
+     "rule_id": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate"
+    },
+    {
+     "token": "kingdom",
+     "label": "error",
+     "severity": 0,
+     "message": "Word must be a level 0 or 1. Hover over the word to get pairing or explication hints.",
+     "rule_id": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate"
+    },
+    {
+     "token": "kingdom",
+     "label": "warning",
+     "severity": 1,
+     "message": "This word has multiple senses and ambiguous complexity. Consider including the sense (e.g. kingdom-A).",
+     "rule_id": "checker:built-in:6 - Warn user if the word's complexity is ambiguous"
+    }
+   ]
+  },
+  {
+   "ref": "Joshua 4:5",
+   "status": "error",
+   "errors": 6,
+   "warnings": 3,
+   "enc": "And Joshua said to those men, [\"(imp) You(men) go into the river near the place [where the priests are standing]].  The priests are holding the ark-of-the-covenant. Then (imp) you(men) find 12 large stones. We(people) will get 12 stones [because Israel has 12 tribes]. Each of you(man) should carry one stone on your(man's) shoulder.",
+   "bt": "And Joshua said to those men, \"(imp) You go into the river near the place that where the priests are standing. The priests are holding the ark of the covenant. Then (imp) you find 12 large stones. We will get 12 stones because Israel has 12 tribes. Each of you should carry one stone on your shoulder.",
+   "msgs": [
+    {
+     "token": "go",
+     "label": "error",
+     "severity": 0,
+     "message": "This use of 'go' does not match any sense in the Ontology. Check other errors and warnings for more information.",
+     "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+    },
+    {
+     "token": "go",
+     "label": "error",
+     "severity": 0,
+     "message": "'go' cannot be used with a different-participant patient clause. Consult the Verb's Theta Grid usage.",
+     "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+    },
+    {
+     "token": "[",
+     "label": "error",
+     "severity": 0,
+     "message": "'go' cannot be used with a different-participant patient clause. Consult the Verb's Theta Grid usage.",
+     "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+    },
+    {
+     "token": "where",
+     "label": "error",
+     "severity": 0,
+     "message": "Cannot use 'where' as a relativizer. Use 'the place [that...]' instead.",
+     "rule_id": "checker:32 - Don't allow 'where' as a relativizer"
+    },
+    {
+     "token": "large",
+     "label": "error",
+     "severity": 0,
+     "message": "The Adjective 'large' is not in the Ontology. Hover over the word for hints from the How-To document.",
+     "rule_id": "checker:built-in:7 - Check ontology status"
+    },
+    {
+     "token": "carry",
+     "label": "error",
+     "severity": 0,
+     "message": "This use of 'carry' does not match any sense in the Ontology. Check other errors and warnings for more information.",
+     "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+    },
+    {
+     "token": "one",
+     "label": "warning",
+     "severity": 1,
+     "message": "The editor cannot determine which part of speech this word is, so some errors and warnings within the same clause may not be accurate.",
+     "rule_id": "checker:built-in:8 - Check for words with ambiguous parts of speech"
+    },
+    {
+     "token": "stone",
+     "label": "warning",
+     "severity": 1,
+     "message": "This word has multiple senses and ambiguous complexity. Consider including the sense (e.g. stone-A).",
+     "rule_id": "checker:built-in:6 - Warn user if the word's complexity is ambiguous"
+    }
+   ]
+  },
+  {
+   "ref": "Haggai 1:1",
+   "status": "error",
+   "errors": 6,
+   "warnings": 0,
+   "enc": "(title) Yahweh tells people [to build again in Jerusalem the big building [that Jews honor/worship God in]]. _paragraph In the second year [that king Darius ruled Persia-B _implicit in,] on the first day of the sixth month, Yahweh spoke words to Zerubbabel through the person [who told God's messages to people _generic] named Haggai. At that time _significantTime the son of Shealtiel named Zerubbabel ruled Judah. Yahweh also spoke words to the son of Jozadak named Joshua [who was the chiefest priest] through the person [who told God's messages to people _generic] named Haggai.",
+   "bt": "(title) The LORD tells people to build again in Jerusalem the big building that Jews worship God in. (paragraph) In the second year that king Darius ruled <<Persia>> in, on the first day of the sixth month, the LORD spoke words to Zerubbabel through the person named Haggai who told God's messages to people. At that time the son of Shealtiel named Zerubbabel ruled Judah. The LORD also spoke words to the son of Jozadak named Joshua, who was the chiefest priest, through the person named Haggai who told God's messages to people.",
+   "msgs": [
+    {
+     "token": "tells",
+     "label": "error",
+     "severity": 0,
+     "message": "This use of 'tell' does not match any sense in the Ontology. Check other errors and warnings for more information.",
+     "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+    },
+    {
+     "token": "tells",
+     "label": "error",
+     "severity": 0,
+     "message": "'tell' cannot be used with a same-participant patient clause. This likely should be '[in-order-to...]' or '[so-that...]' instead.",
+     "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+    },
+    {
+     "token": "[",
+     "label": "error",
+     "severity": 0,
+     "message": "'tell' cannot be used with a same-participant patient clause. This likely should be '[in-order-to...]' or '[so-that...]' instead.",
+     "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+    },
+    {
+     "token": "build",
+     "label": "error",
+     "severity": 0,
+     "message": "This use of 'build' does not match any sense in the Ontology. Check other errors and warnings for more information.",
+     "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+    },
+    {
+     "token": "spoke",
+     "label": "error",
+     "severity": 0,
+     "message": "This use of 'speak' does not match any sense in the Ontology. Check other errors and warnings for more information.",
+     "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+    },
+    {
+     "token": "spoke",
+     "label": "error",
+     "severity": 0,
+     "message": "This use of 'speak' does not match any sense in the Ontology. Check other errors and warnings for more information.",
+     "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+    }
+   ]
+  },
+  {
+   "ref": "Daniel 11:11",
+   "status": "error",
+   "errors": 6,
+   "warnings": 0,
+   "enc": "Then the king of the south region will be angry. That king will go to the north region [in order to fight the king of the north region]. The king of the north region will gather a big army. But the king of the south region will defeat the army of the king of the north region.",
+   "bt": "Then the king of the south region will be angry. That king will go to the north region in order to fight the king of the north region. The king of the north region will gather a big army. But the king of the south region will defeat the army of the king of the north region.",
+   "msgs": [
+    {
+     "token": "region",
+     "label": "error",
+     "severity": 0,
+     "message": "Word must be a level 0 or 1. Hover over the word to get pairing or explication hints.",
+     "rule_id": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate"
+    },
+    {
+     "token": "region",
+     "label": "error",
+     "severity": 0,
+     "message": "Word must be a level 0 or 1. Hover over the word to get pairing or explication hints.",
+     "rule_id": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate"
+    },
+    {
+     "token": "region",
+     "label": "error",
+     "severity": 0,
+     "message": "Word must be a level 0 or 1. Hover over the word to get pairing or explication hints.",
+     "rule_id": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate"
+    },
+    {
+     "token": "region",
+     "label": "error",
+     "severity": 0,
+     "message": "Word must be a level 0 or 1. Hover over the word to get pairing or explication hints.",
+     "rule_id": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate"
+    },
+    {
+     "token": "region",
+     "label": "error",
+     "severity": 0,
+     "message": "Word must be a level 0 or 1. Hover over the word to get pairing or explication hints.",
+     "rule_id": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate"
+    },
+    {
+     "token": "region",
+     "label": "error",
+     "severity": 0,
+     "message": "Word must be a level 0 or 1. Hover over the word to get pairing or explication hints.",
+     "rule_id": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate"
+    }
+   ]
+  },
+  {
+   "ref": "Daniel 4:15",
+   "status": "error",
+   "errors": 6,
+   "warnings": 0,
+   "enc": "But you(angels) (imp) allow [the roots of the tree to be in the ground]. You(angels) (imp) tie the tree with chains of iron and chains of bronze. You(angels) (imp) allow [the dew [that comes from the sky] to be on the tree]. You(angels) (imp) make [the tree live in a field with animals].",
+   "bt": "But allow the roots of the tree to be in the ground. Tie the tree with chains of iron and chains of bronze. Allow the dew that comes from the sky to be on the tree. Make that the tree live in a field with animals.",
+   "msgs": [
+    {
+     "token": "angels",
+     "label": "error",
+     "severity": 0,
+     "message": "Word must be a level 0 or 1. Hover over the word to get pairing or explication hints.",
+     "rule_id": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate"
+    },
+    {
+     "token": "angels",
+     "label": "error",
+     "severity": 0,
+     "message": "Word must be a level 0 or 1. Hover over the word to get pairing or explication hints.",
+     "rule_id": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate"
+    },
+    {
+     "token": "bronze",
+     "label": "error",
+     "severity": 0,
+     "message": "Word must be a level 0 or 1. Hover over the word to get pairing or explication hints.",
+     "rule_id": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate"
+    },
+    {
+     "token": "angels",
+     "label": "error",
+     "severity": 0,
+     "message": "Word must be a level 0 or 1. Hover over the word to get pairing or explication hints.",
+     "rule_id": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate"
+    },
+    {
+     "token": "dew",
+     "label": "error",
+     "severity": 0,
+     "message": "Word must be a level 0 or 1. Hover over the word to get pairing or explication hints.",
+     "rule_id": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate"
+    },
+    {
+     "token": "angels",
+     "label": "error",
+     "severity": 0,
+     "message": "Word must be a level 0 or 1. Hover over the word to get pairing or explication hints.",
+     "rule_id": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate"
+    }
+   ]
+  },
+  {
+   "ref": "1 Samuel 6:18",
+   "status": "error",
+   "errors": 5,
+   "warnings": 7,
+   "enc": "And the Philistines also sent five gold rats to the Israelites. The five Philistine rulers owned five towns.  Those towns had strong walls.  And villages were near those towns. So each town sent one gold rat to the Israelites.  The Israelites put the Ark-of-the-Covenant on the big rock.  That rock is still at that place today. That rock is in the field of Joshua [who lived in Beth-Shemesh].",
+   "bt": "And the Philistines also sent five gold rats to the Israelites. The five Philistine rulers owned five towns. Those towns had strong walls. And villages were near those towns. So each town sent one gold rat to the Israelites. The Israelites put the Ark of the Covenant on the big rock. That rock is still at that place today. That rock is in the field of Joshua, who lived in Beth Shemesh.",
+   "msgs": [
+    {
+     "token": "five",
+     "label": "warning",
+     "severity": 1,
+     "message": "The Adjective 'five' is not recognized. Consult the How-To document or consider using a different word.",
+     "rule_id": "checker:built-in:7 - Check ontology status"
+    },
+    {
+     "token": "five",
+     "label": "warning",
+     "severity": 1,
+     "message": "The Adjective 'five' is not recognized. Consult the How-To document or consider using a different word.",
+     "rule_id": "checker:built-in:7 - Check ontology status"
+    },
+    {
+     "token": "five",
+     "label": "warning",
+     "severity": 1,
+     "message": "The Adjective 'five' is not recognized. Consult the How-To document or consider using a different word.",
+     "rule_id": "checker:built-in:7 - Check ontology status"
+    },
+    {
+     "token": "sent",
+     "label": "error",
+     "severity": 0,
+     "message": "This use of 'send' does not match any sense in the Ontology. Check other errors and warnings for more information.",
+     "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+    },
+    {
+     "token": "one",
+     "label": "warning",
+     "severity": 1,
+     "message": "The editor cannot determine which part of speech this word is, so some errors and warnings within the same clause may not be accurate.",
+     "rule_id": "checker:built-in:8 - Check for words with ambiguous parts of speech"
+    },
+    {
+     "token": "put",
+     "label": "error",
+     "severity": 0,
+     "message": "Incorrect usage of put-A. Check other errors and warnings for more information, and consult the Ontology.",
+     "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+    },
+    {
+     "token": "Ark-of-the-Covenant",
+     "label": "warning",
+     "severity": 1,
+     "message": "'Ark-of-the-Covenant' is not recognized. Consult the How-To document or consider using a different word.",
+     "rule_id": "checker:built-in:7 - Check ontology status"
+    },
+    {
+     "token": "Ark-of-the-Covenant",
+     "label": "warning",
+     "severity": 1,
+     "message": "WARNING: Because this word is not recognized, errors and warnings within the same clause may not be accurate.",
+     "rule_id": "checker:built-in:7 - Check ontology status"
+    }
+   ]
+  }
+ ]
+}</script>
+<script id="seed-suggestions" type="application/json">[
+ {
+  "date": "2026-09-10",
+  "systemic_note": "The 'all'/'all of' gap and the missing-space-before-'[' gap both look corpus-wide rather than verse-local — 5 and 14 verses respectively in this 200-verse sample. Both are detectable with a regex sweep over all 18,830 rows and fixable without judgment calls.",
+  "corrections": [
+   {
+    "ref": "Genesis 8:17",
+    "niv": "Bring out every kind of living creature that is with you—the birds, the animals, and all the creatures that move along the ground—so they can multiply on the earth and be fruitful and increase in number upon it.",
+    "original_errors": 6,
+    "suggested_status": "ok",
+    "suggested": "You(Noah) (imp) bring all of the animals with you(Noah).  You(Noah) (imp) bring all of the birds, all of the animals, and all of the animals [that move on the ground].  You(Noah) (imp) allow [all of these animals to live] [so-that the animals will have many children].\"",
+    "changes": [
+     {
+      "was": "all the animals / all the birds / all these animals (5×)",
+      "now": "all of the animals / all of the birds / all of these animals",
+      "reason": "checker:35 — P1 Checklist 0.17 requires 'all of' unless the modified Noun is generic. A definite ('the') or demonstrative ('these') determiner makes it non-generic, so 'of' is obligatory at every one of the five sites. One rule, five separate tokens — the checker reports each individually."
+     },
+     {
+      "was": "[that crawl on the ground]",
+      "now": "[that move on the ground]",
+      "reason": "built-in:4 — 'crawl-A' is level 2. /simplification_hints gives the explication \"X goes//moves on X's hands and X's knees\"; the anatomical explication is wrong for animals generally, so the level-1 head verb 'move' from that same explication is used directly. This is a slight generalization — it loses the manner of locomotion; the alternative (full explication per animal type) is heavy for a list clause, flagged for review."
+     }
+    ],
+    "note": "Residual warnings: none.",
+    "ai_assist": {
+     "phase_1": "You(Noah) (imp) lead-A every kind of creature [that is alive-A] [that is with you(Noah)] out. Those creatures are birds, animals, and all creatures [that move-A on the ground]. You(Noah) do this so-that those creatures are able [to produce-A many descendants on the earth]. Also, you(Noah) do this so-that those creatures are able [to produce-A many descendants]. Also, you(Noah) do this so-that those creatures are able [to increase-A on the earth].",
+     "notes": [
+      "Replaced 'bring-out' with 'lead-A ... out' to use a recognized verb.",
+      "Replaced 'living' with 'alive-A' to avoid ontology errors with 'live'.",
+      "Replaced 'can' with 'be able [to...]' as required by the checklist.",
+      "Replaced 'multiply' and 'offspring' with 'produce-A many descendants' to use level 0/1 words.",
+      "Replaced 'become' with 'increase-A' to avoid ontology errors.",
+      "Split the purpose clauses into separate sentences to avoid nested independent clause errors."
+     ],
+     "check_status": "error",
+     "back_translation": "Lead every kind of creature that is alive that is with you out. Those creatures are birds, animals, and all creatures that move on the ground. You do this so that those creatures are able to produce many descendants on the earth. Also, you do this so that those creatures are able to produce many descendants. Also, you do this so that those creatures are able to increase on the earth.",
+     "messages": [
+      {
+       "token": "out",
+       "label": "warning",
+       "message": "'out' is not recognized. Consult the How-To document or consider using a different word.",
+       "rule_id": "checker:built-in:7 - Check ontology status"
+      },
+      {
+       "token": "out",
+       "label": "warning",
+       "message": "WARNING: Because this word is not recognized, errors and warnings within the same clause may not be accurate.",
+       "rule_id": "checker:built-in:7 - Check ontology status"
+      },
+      {
+       "token": "so-that",
+       "label": "warning",
+       "message": "The editor cannot determine which part of speech this word is, so some errors and warnings within the same clause may not be accurate.",
+       "rule_id": "checker:built-in:8 - Check for words with ambiguous parts of speech"
+      },
+      {
+       "token": "descendants",
+       "label": "error",
+       "message": "Word must be a level 0 or 1. Hover over the word to get pairing or explication hints.",
+       "rule_id": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate"
+      },
+      {
+       "token": "so-that",
+       "label": "warning",
+       "message": "The editor cannot determine which part of speech this word is, so some errors and warnings within the same clause may not be accurate.",
+       "rule_id": "checker:built-in:8 - Check for words with ambiguous parts of speech"
+      },
+      {
+       "token": "descendants",
+       "label": "error",
+       "message": "Word must be a level 0 or 1. Hover over the word to get pairing or explication hints.",
+       "rule_id": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate"
+      },
+      {
+       "token": "so-that",
+       "label": "warning",
+       "message": "The editor cannot determine which part of speech this word is, so some errors and warnings within the same clause may not be accurate.",
+       "rule_id": "checker:built-in:8 - Check for words with ambiguous parts of speech"
+      }
+     ],
+     "collapsed_count": 11
+    }
+   },
+   {
+    "ref": "Joshua 16:3",
+    "niv": "descended westward to the territory of the Japhletites as far as the region of Lower Beth Horon and on to Gezer, ending at the sea.",
+    "original_errors": 5,
+    "original_warnings": 1,
+    "suggested_status": "ok",
+    "suggested": "Then the border went to the area/region [that the Japhletites were living _verb in]. Then the border went to Lower-Beth-Horon, Gezer, and the sea-Mediterranean.",
+    "changes": [
+     {
+      "was": "[where the Japhletites were living]",
+      "now": "[that the Japhletites were living _verb in]",
+      "reason": "checker:32 — 'where' is not a legal relativizer; the rule requires the 'that … <adposition>' form with the preposition clause-final."
+     },
+     {
+      "was": "the region",
+      "now": "the area/region",
+      "reason": "built-in:4 — 'region-A' is level 2. /simplification_hints gives pairing 'area or place'; pairing order is simple/complex, so 'area/region'."
+     },
+     {
+      "was": "living",
+      "now": "living _verb",
+      "reason": "built-in:8 — the editor could not resolve the part of speech; the '_verb' tag (a separate, space-preceded token) resolves it."
+     }
+    ],
+    "note": "Four of the five original errors were cascade: the malformed 'where' relative was parsed as a patient clause on 'go', producing two 'different-participant patient clause' errors plus a bracket-level repeat — all three cleared on the relativizer fix alone, with no change to the verb. The backtranslation was the tell: \"the region that where the Japhletites were living\". Residual warnings: none.",
+    "ai_assist": {
+     "phase_1": "The border-line extended-A to the west to the land of the Japhletite people to the town of Lower-Beth-Horon. And the border-line extended-A to Gezer. And the border-line ended-A at the sea.",
+     "notes": [
+      "Replaced 'boundary' with 'border-line' which is the standard ontology term.",
+      "Replaced 'went-down' and 'continued-A' with 'extended-A' to describe the path of the border-line.",
+      "Replaced 'westward' with 'to the west'.",
+      "Replaced 'territory' with 'land' and 'region' with 'town' (since Beth-Horon is a town).",
+      "Hyphenated 'Lower-Beth-Horon' as a single proper noun.",
+      "Replaced 'as far as' with 'to'.",
+      "Replaced 'Mediterranean Sea' with 'sea'."
+     ],
+     "check_status": "error",
+     "back_translation": "The border line extended to the west to the land of the Japhletite people to the town of Lower Beth Horon. And the border line extended to Gezer. And the border line ended at the sea.",
+     "messages": [
+      {
+       "token": "border-line",
+       "label": "warning",
+       "message": "'border-line' is not recognized. Consult the How-To document or consider using a different word.",
+       "rule_id": "checker:built-in:7 - Check ontology status"
+      },
+      {
+       "token": "border-line",
+       "label": "warning",
+       "message": "WARNING: Because this word is not recognized, errors and warnings within the same clause may not be accurate.",
+       "rule_id": "checker:built-in:7 - Check ontology status"
+      },
+      {
+       "token": "extended-A",
+       "label": "warning",
+       "message": "'extended-A' is not recognized. Consult the How-To document or consider using a different word.",
+       "rule_id": "checker:built-in:7 - Check ontology status"
+      },
+      {
+       "token": "extended-A",
+       "label": "warning",
+       "message": "WARNING: Because this word is not recognized, errors and warnings within the same clause may not be accurate.",
+       "rule_id": "checker:built-in:7 - Check ontology status"
+      },
+      {
+       "token": "border-line",
+       "label": "warning",
+       "message": "'border-line' is not recognized. Consult the How-To document or consider using a different word.",
+       "rule_id": "checker:built-in:7 - Check ontology status"
+      },
+      {
+       "token": "border-line",
+       "label": "warning",
+       "message": "WARNING: Because this word is not recognized, errors and warnings within the same clause may not be accurate.",
+       "rule_id": "checker:built-in:7 - Check ontology status"
+      },
+      {
+       "token": "extended-A",
+       "label": "warning",
+       "message": "'extended-A' is not recognized. Consult the How-To document or consider using a different word.",
+       "rule_id": "checker:built-in:7 - Check ontology status"
+      },
+      {
+       "token": "extended-A",
+       "label": "warning",
+       "message": "WARNING: Because this word is not recognized, errors and warnings within the same clause may not be accurate.",
+       "rule_id": "checker:built-in:7 - Check ontology status"
+      }
+     ],
+     "collapsed_count": 7
+    }
+   },
+   {
+    "ref": "1 Kings 10:16",
+    "niv": "King Solomon made two hundred large shields of hammered gold; six hundred bekas of gold went into each shield.",
+    "original_errors": 5,
+    "original_warnings": 1,
+    "suggested_status": "ok",
+    "suggested": "The people [who worked for the king named Solomon] made 200 big pieces of metal [that soldiers hold [in order to protect those soldiers]] with gold _noun [that people had hit with a hammer]. Each board-A/shield weighed 7 kilograms.  (footnote) The amount of gold is 600 shekels in Hebrew.",
+    "changes": [
+     {
+      "was": "gold[that people had hit",
+      "now": "gold _noun [that people had hit",
+      "reason": "token:syntax — missing a space before '['. The unspaced token also left 'gold''s part of speech unresolved (built-in:8), so the '_noun' tag is added in the same fix."
+     },
+     {
+      "was": "large",
+      "now": "big",
+      "reason": "built-in:7 — /simplification_hints returns ontology_status: not used, level: -1, explication \"Use 'big'\". A straight substitution, not a pairing — the word simply isn't in the ontology."
+     },
+     {
+      "was": "Each shield",
+      "now": "Each board-A/shield",
+      "reason": "built-in:4 — 'shield-A' is level 2; the hint says \"Or pair with 'board-A'\", so the pairing (simple/complex) is used."
+     },
+     {
+      "was": "for King Solomon",
+      "now": "for the king named Solomon",
+      "reason": "built-in:7 — capitalized 'King' is not an ontology Noun. Rule 0.23's 'named' form with a generic head noun resolves it."
+     },
+     {
+      "was": "made ... with gold (left untouched)",
+      "now": "(no change)",
+      "reason": "Both the 'make' case-frame and 'with' argument-structure errors were cascade from the unspaced 'gold[' token and disappeared untouched once that token was fixed — not a genuine theta-grid fault. The Source-vs-Instrument rewrite ('from gold') the errors seemed to call for would have been a wrong, meaning-changing fix; isolating before re-picking a verb sense caught this."
+     }
+    ],
+    "note": "Residual warnings: none.",
+    "ai_assist": {
+     "phase_1": "King Solomon made-A 200 big-A shields/armor-A from gold-A [which an artisan/worker-A beat-A]. An artisan/worker-A used-A 600 beka-A [literalunits] (3.4 kilogram-A [modernunits]) of gold-A [in-order-to make-A each shield/armor-A].",
+     "notes": [
+      "Replaced 'large' with 'big-A' because 'large' is not in the ontology.",
+      "Paired 'shield' as 'shield/armor-A' because 'shield' is not a level 0 or 1 word.",
+      "Replaced 'craftsman' with 'artisan/worker-A' and 'hammered' with 'beat-A' to resolve ontology errors.",
+      "Replaced the slash '/' in the literal/modern units with parentheses to avoid the complex pairing error.",
+      "Added senses to 'make', 'gold', 'use', 'beka', and 'kilogram'."
+     ],
+     "check_status": "error",
+     "back_translation": "King Solomon made 200 big armor from gold that which an worker beat. An worker used 600 beka that literalunits (3.4 kilogram that modernunits ]) of gold in order to make each armor.",
+     "messages": [
+      {
+       "token": "made-A",
+       "label": "error",
+       "message": "Incorrect usage of make-A. Check other errors and warnings for more information, and consult the Ontology.",
+       "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+      },
+      {
+       "token": "shields",
+       "label": "error",
+       "message": "Word must be a level 0 or 1. Hover over the word to get pairing or explication hints.",
+       "rule_id": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate"
+      },
+      {
+       "token": "gold-A",
+       "label": "warning",
+       "message": "The editor cannot determine which part of speech this word is, so some errors and warnings within the same clause may not be accurate.",
+       "rule_id": "checker:built-in:8 - Check for words with ambiguous parts of speech"
+      },
+      {
+       "token": "[",
+       "label": "error",
+       "message": "make-A cannot be used with a different-participant patient clause. Consult the Verb's Theta Grid usage.",
+       "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+      },
+      {
+       "token": "artisan",
+       "label": "warning",
+       "message": "'artisan' is not recognized. Consult the How-To document or consider using a different word.",
+       "rule_id": "checker:built-in:7 - Check ontology status"
+      },
+      {
+       "token": "artisan",
+       "label": "warning",
+       "message": "WARNING: Because this word is not recognized, errors and warnings within the same clause may not be accurate.",
+       "rule_id": "checker:built-in:7 - Check ontology status"
+      },
+      {
+       "token": "beat-A",
+       "label": "error",
+       "message": "Incorrect usage of beat-A. Check other errors and warnings for more information, and consult the Ontology.",
+       "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+      },
+      {
+       "token": "artisan",
+       "label": "warning",
+       "message": "'artisan' is not recognized. Consult the How-To document or consider using a different word.",
+       "rule_id": "checker:built-in:7 - Check ontology status"
+      }
+     ],
+     "collapsed_count": 16
+    }
+   }
+  ]
+ },
+ {
+  "date": "2026-09-09",
+  "corrections": [
+   {
+    "ref": "Matthew 23:35",
+    "niv": "And so upon you will come all the righteous blood that has been shed on earth, from the blood of righteous Abel to the blood of Zechariah son of Berekiah, whom you murdered between the temple and the altar.",
+    "original_errors": 14,
+    "original_warnings": 23,
+    "suggested_status": "ok",
+    "suggested": "You(Pharisees) and your(Pharisees') parents/ancestors killed all of the good/righteous people. So you(Pharisees) are guilty. You(Pharisees) killed good/righteous Abel. You(Pharisees) also killed Zechariah [_descriptive who was the son of Berekiah] between the big building of Jerusalem [that Jews honor/worship God in] and the structure [on which people give gifts/sacrifices to God]. And you(Pharisees) killed all of the good/righteous people [who lived between Abel's time and Zechariah's time].",
+    "changes": [
+     {
+      "was": "guilty-A [you(scribes) killing ...] (×4)",
+      "now": "... killed ... — followed by a separate sentence: \"So you(Pharisees) are guilty.\"",
+      "reason": "guilty-A's theta grid is never used predicatively with a different-participant clausal argument, so a bracketed clause after it can never validate; decomposing into a plain 'killed' clause plus a standalone 'So you(Pharisees) are guilty.' sentence clears all four errors."
+     },
+     {
+      "was": "you(scribes)",
+      "now": "you(Pharisees)",
+      "reason": "'scribes' is not in the ontology; the unrecognized noun cascaded into all four kill-A errors on the same clauses. 'Pharisees' validates and is the addressee Matthew 23 actually names."
+     },
+     {
+      "was": "killing (×4)",
+      "now": "killed",
+      "reason": "P1 Checklist rule 0.31 — no participles or gerunds."
+     },
+     {
+      "was": "all the good/righteous people (×2)",
+      "now": "all of the good/righteous people",
+      "reason": "checker:35 — P1 Checklist rule 0.17: 'all of' is required unless the modified Noun is generic."
+     }
+    ],
+    "note": "The obvious alternative to decomposing the guilty-A clause, guilty-B ('to be guilty of doing something', same-participant clausal argument), was tried in every clausal form — present, past, be, feel, and the exact shape 1 John 3:20 uses in the corpus — and failed every time; its case frame appears broken in the checker itself, so the decomposition above is a workaround rather than the ideal encoding, worth raising with whoever maintains the checker.",
+    "ai_assist": {
+     "phase_1": "Therefore God will punish you-plural [because people killed all of the good people on-A the earth]. (dynamic) Therefore all of the blood of the good people [whom people killed on-A the earth] will come-A on-A you-plural. (literal) This includes the blood of good Abel and the blood of Zechariah [who was the son of Berekiah] [whom you-plural killed between-A the temple and the altar-A].",
+     "notes": [
+      "Replaced 'you(plural)' with 'you-plural' to match TBTA pronoun conventions.",
+      "Replaced 'shed' with 'killed' to use a valid ontology verb.",
+      "Replaced 'righteous' with 'good' to use a level 0/1 adjective.",
+      "Changed 'all the' to 'all of the' to satisfy the quantifier rule.",
+      "Replaced 'upon' with 'on-A'.",
+      "Replaced 'murdered-A' with 'killed'.",
+      "Replaced 'between' with 'between-A'.",
+      "Replaced 'temple-building' with 'temple'.",
+      "Replaced 'altar' with 'altar-A'."
+     ],
+     "check_status": "error",
+     "back_translation": "Therefore God will punish you plural because people killed all of the good people on the earth. (dynamic) Therefore all of the blood of the good people whom people killed on the earth will come on you plural. (literal) This includes the blood of good Abel and the blood of Zechariah, who was the son of Berekiah, whom you plural killed between the temple and the altar.",
+     "messages": [
+      {
+       "token": "you-plural",
+       "label": "warning",
+       "message": "'you-plural' is not recognized. Consult the How-To document or consider using a different word.",
+       "rule_id": "checker:built-in:7 - Check ontology status"
+      },
+      {
+       "token": "you-plural",
+       "label": "warning",
+       "message": "WARNING: Because this word is not recognized, errors and warnings within the same clause may not be accurate.",
+       "rule_id": "checker:built-in:7 - Check ontology status"
+      },
+      {
+       "token": "on-A",
+       "label": "error",
+       "message": "Incorrect usage of on-A. Check other errors and warnings for more information, and consult the Ontology.",
+       "rule_id": "checker:built-in:2 - Check argument structure/case frame"
+      },
+      {
+       "token": "you-plural",
+       "label": "warning",
+       "message": "'you-plural' is not recognized. Consult the How-To document or consider using a different word.",
+       "rule_id": "checker:built-in:7 - Check ontology status"
+      },
+      {
+       "token": "you-plural",
+       "label": "warning",
+       "message": "WARNING: Because this word is not recognized, errors and warnings within the same clause may not be accurate.",
+       "rule_id": "checker:built-in:7 - Check ontology status"
+      },
+      {
+       "token": "you-plural",
+       "label": "warning",
+       "message": "'you-plural' is not recognized. Consult the How-To document or consider using a different word.",
+       "rule_id": "checker:built-in:7 - Check ontology status"
+      },
+      {
+       "token": "you-plural",
+       "label": "warning",
+       "message": "WARNING: Because this word is not recognized, errors and warnings within the same clause may not be accurate.",
+       "rule_id": "checker:built-in:7 - Check ontology status"
+      },
+      {
+       "token": "killed",
+       "label": "warning",
+       "message": "Incorrect usage of kill-A. Check other errors and warnings for more information, and consult the Ontology.",
+       "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+      }
+     ],
+     "collapsed_count": 11
+    }
+   },
+   {
+    "ref": "1 Kings 8:58",
+    "niv": "May he turn our hearts to him, to walk in all his ways and to keep the commands, decrees and regulations he gave our fathers.",
+    "original_errors": 13,
+    "suggested_status": "ok",
+    "suggested": "I(Solomon) pray-hope [that Yahweh will cause [our(people) to love Yahweh with all of our(people's) hearts]]. I(Solomon) pray-hope [that Yahweh will cause [our(people) to follow Yahweh completely]]. Then we(people) will live [just-like Yahweh wants [us(people) to live]]. We(people) will do all of the things [that Yahweh's commands and Yahweh's rules say]. We(people) will do all of the things [that Yahweh said with authority]. Yahweh said these things to our(people's) parents/ancestors.",
+    "changes": [
+     {
+      "was": "things[",
+      "now": "things [",
+      "reason": "token:syntax — missing a space before '['. This was the root cause of 6 of the verse's 13 errors — 'things[' parsed as one unknown token, producing 'Incorrect usage of do-A', 'do-A cannot be used with a predicate Adjective', and 'do-A cannot be used with a different-participant patient clause' twice over."
+     },
+     {
+      "was": "(alt)",
+      "now": "(removed)",
+      "reason": "token:syntax — this clause notation is not recognized; not a valid marker. The two sentences stand as alternates without it."
+     },
+     {
+      "was": "commandments",
+      "now": "commands",
+      "reason": "built-in:4 — 'commandment' is L2; the ontology pairing is 'command'."
+     },
+     {
+      "was": "ancestors",
+      "now": "parents/ancestors",
+      "reason": "built-in:4 — 'ancestor' is L2; ontology pairing 'parent/ancestor', simple word first."
+     },
+     {
+      "was": "all our(people's) hearts",
+      "now": "all of our(people's) hearts",
+      "reason": "checker:35 — P1 Checklist 0.17: 'all of' unless the modified Noun is generic."
+     },
+     {
+      "was": "that Yahweh's said with authority",
+      "now": "that Yahweh said with authority",
+      "reason": "token:syntax — stray possessive 's' attached to a finite verb."
+     }
+    ],
+    "note": "Isolating 'We(people) will do all of the things [that Yahweh's commands say].' returns clean, confirming all six errors from the missing space were cascades from one whitespace character.",
+    "ai_assist": {
+     "phase_1": "God (jussive) incline-A our(Israelites') hearts(heart-B) to God [so that we(Israelites) will walk-B in all God's ways(way-B)] [and so that we(Israelites) will obey-A the commands(command-A), the laws(law-A), and the rules(rule-A) [which God gave-B to our(Israelites') fathers(father-A)]].",
+     "notes": [
+      "Changed 'turn-C' to 'incline-A' to correctly express the metaphorical turning of hearts, with 'heart-B' as the patient.",
+      "Replaced 'decrees' and 'regulations' with the level 0/1 words 'laws(law-A)' and 'rules(rule-A)'.",
+      "Changed 'gave-A' to 'gave-B' because laws/commands are non-physical entities.",
+      "Replaced 'ancestors' with 'fathers(father-A)' to use a level 0/1 word that matches the source text 'fathers'."
+     ],
+     "check_status": "error",
+     "back_translation": "Let (jussive) god incline our hearts to God so that we will walk in all God's ways and so that we will obey the commands, the laws, and the rules which God gave to our fathers.",
+     "messages": [
+      {
+       "token": "incline-A",
+       "label": "warning",
+       "message": "'incline-A' is not recognized. Consult the How-To document or consider using a different word.",
+       "rule_id": "checker:built-in:7 - Check ontology status"
+      },
+      {
+       "token": "incline-A",
+       "label": "warning",
+       "message": "WARNING: Because this word is not recognized, errors and warnings within the same clause may not be accurate.",
+       "rule_id": "checker:built-in:7 - Check ontology status"
+      }
+     ],
+     "collapsed_count": 7
+    }
+   },
+   {
+    "ref": "Colossians 3:11",
+    "niv": "Here there is no Greek or Jew, circumcised or uncircumcised, barbarian, Scythian, slave or free, but Christ is all, and is in all.",
+    "original_errors": 13,
+    "original_warnings": 4,
+    "suggested_status": "ok",
+    "suggested": "[Because God gave a new life to you(people)] [you(person) are a Jew] is-V not important. And [you(person) are not a Jew] is-V not important. And [your(person's) skin [that is on the end of the person's penis] was cut-off by a person] is-V not important. And [your(person's) skin [that is on the end of the person's penis] was not cut-off by a person] is-V not important. [You(person) are from another/foreign country] is-V not important. And [the people of your(person's) country are violent] is-V not important. [You(person) are a slave] is-V not important. And [you(person) are not a slave] is-V not important. But Christ _emphasized is most important. And Christ lives in all of you(people) _necessaryImplicit.",
+    "changes": [
+     {
+      "was": "gave to you(people) a new life",
+      "now": "gave a new life to you(people)",
+      "reason": "built-in:1 — 'give' requires the Patient to immediately follow the Verb, with 'to X' for the destination — the checker states this in its message text. Same fault as 'buy-A' in Exodus 13:13."
+     },
+     {
+      "was": "[A] [or B] is-V not important (×3)",
+      "now": "split into two separate sentences each",
+      "reason": "built-in:1 — 'be-V' rejects a different-participant patient clause. A single bracketed clause subject validates ('[You(person) are a Jew] is-V not important.' returns ok) — it's the coordinate '[or ...]' second clause that breaks it."
+     },
+     {
+      "was": "foreskin (×2)",
+      "now": "skin [that is on the end of the person's penis]",
+      "reason": "built-in:4 — 'foreskin' is L2; ontology explication used verbatim."
+     },
+     {
+      "was": "cut off (×2)",
+      "now": "cut-off",
+      "reason": "Checker: \"'off' must be hyphenated with the Verb (i.e. cut-off). DO NOT inflect the Verb.\""
+     }
+    ],
+    "ai_assist": {
+     "phase_1": "At this place, Greek-prop people and Jewish-prop people are not different-A. People who have circumcision and people who do not have circumcision are not different-A. Barbarian-A people, Scythian-prop people, slaves, and free-A people are not different-A. But Christ is everything, and Christ lives in all people who trust in Christ.",
+     "notes": [
+      "Replaced 'circumcised' and 'uncircumcised' with 'people who have circumcision' and 'people who do not have circumcision' to use level 1 nouns.",
+      "Replaced 'Uncivilized' with 'Barbarian-A' and 'Scythian' with 'Scythian-prop' to resolve unrecognized word warnings.",
+      "Specified 'free-A' as an adjective to resolve part-of-speech ambiguity.",
+      "Changed 'everything-A' to the pronoun 'everything'.",
+      "Replaced 'believers' with 'people who trust in Christ' to use level 1 words."
+     ],
+     "check_status": "error",
+     "back_translation": "At this place, Greek prop people and Jewish prop people are not different. People who have circumcision and people who do not have circumcision are not different. Barbarian people, Scythian prop people, slaves, and free people are not different. But Christ is everything, and Christ lives in all people who trust in Christ.",
+     "messages": [
+      {
+       "token": "Greek-prop",
+       "label": "warning",
+       "message": "'Greek-prop' is not recognized. Consult the How-To document or consider using a different word.",
+       "rule_id": "checker:built-in:7 - Check ontology status"
+      },
+      {
+       "token": "Greek-prop",
+       "label": "warning",
+       "message": "WARNING: Because this word is not recognized, errors and warnings within the same clause may not be accurate.",
+       "rule_id": "checker:built-in:7 - Check ontology status"
+      },
+      {
+       "token": "Jewish-prop",
+       "label": "warning",
+       "message": "'Jewish-prop' is not recognized. Consult the How-To document or consider using a different word.",
+       "rule_id": "checker:built-in:7 - Check ontology status"
+      },
+      {
+       "token": "Jewish-prop",
+       "label": "warning",
+       "message": "WARNING: Because this word is not recognized, errors and warnings within the same clause may not be accurate.",
+       "rule_id": "checker:built-in:7 - Check ontology status"
+      },
+      {
+       "token": "[",
+       "label": "error",
+       "message": "Missing bracket before relative or complement clause.",
+       "rule_id": "checker:18 - Expect a [ before a relative clause"
+      },
+      {
+       "token": "circumcision",
+       "label": "warning",
+       "message": "'circumcision' is not recognized. Consult the How-To document or consider using a different word.",
+       "rule_id": "checker:built-in:7 - Check ontology status"
+      },
+      {
+       "token": "circumcision",
+       "label": "warning",
+       "message": "WARNING: Because this word is not recognized, errors and warnings within the same clause may not be accurate.",
+       "rule_id": "checker:built-in:7 - Check ontology status"
+      },
+      {
+       "token": "[",
+       "label": "error",
+       "message": "Missing bracket before relative or complement clause.",
+       "rule_id": "checker:18 - Expect a [ before a relative clause"
+      }
+     ],
+     "collapsed_count": 11
+    }
+   },
+   {
+    "ref": "1 Kings 6:6",
+    "niv": "The lowest floor was five cubits wide, the middle floor six cubits and the third floor seven. He made offset ledges around the outside of the temple so that nothing would be inserted into the temple walls.",
+    "original_errors": 12,
+    "original_warnings": 15,
+    "suggested_status": "ok",
+    "suggested": "The rooms [that were on the first floor] were 230 centimeters wide. The rooms [that were on the second floor] were 275 centimeters wide. And the rooms [that were on the third floor] were 320 centimeters wide. The walls of the high rooms were thinner than the walls of the low _adj rooms. So a flat place was at the top of each low _adj wall. That flat place held the poles/beams [that held the floor]. So the poles/beams were not in the temple-A walls. (footnote) In Hebrew these distances are 5 cubits, 6 cubits, and 7 cubits.",
+    "changes": [
+     {
+      "was": "rooms[ (×3), beams[",
+      "now": "rooms [, beams [",
+      "reason": "token:syntax — missing a space before '['."
+     },
+     {
+      "was": "beams",
+      "now": "poles/beams",
+      "reason": "built-in:4 — 'beam' is L2; ontology pairing 'pole', simple word first."
+     },
+     {
+      "was": "5 cubits wide, 6 cubits wide, and 7 cubits wide",
+      "now": "5 cubits, 6 cubits, and 7 cubits",
+      "reason": "built-in:2 — 'wide' is never used attributively; it validates predicatively ('These distances are 5 cubits wide.' is ok) but not in a coordinate list where the parser reads it attributively. Dropping the repeated 'wide' keeps the meaning since the sentence already says 'distances'."
+     },
+     {
+      "was": "(footnote) in Hebrew",
+      "now": "(footnote) In Hebrew",
+      "reason": "built-in:0 — first word of each sentence must be capitalized."
+     },
+     {
+      "was": "ledge",
+      "now": "place",
+      "reason": "built-in:7 — meaning-narrowing, flagged for review. 'ledge' isn't in the ontology; 'place', 'part', and 'stone' all validate. 'place' was chosen as the least meaning-shifting option, but it loses the architectural specificity of a ledge."
+     },
+     {
+      "was": "hold-up (×2)",
+      "now": "held",
+      "reason": "built-in:7 — 'hold-up' isn't a recognized hyphenated verb; 'held' and 'supported' both validate."
+     },
+     {
+      "was": "low (×2)",
+      "now": "low _adv",
+      "reason": "built-in:8 — part-of-speech ambiguity on 'low' in this construction; the _adv tag resolves it, matching the pattern already confirmed for 'first _adv' in Exodus 13:13."
+     },
+     {
+      "was": "temple",
+      "now": "temple-A",
+      "reason": "built-in:6 — the word has multiple senses and ambiguous complexity; the checker asks for the sense to be included."
+     }
+    ],
+    "ai_assist": {
+     "phase_1": "The lowest-A floor-A was 5 cubit-A wide-A. And the middle-A floor-A was 6 cubit-A wide-A. And the third-A floor-A was 7 cubit-A wide-A. Solomon-A built-A ledge-A around-B the outer-A wall-A of the temple-A so-that people would not put-A the beam-A into the wall-A of the temple-A.",
+     "notes": [
+      "Replaced 'room-level' with 'floor-A'.",
+      "Replaced 'five', 'six', 'seven' with digits '5', '6', '7'.",
+      "Replaced 'He' with 'Solomon-A'.",
+      "Replaced 'made' with 'built-A'.",
+      "Replaced 'offset ledges' with 'ledge-A'.",
+      "Replaced 'around' with 'around-B'.",
+      "Replaced 'outside of the temple' with 'outer-A wall-A of the temple-A'.",
+      "Replaced 'insert' with 'put-A'.",
+      "Specified senses for 'temple-A', 'beam-A', 'wall-A', and other nouns/adjectives."
+     ],
+     "check_status": "error",
+     "back_translation": "The lowest floor was five cubit wide. And the middle floor was 6 cubit wide. And the third floor was 7 cubit wide. Solomon built ledge around the outer wall of the temple so that people would not put the beam into the wall of the temple.",
+     "messages": [
+      {
+       "token": "was",
+       "label": "warning",
+       "message": "'be-Y' has no theta grid information to check with. Double check the expected arguments with a colleague.",
+       "rule_id": "checker:built-in:3 - Check if a Verb has no theta grid information"
+      },
+      {
+       "token": "wide-A",
+       "label": "error",
+       "message": "Incorrect usage of wide-A. Check other errors and warnings for more information, and consult the Ontology.",
+       "rule_id": "checker:built-in:2 - Check argument structure/case frame"
+      },
+      {
+       "token": "was",
+       "label": "warning",
+       "message": "'be-Y' has no theta grid information to check with. Double check the expected arguments with a colleague.",
+       "rule_id": "checker:built-in:3 - Check if a Verb has no theta grid information"
+      },
+      {
+       "token": "wide-A",
+       "label": "error",
+       "message": "Incorrect usage of wide-A. Check other errors and warnings for more information, and consult the Ontology.",
+       "rule_id": "checker:built-in:2 - Check argument structure/case frame"
+      },
+      {
+       "token": "was",
+       "label": "warning",
+       "message": "'be-Y' has no theta grid information to check with. Double check the expected arguments with a colleague.",
+       "rule_id": "checker:built-in:3 - Check if a Verb has no theta grid information"
+      },
+      {
+       "token": "wide-A",
+       "label": "error",
+       "message": "Incorrect usage of wide-A. Check other errors and warnings for more information, and consult the Ontology.",
+       "rule_id": "checker:built-in:2 - Check argument structure/case frame"
+      },
+      {
+       "token": "built-A",
+       "label": "error",
+       "message": "Incorrect usage of build-A. Check other errors and warnings for more information, and consult the Ontology.",
+       "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+      },
+      {
+       "token": "ledge-A",
+       "label": "warning",
+       "message": "'ledge-A' is not recognized. Consult the How-To document or consider using a different word.",
+       "rule_id": "checker:built-in:7 - Check ontology status"
+      }
+     ],
+     "collapsed_count": 24
+    }
+   },
+   {
+    "ref": "2 Kings 18:11",
+    "niv": "The king of Assyria deported Israel to Assyria and settled them in Halah, in Gozan on the Habor River and in towns of the Medes.",
+    "suggested_status": "warning",
+    "suggested": "The king of Assyria take-away _past the Israelites from Israel. And the king of Assyria forced [the Israelites to go to Assyria]. The king of Assyria forced [those Israelites to live in a town named Halah, in a town named Gozan, and in the towns of Media of the people _dynamicExpansion]. A river named Habor is beside that town named Gozan.",
+    "changes": [
+     {
+      "was": "take-away ... to Assyria (single event, with a Destination)",
+      "now": "take-away ... from Israel. And ... forced [the Israelites to go to Assyria]. (two decomposed events)",
+      "reason": "built-in:1 — 'take-away''s ontology grid is Agent, Patient, (Source) only, in all three senses — no Destination sense exists — so 'take-away ... to Assyria' can never validate. The deportation has to decompose into two events: taken from Israel, then forced [X to go to Assyria]."
+     },
+     {
+      "was": "the king of the army _dynamicExpansion of Assyria",
+      "now": "the king of Assyria",
+      "reason": "The backtranslation exposed this as garbled — it came back '<<The army of Assyria of>> the king.' The NIV subject here is the king himself; the army is the subject in the parallel verse (17:6), and it looks like it bled across from there."
+     },
+     {
+      "was": "in Halah",
+      "now": "in a town named Halah",
+      "reason": "An unrecognized proper noun directly after 'in' breaks the adposition itself ('This use of 'in' does not match any sense'). The fix is the rule-0.23 'named' form with a generic head noun; naming order matters — 'Halah named a town' would still fail. The same pattern is applied to Gozan."
+     },
+     {
+      "was": "forced [... to live in ...] [that _descriptive is beside the river-Habor] (nested inside the force-clause)",
+      "now": "A river named Habor is beside that town named Gozan. (pulled out as its own sentence)",
+      "reason": "'live' rejects a different-participant patient clause, so the [_descriptive which ...] relative buried inside 'forced [... to live in ...]' produced both the 'live' errors and the 'beside' error; lifting the descriptive out into its own sentence clears it. This also drops 'river-Habor', which was hyphenated as if it were a single ontology entry — the same failure mode as 'man-of-God' — unhyphenated here to 'a river named Habor'."
+     }
+    ],
+    "note": "The parallel verse 2 Kings 17:6 has the same disease: it covers identical content, is also status: error, and shares this exact take-away-to-Assyria bug despite being marked 'Final Review in Progress' in the corpus — the two verses want a joint pass rather than separate ones. Two patterns here look systemic and worth a corpus-wide sweep: take-away used with a destination, and hyphenated pseudo-ontology proper nouns (river-Habor, valley-Arnon, man-of-God).",
+    "ai_assist": {
+     "phase_1": "The king-A of Assyria forced the people-A of Israel to go-A to Assyria. And he [the king-A of Assyria] made-A them [the people-A of Israel] live-A in the city-A of Halah, in the land-A of Gozan [which is near-A the river-A named Habor], and in the towns-A of the people-A of Media.",
+     "notes": [
+      "Replaced 'deported' with 'forced ... to go-A' to use recognized TBTA vocabulary.",
+      "Replaced 'settled' with 'made-A ... live-A' to use recognized TBTA vocabulary.",
+      "Fixed the bracket/parenthesis syntax for referents to avoid parsing errors.",
+      "Replaced 'region-A' with 'land-A' because 'region-A' is not a level 0 or 1 word.",
+      "Replaced 'beside-A' with 'near-A' to avoid incorrect preposition usage.",
+      "Replaced 'Habor River' with 'the river-A named Habor' to use standard proper noun phrasing.",
+      "Replaced 'Medes' with 'the people-A of Media' since 'Medes' is not in the ontology."
+     ],
+     "check_status": "error",
+     "back_translation": "The king of Assyria forced the people of Israel to go to Assyria. And he the king of Assyria made them the people of Israel live in the city of Halah, in the land of Gozan that which is near the river named Habor, and in the towns of the people of Media.",
+     "messages": [
+      {
+       "token": "go-A",
+       "label": "error",
+       "message": "Cannot have multiple verbs in the same clause (force and go). Check for an unbracketed subordinate clause or consider splitting the sentence.",
+       "rule_id": "checker:5 - Flag two verbs within the same sentence"
+      },
+      {
+       "token": "he",
+       "label": "error",
+       "message": "Third person pronouns should be replaced with the Noun they represent, e.g., Paul (instead of he).",
+       "rule_id": "pronoun:built-in:0 - Check for invalid stand-alone pronouns"
+      },
+      {
+       "token": "he",
+       "label": "warning",
+       "message": "'he' is not recognized. Consult the How-To document or consider using a different word.",
+       "rule_id": "checker:built-in:7 - Check ontology status"
+      },
+      {
+       "token": "he",
+       "label": "warning",
+       "message": "WARNING: Because this word is not recognized, errors and warnings within the same clause may not be accurate.",
+       "rule_id": "checker:built-in:7 - Check ontology status"
+      },
+      {
+       "token": "[",
+       "label": "error",
+       "message": "make-A cannot be used with an agent clause. Consult the Verb's Theta Grid usage.",
+       "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+      },
+      {
+       "token": "made-A",
+       "label": "error",
+       "message": "Incorrect usage of make-A. Check other errors and warnings for more information, and consult the Ontology.",
+       "rule_id": "checker:built-in:1 - Check Verb argument structure/case frame"
+      },
+      {
+       "token": "them",
+       "label": "error",
+       "message": "Third person pronouns should be replaced with the Noun they represent, e.g., Paul (instead of them).",
+       "rule_id": "pronoun:built-in:0 - Check for invalid stand-alone pronouns"
+      },
+      {
+       "token": "them",
+       "label": "warning",
+       "message": "'them' is not recognized. Consult the How-To document or consider using a different word.",
+       "rule_id": "checker:built-in:7 - Check ontology status"
+      }
+     ],
+     "collapsed_count": 20
+    }
+   },
+   {
+    "ref": "Exodus 13:13",
+    "niv": "Redeem with a lamb every firstborn donkey, but if you do not redeem it, break its neck. Redeem every firstborn among your sons.",
+    "original_errors": 8,
+    "suggested_status": "warning",
+    "suggested": "You(Israelites) may buy/redeem every animal/donkey [that was born first] from me(Yahweh) [by giving a young sheep to me(Yahweh)]. [If you(Israelites) do not buy/redeem that animal/donkey from me(Yahweh),] then you(Israelites) must break the neck of that animal/donkey. But you(Israelites) must buy/redeem every son [who was born first] from me(Yahweh).",
+    "changes": [
+     {
+      "was": "buy from me(Yahweh) a firstborn donkey",
+      "now": "buy/redeem every animal/donkey [that was born first] from me(Yahweh)",
+      "reason": "built-in:1 — buy-A's grid is Agent, Patient, (Source), (Instrument), (Beneficiary) — the Patient must immediately follow the verb, with the Source phrase after it. Source-before-Patient order produced 'Incorrect usage of buy-A'; this was a genuine word-order fault, not a cascade — isolating it confirmed the diagnosis: 'buy from me(Yahweh) a donkey' errors on 'buy', while 'buy a donkey from me(Yahweh)' leaves only the unrelated donkey-level error."
+     },
+     {
+      "was": "firstborn donkey / firstborn son",
+      "now": "animal/donkey [that was born first] / son [who was born first]",
+      "reason": "built-in:4 — 'firstborn' is L2 Adjective — rule 0.2 permits L2/L3 only in a pairing, explication, or complex alternate. The ontology explication is 'X [who was born first]', matching validated Numbers 18:15 (rule 0.36) — Numbers 18:15 covers the same redemption law and already validates with this exact pattern, so it's the model to copy."
+     },
+     {
+      "was": "donkey",
+      "now": "animal/donkey",
+      "reason": "built-in:4 — 'donkey' is L2 Noun. Ontology hint: 'in most cases it would be better to pair donkey with horse or animal.' Pairing order is simple/complex — 'animal/donkey' validates, 'donkey/animal' still errors."
+     },
+     {
+      "was": "lamb",
+      "now": "young sheep",
+      "reason": "built-in:4 — 'lamb' is L2 Noun. The ontology explication is exactly 'young sheep'."
+     },
+     {
+      "was": "buy",
+      "now": "buy/redeem",
+      "reason": "'redeem' is L2 Verb, pairing 'buy'. P1 Checklist rule 0.30 — the sentence must read correctly on either the simple or complex side of a pairing, and 'redeem' preserves the buy-back sense the plain 'buy' loses. Matches Numbers 18:15."
+     },
+     {
+      "was": "[that you(Israelites) must give to me(Yahweh)]",
+      "now": "(removed)",
+      "reason": "Stylistic, not rule-driven — decline if disagreed. Duplicates v12 ('you must give every firstborn male animal to me') and isn't in v13's source text; dropping it also takes the verse from 4 bracket levels down to 2."
+     },
+     {
+      "was": "the donkey's neck",
+      "now": "the neck of that animal/donkey",
+      "reason": "Stylistic, not rule-driven — a possessive on a pairing is awkward to read. Both forms validate, so this is preference only."
+     },
+     {
+      "was": "[If ...] then (no comma)",
+      "now": "[If ..., ] then",
+      "reason": "P1 Checklist rule 0.42 — a comma is required separating the subordinate clause from the main clause."
+     }
+    ],
+    "note": "All 8 errors cleared — error to warning, brackets balanced 4/4. Remaining warnings are acceptable: two 'cannot determine which part of speech' warnings on 'first' in the '[... was born first]' construction — the same class named in rule 0.23, with wording taken straight from the ontology hint. Systemic and worth a sweep: 'firstborn' appears bare in 21 corpus verses (Exodus 4:22, 11:1, 11:5, 13:2, 13:12, 13:15 among them), 'donkey' in 110, and 'lamb' in 27 — every one a rule 0.2 error on the same three words, with mechanical explications already defined.",
+    "ai_assist": {
+     "phase_1": "You(Israelites) (imp) buy-back-A every first-born-A donkey-A with a lamb-A. But [if you(Israelites) do not buy-back-A that donkey-A], you(Israelites) (imp) break-A the neck-A of that donkey-A. You(Israelites) (imp) buy-back-A every first-born-A son-A of you(Israelites).",
+     "notes": [
+      "Replaced 'redeem-A' with the standard TBTA concept 'buy-back-A'.",
+      "Replaced 'firstborn' with 'first-born-A'.",
+      "Replaced 'donkey' with 'donkey-A'.",
+      "Replaced 'lamb' with 'lamb-A'.",
+      "Replaced 'neck' with 'neck-A' and structured 'its neck' as 'the neck-A of that donkey-A'.",
+      "Replaced 'son' with 'son-A'."
+     ],
+     "check_status": "error",
+     "back_translation": "Buy back every first born donkey with a lamb. But if you do not buy back that donkey, break the neck of that donkey. Buy back every first born son of you.",
+     "messages": [
+      {
+       "token": "buy-back-A",
+       "label": "warning",
+       "message": "'buy-back-A' is not recognized. Consult the How-To document or consider using a different word.",
+       "rule_id": "checker:built-in:7 - Check ontology status"
+      },
+      {
+       "token": "buy-back-A",
+       "label": "warning",
+       "message": "WARNING: Because this word is not recognized, errors and warnings within the same clause may not be accurate.",
+       "rule_id": "checker:built-in:7 - Check ontology status"
+      },
+      {
+       "token": "first-born-A",
+       "label": "warning",
+       "message": "'first-born-A' is not recognized. Consult the How-To document or consider using a different word.",
+       "rule_id": "checker:built-in:7 - Check ontology status"
+      },
+      {
+       "token": "first-born-A",
+       "label": "warning",
+       "message": "WARNING: Because this word is not recognized, errors and warnings within the same clause may not be accurate.",
+       "rule_id": "checker:built-in:7 - Check ontology status"
+      },
+      {
+       "token": "donkey-A",
+       "label": "error",
+       "message": "Word must be a level 0 or 1. Hover over the word to get pairing or explication hints.",
+       "rule_id": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate"
+      },
+      {
+       "token": "lamb-A",
+       "label": "error",
+       "message": "Word must be a level 0 or 1. Hover over the word to get pairing or explication hints.",
+       "rule_id": "checker:built-in:4 - Check that level 2/3 words are within a (complex) alternate"
+      },
+      {
+       "token": "buy-back-A",
+       "label": "warning",
+       "message": "'buy-back-A' is not recognized. Consult the How-To document or consider using a different word.",
+       "rule_id": "checker:built-in:7 - Check ontology status"
+      },
+      {
+       "token": "buy-back-A",
+       "label": "warning",
+       "message": "WARNING: Because this word is not recognized, errors and warnings within the same clause may not be accurate.",
+       "rule_id": "checker:built-in:7 - Check ontology status"
+      }
+     ],
+     "collapsed_count": 12
+    }
+   }
+  ]
+ }
+]</script>
+<script id="seed-skillnotes" type="application/json">{"items":[]}</script>
+<script>
+(function(){
+  var esc=function(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){
+    return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});};
+
+  function markup(enc){
+    // highlight the notation that carries structure: _features, (parentheticals), [clauses]
+    return esc(enc)
+      .replace(/(_[A-Za-z][A-Za-z0-9]*)/g,"<b>$1</b>")
+      .replace(/([\[\]()])/g,"<b>$1</b>");
+  }
+
+  function splitRule(r){
+    var m=/^(.*?)\s+-\s+(.*)$/.exec(r);
+    return m?{id:m[1],name:m[2]}:{id:r,name:""};
+  }
+
+  function render(run,origin){
+    var sc=run.status_counts||{},ok=sc.ok||0,wn=sc.warning||0,er=sc.error||0,n=run.n||0;
+
+    document.getElementById("stamp").innerHTML=
+      "<b>"+esc(run.date)+"</b>"+esc(n)+" verses &middot; seed "+esc(run.seed)+
+      (run.transport_errors?"<br>"+esc(run.transport_errors)+" transport errors":"<br>no transport errors");
+
+    var ro=[
+      {k:"Clean",v:run.clean,n:"no messages at all",c:"is-ok"},
+      {k:"With errors",v:run.verses_with_errors,n:"of "+n+" verses",c:"is-err"},
+      {k:"With warnings",v:run.verses_with_warnings,n:"of "+n+" verses",c:"is-warn"},
+      {k:"Error messages",v:run.total_errors,n:"total",c:"is-err"},
+      {k:"Warning messages",v:run.total_warnings,n:"total",c:"is-warn"}
+    ];
+    document.getElementById("readouts").innerHTML=ro.map(function(d){
+      return '<div class="ro '+d.c+'"><span class="k">'+esc(d.k)+'</span><span class="v">'+
+        esc(d.v)+'</span><span class="n">'+esc(d.n)+'</span></div>';}).join("");
+
+    var pct=function(x){return n?(x/n*100).toFixed(2)+"%":"0%";};
+    document.getElementById("bar").innerHTML=
+      '<span style="width:'+pct(ok)+';background:var(--ok)"></span>'+
+      '<span style="width:'+pct(wn)+';background:var(--warn)"></span>'+
+      '<span style="width:'+pct(er)+';background:var(--err)"></span>';
+    document.getElementById("barkey").innerHTML=
+      '<span><i style="background:var(--ok)"></i>ok — '+ok+'</span>'+
+      '<span><i style="background:var(--warn)"></i>warning — '+wn+'</span>'+
+      '<span><i style="background:var(--err)"></i>error — '+er+'</span>'+
+      '<span style="margin-left:auto">verse status returned by <span style="font-family:var(--mono)">/check</span></span>';
+
+    var max=(run.top_rules||[]).reduce(function(a,r){return Math.max(a,r.count);},1);
+    document.getElementById("ledger").innerHTML=(run.top_rules||[]).map(function(r){
+      var p=splitRule(r.rule),bl=r.by_label||{},e=bl.error||0,w=bl.warning||0,tot=e+w||1;
+      var width=(r.count/max*100).toFixed(1);
+      return '<div class="rule"><div><span class="name">'+esc(p.name||p.id)+'</span><br>'+
+        '<span class="id">'+esc(p.id)+'</span></div>'+
+        '<div class="ct">'+esc(r.count)+'</div>'+
+        '<div class="track" style="width:'+width+'%">'+
+          '<span style="width:'+(e/tot*100)+'%;background:var(--err)"></span>'+
+          '<span style="width:'+(w/tot*100)+'%;background:var(--warn)"></span>'+
+        '</div></div>';}).join("");
+
+    document.getElementById("verses").innerHTML=(run.worst||[]).map(function(v){
+      var sev=v.errors?"sev-error":(v.warnings?"sev-warn":"sev-ok");
+      var tally="";
+      if(v.errors)tally+='<span class="pill e">'+v.errors+' error'+(v.errors>1?"s":"")+'</span>';
+      if(v.warnings)tally+='<span class="pill w">'+v.warnings+' warning'+(v.warnings>1?"s":"")+'</span>';
+      if(!tally)tally='<span class="pill">clean</span>';
+      var msgs=(v.msgs||[]).map(function(m){
+        var cl=m.label==="error"?"e":"w";
+        return '<div class="msg '+cl+'"><span class="tok">'+esc(m.token)+'</span><span>'+
+          esc(m.message)+'<span class="rid">'+esc(m.rule_id)+'</span></span></div>';}).join("");
+      return '<details class="verse '+sev+'"><summary><span class="stripe"></span>'+
+        '<span class="ref">'+esc(v.ref)+'</span><span class="tally">'+tally+'</span></summary>'+
+        '<div class="body">'+
+          '<div><div class="lbl">Phase 1 encoding</div><div class="enc">'+markup(v.enc)+'</div></div>'+
+          (v.bt?'<div><div class="lbl">Back-translation</div><div class="bt">'+esc(v.bt)+'</div></div>':'')+
+          (msgs?'<div><div class="lbl">Checker messages</div><div class="msgs">'+msgs+'</div></div>':'')+
+        '</div></details>';}).join("");
+
+    document.getElementById("src").textContent=origin;
+  }
+
+  // --- Overview tab --------------------------------------------------------
+  // Aggregates every stored `runs` doc into corpus-wide totals: cumulative
+  // sample size, ok/warning/error split, rules merged by id across runs, and
+  // verses merged by ref (summing errors/warnings each time they show up in
+  // a run's worst list). Recomputed whenever the live runs list changes, so
+  // it grows on its own as the scheduled task adds new runs — including at
+  // the roughly-hourly cadence, where `date` holds a full timestamp rather
+  // than a calendar date, so runs sort and dedupe correctly within a day.
+  var CORPUS_TOTAL=18830;
+
+  function aggregateRuns(runs){
+    var byRule={},byRef={},ok=0,wn=0,er=0,nTotal=0;
+    for(var i=0;i<runs.length;i++){
+      var r=runs[i],sc=r.status_counts||{};
+      ok+=sc.ok||0; wn+=sc.warning||0; er+=sc.error||0;
+      nTotal+=r.n||0;
+      (r.top_rules||[]).forEach(function(rule){
+        var p=splitRule(rule.rule),key=p.id,bl=rule.by_label||{};
+        if(!byRule[key])byRule[key]={id:p.id,name:p.name,count:0,by_label:{error:0,warning:0}};
+        byRule[key].count+=rule.count||0;
+        byRule[key].by_label.error+=bl.error||0;
+        byRule[key].by_label.warning+=bl.warning||0;
+      });
+      (r.worst||[]).forEach(function(v){
+        var key=v.ref;
+        if(!byRef[key])byRef[key]={ref:v.ref,errors:0,warnings:0,days:[],latest:null};
+        byRef[key].errors+=v.errors||0;
+        byRef[key].warnings+=v.warnings||0;
+        byRef[key].days.push(r.date);
+        byRef[key].latest={enc:v.enc,bt:v.bt,msgs:v.msgs,status:v.status,date:r.date};
+      });
+    }
+    var top_rules=Object.keys(byRule).map(function(k){return byRule[k];})
+      .sort(function(a,b){return b.count-a.count;}).slice(0,12);
+    var worst=Object.keys(byRef).map(function(k){return byRef[k];})
+      .sort(function(a,b){return (b.errors-a.errors)||(b.warnings-a.warnings);}).slice(0,12);
+    return{days:runs.length,n:nTotal,status_counts:{ok:ok,warning:wn,error:er},top_rules:top_rules,worst:worst};
+  }
+
+  function renderOverview(agg){
+    var n=agg.n||0,sc=agg.status_counts||{},ok=sc.ok||0,wn=sc.warning||0,er=sc.error||0;
+    var coverage=CORPUS_TOTAL?(n/CORPUS_TOTAL*100):0;
+
+    var ro=[
+      {k:"Corpus",v:CORPUS_TOTAL.toLocaleString(),n:"verses with a phase 1 encoding",c:""},
+      {k:"Sampled so far",v:n.toLocaleString(),n:"across "+agg.days+" run"+(agg.days!==1?"s":""),c:""},
+      {k:"Coverage",v:coverage.toFixed(1)+"%",n:"of the tracked corpus",c:""},
+      {k:"Ok",v:ok,n:"of "+n+" sampled",c:"is-ok"},
+      {k:"Warning",v:wn,n:"of "+n+" sampled",c:"is-warn"},
+      {k:"Error",v:er,n:"of "+n+" sampled",c:"is-err"}
+    ];
+    document.getElementById("ov-readouts").innerHTML=ro.map(function(d){
+      return '<div class="ro '+d.c+'"><span class="k">'+esc(d.k)+'</span><span class="v">'+
+        esc(d.v)+'</span><span class="n">'+esc(d.n)+'</span></div>';}).join("");
+
+    var pct=function(x){return n?(x/n*100).toFixed(2)+"%":"0%";};
+    document.getElementById("ov-bar").innerHTML=
+      '<span style="width:'+pct(ok)+';background:var(--ok)"></span>'+
+      '<span style="width:'+pct(wn)+';background:var(--warn)"></span>'+
+      '<span style="width:'+pct(er)+';background:var(--err)"></span>';
+    document.getElementById("ov-barkey").innerHTML=
+      '<span><i style="background:var(--ok)"></i>ok — '+ok+'</span>'+
+      '<span><i style="background:var(--warn)"></i>warning — '+wn+'</span>'+
+      '<span><i style="background:var(--err)"></i>error — '+er+'</span>'+
+      '<span style="margin-left:auto">status split summed across all stored runs</span>';
+
+    var max=(agg.top_rules||[]).reduce(function(a,r){return Math.max(a,r.count);},1);
+    document.getElementById("ov-ledger").innerHTML=(agg.top_rules||[]).map(function(r){
+      var bl=r.by_label||{},e=bl.error||0,w=bl.warning||0,tot=e+w||1;
+      var width=(r.count/max*100).toFixed(1);
+      return '<div class="rule"><div><span class="name">'+esc(r.name||r.id)+'</span><br>'+
+        '<span class="id">'+esc(r.id)+'</span></div>'+
+        '<div class="ct">'+esc(r.count)+'</div>'+
+        '<div class="track" style="width:'+width+'%">'+
+          '<span style="width:'+(e/tot*100)+'%;background:var(--err)"></span>'+
+          '<span style="width:'+(w/tot*100)+'%;background:var(--warn)"></span>'+
+        '</div></div>';}).join("");
+
+    document.getElementById("ov-verses").innerHTML=(agg.worst||[]).map(function(v){
+      var sev=v.errors?"sev-error":(v.warnings?"sev-warn":"sev-ok");
+      var tally="";
+      if(v.errors)tally+='<span class="pill e">'+v.errors+' error'+(v.errors>1?"s":"")+'</span>';
+      if(v.warnings)tally+='<span class="pill w">'+v.warnings+' warning'+(v.warnings>1?"s":"")+'</span>';
+      if(!tally)tally='<span class="pill">clean</span>';
+      var latest=v.latest||{};
+      var msgs=(latest.msgs||[]).map(function(m){
+        var cl=m.label==="error"?"e":"w";
+        return '<div class="msg '+cl+'"><span class="tok">'+esc(m.token)+'</span><span>'+
+          esc(m.message)+'<span class="rid">'+esc(m.rule_id)+'</span></span></div>';}).join("");
+      var days=(v.days||[]).join(", ");
+      return '<details class="verse '+sev+'"><summary><span class="stripe"></span>'+
+        '<span class="ref">'+esc(v.ref)+'</span><span class="tally">'+tally+'</span></summary>'+
+        '<div class="body">'+
+          '<div class="hint" style="margin:0">Seen in the worst list on: '+esc(days)+'</div>'+
+          (latest.enc?'<div><div class="lbl">Phase 1 encoding ('+esc(latest.date)+')</div><div class="enc">'+markup(latest.enc)+'</div></div>':'')+
+          (latest.bt?'<div><div class="lbl">Back-translation</div><div class="bt">'+esc(latest.bt)+'</div></div>':'')+
+          (msgs?'<div><div class="lbl">Checker messages ('+esc(latest.date)+')</div><div class="msgs">'+msgs+'</div></div>':'')+
+        '</div></details>';}).join("");
+  }
+
+  var seed=JSON.parse(document.getElementById("seed").textContent);
+  render(seed,"Showing the seeded run of "+seed.date);
+  renderOverview(aggregateRuns([seed]));
+
+  var srcEl=document.getElementById("src"),pickEl=document.getElementById("picker");
+  function note(t){srcEl.textContent=t;}
+
+  // Newer runs are written to the `runs` collection by the daily task.
+  // NOTE: Query.get() resolves a QuerySnapshot ({docs, size, empty}), NOT an array.
+  if(!(window.claude&&window.claude.use)){
+    note("Seeded run of "+seed.date+" — live runs unavailable in this view");
+  }else{
+    note("Seeded run of "+seed.date+" — loading later runs\u2026");
+    window.claude.use("db").then(function(db){
+      if(!db){note("Seeded run of "+seed.date+" — database not available in this view");return;}
+      return db.collection("runs").orderBy("date","desc").limit(500).get().then(function(snap){
+        var docs=(snap&&snap.docs)||[];
+        var runs=[];
+        for(var i=0;i<docs.length;i++){
+          var d=docs[i].exists?docs[i].data():null;
+          if(d&&d.date)runs.push(d);
+        }
+        if(!runs.length){note("Seeded run of "+seed.date+" — no stored runs found");return;}
+
+        runs.sort(function(a,b){return a.date<b.date?1:a.date>b.date?-1:0;});
+        var latest=runs[0];
+        renderOverview(aggregateRuns(runs));
+
+        if(runs.length>1||latest.date!==seed.date){
+          var opts=runs.map(function(r){
+            return '<option value="'+esc(r.date)+'">'+esc(r.date)+'</option>';}).join("");
+          pickEl.innerHTML='Run: <select id="runsel" style="font:inherit;font-family:var(--mono);'+
+            'background:var(--surface);color:var(--ink);border:1px solid var(--line);padding:1px 4px">'+
+            opts+'</select>';
+          pickEl.hidden=false;
+          document.getElementById("runsel").addEventListener("change",function(e){
+            var pick=runs.filter(function(r){return r.date===e.target.value;})[0];
+            if(pick)show(pick);
+          });
+        }
+
+        function show(r){
+          render(r,(r.date===latest.date?"Latest run: ":"Run: ")+r.date+
+            " \u00b7 "+runs.length+" run"+(runs.length>1?"s":"")+" stored");
+          var sel=document.getElementById("runsel");
+          if(sel)sel.value=r.date;
+        }
+        show(latest);
+      });
+    }).catch(function(e){
+      note("Seeded run of "+seed.date+" — could not load later runs"+
+        (e&&e.code?" ("+esc(e.code)+")":""));
+    });
+  }
+
+  // --- Suggested changes tab ---------------------------------------------
+  // Docs are shaped {date, systemic_note?, corrections:[{ref, niv?, original_errors?,
+  // original_warnings?, suggested_status, suggested, changes:[{was,now,reason}], note?,
+  // ai_assist?:{phase_1, notes:[...], check_status, back_translation?, messages:[{token,
+  // label,message,rule_id}], collapsed_count}}]} — deliberately the same level of detail
+  // as the Sample runs tab (full corrected encoding, status, per-change reasoning),
+  // reusing its verse/body/enc styles. `niv` is the raw NIV verse text, shown once at
+  // the top of the detail body for reference — optional so older stored docs without it
+  // still render fine. Each verse now splits into two side-by-side columns: the reviewed
+  // fix (phase1-encoding-review — Was/Now/Reason, re-checked to clear the named error)
+  // and an unedited AI-assisted first draft of the same verse (phase1-ai-assist —
+  // suggested_status is never set by that skill, only check_status is). `ai_assist` is
+  // optional so corrections saved before this column existed still render, with an empty
+  // right column rather than breaking.
+  function renderSuggestions(docs){
+    docs=(docs||[]).slice().sort(function(a,b){return a.date<b.date?1:a.date>b.date?-1:0;});
+    var list=document.getElementById("suggest-list"),
+        empty=document.getElementById("suggest-empty");
+    var total=docs.reduce(function(n,d){return n+((d.corrections||[]).length);},0);
+    if(!total){
+      list.innerHTML="";
+      empty.hidden=false;
+      return;
+    }
+    empty.hidden=true;
+    list.innerHTML=docs.map(function(d){
+      var corrections=d.corrections||[];
+      if(!corrections.length)return "";
+      var systemic=d.systemic_note?
+        '<div class="suggest-systemic"><div class="lbl">Systemic note</div>'+esc(d.systemic_note)+'</div>':"";
+      var verses=corrections.map(function(c){
+        var status=c.suggested_status||"ok";
+        var sev=status==="error"?"sev-error":(status==="warning"?"sev-warn":"sev-ok");
+        var pillClass=status==="error"?"e":(status==="warning"?"w":"ok");
+        var tally="";
+        if(c.original_errors||c.original_warnings){
+          var bits=[];
+          if(c.original_errors)bits.push(c.original_errors+" error"+(c.original_errors>1?"s":""));
+          if(c.original_warnings)bits.push(c.original_warnings+" warning"+(c.original_warnings>1?"s":""));
+          tally+='<span class="pill was">was '+esc(bits.join(", "))+'</span>';
+        }
+        tally+='<span class="pill '+pillClass+'">now: '+esc(status)+'</span>';
+
+        var changesHtml=(c.changes||[]).map(function(ch){
+          return '<div class="change"><div class="cwn">'+
+            '<span class="k">Was</span><span class="was">'+markup(ch.was)+'</span>'+
+            '<span class="k">Now</span><span class="now">'+markup(ch.now)+'</span>'+
+            '</div><div class="reason">'+esc(ch.reason)+'</div></div>';
+        }).join("");
+
+        var reviewCol=
+          '<div class="sugg-col">'+
+            '<div class="sugg-col-head"><span>Reviewed correction</span><span class="src">phase1-encoding-review</span></div>'+
+            '<div><div class="lbl">Suggested Phase 1 encoding</div><div class="enc">'+markup(c.suggested||"")+'</div></div>'+
+            (changesHtml?'<div><div class="lbl">Was / Now / Reason</div><div class="changes">'+changesHtml+'</div></div>':"")+
+            (c.note?'<div><div class="lbl">Notes</div><div class="suggest-note">'+esc(c.note)+'</div></div>':"")+
+          '</div>';
+
+        var ai=c.ai_assist,aiCol;
+        if(ai&&(ai.phase_1||ai.check_status)){
+          var aiStatus=ai.check_status||"",
+              aiPillClass=aiStatus==="error"?"e":(aiStatus==="warning"?"w":"ok");
+          var aiNotes=(ai.notes||[]).map(function(n){return '<li>'+esc(n)+'</li>';}).join("");
+          var aiMsgs=(ai.messages||[]).map(function(m){
+            var cl=m.label==="error"?"e":"w";
+            return '<div class="msg '+cl+'"><span class="tok">'+esc(m.token)+'</span><span>'+
+              esc(m.message)+'<span class="rid">'+esc(m.rule_id)+'</span></span></div>';}).join("");
+          aiCol=
+            '<div class="sugg-col">'+
+              '<div class="sugg-col-head"><span>AI-assisted draft</span><span class="src">phase1-ai-assist</span></div>'+
+              '<div><div class="lbl">AI-suggested Phase 1 encoding</div><div class="enc">'+markup(ai.phase_1||"")+'</div></div>'+
+              (ai.back_translation?'<div><div class="lbl">Back-translation</div><div class="bt">'+esc(ai.back_translation)+'</div></div>':"")+
+              '<div class="ai-check"><span class="pill '+aiPillClass+'">check: '+esc(aiStatus||"—")+'</span></div>'+
+              (aiNotes?'<div><div class="lbl">AI’s comments</div><ul class="ai-notes">'+aiNotes+'</ul></div>':"")+
+              (aiMsgs?'<div><div class="lbl">Check messages</div><div class="msgs">'+aiMsgs+'</div></div>':"")+
+              (ai.collapsed_count?'<div class="ai-collapsed">'+esc(ai.collapsed_count)+' routine info/suggest message'+(ai.collapsed_count>1?"s":"")+' collapsed</div>':"")+
+            '</div>';
+        }else{
+          aiCol=
+            '<div class="sugg-col">'+
+              '<div class="sugg-col-head"><span>AI-assisted draft</span><span class="src">phase1-ai-assist</span></div>'+
+              '<div class="ai-empty">Not generated for this verse yet.</div>'+
+            '</div>';
+        }
+
+        return '<details class="verse '+sev+'"><summary><span class="stripe"></span>'+
+          '<span class="ref">'+esc(c.ref)+'</span><span class="tally">'+tally+'</span></summary>'+
+          '<div class="body">'+
+            (c.niv?'<div><div class="lbl">Raw NIV verse</div><div class="bt">'+esc(c.niv)+'</div></div>':"")+
+            '<div class="sugg-grid">'+reviewCol+aiCol+'</div>'+
+          '</div></details>';
+      }).join("");
+      return '<div class="suggest-date">'+esc(d.date)+'</div>'+systemic+'<div class="verses">'+verses+'</div>';
+    }).join("");
+  }
+
+  var seedSuggestEl=document.getElementById("seed-suggestions");
+  renderSuggestions(seedSuggestEl?JSON.parse(seedSuggestEl.textContent):[]);
+
+  if(window.claude&&window.claude.use){
+    window.claude.use("db").then(function(db){
+      if(!db)return;
+      return db.collection("suggestions").orderBy("date","desc").limit(300).get().then(function(snap){
+        var docs=(snap&&snap.docs)||[];
+        var groups=[];
+        for(var i=0;i<docs.length;i++){
+          var d=docs[i].exists?docs[i].data():null;
+          if(d&&d.date)groups.push(d);
+        }
+        if(groups.length)renderSuggestions(groups);
+      });
+    }).catch(function(){/* keep the seeded table shown */});
+  }
+
+  // --- Skill notes tab -----------------------------------------------------
+  // A single accumulating doc (collection "skill_notes", doc_id "pending")
+  // rather than a propose_skills call per run: this task now fires every few
+  // hours from a fresh session each time, so an in-session proposal card is
+  // easy to miss before the next run replaces it. Runs append a note here
+  // instead; Yu Hui reviews the accumulated list on their own schedule and
+  // asks Claude directly to fold any of them into the skill.
+  function renderSkillNotes(doc){
+    var items=((doc&&doc.items)||[]).slice().sort(function(a,b){return a.date<b.date?1:a.date>b.date?-1:0;});
+    var list=document.getElementById("sn-list"),empty=document.getElementById("sn-empty");
+    if(!items.length){list.innerHTML="";empty.hidden=false;return;}
+    empty.hidden=true;
+    list.innerHTML=items.map(function(it){
+      return '<div class="sn-item"><div class="sn-head"><span>'+esc(it.date)+'</span>'+
+        '<span class="sn-skill">'+esc(it.skill)+'</span></div>'+
+        '<div class="sn-note">'+esc(it.note)+'</div></div>';
+    }).join("");
+  }
+
+  var seedSkillNotesEl=document.getElementById("seed-skillnotes");
+  renderSkillNotes(seedSkillNotesEl?JSON.parse(seedSkillNotesEl.textContent):{items:[]});
+
+  if(window.claude&&window.claude.use){
+    window.claude.use("db").then(function(db){
+      if(!db)return;
+      return db.collection("skill_notes").doc("pending").get().then(function(doc){
+        var data=doc&&doc.exists?doc.data():null;
+        if(data)renderSkillNotes(data);
+      });
+    }).catch(function(){/* keep the seeded (empty) state shown */});
+  }
+
+  // --- Tab switching -------------------------------------------------------
+  // Scoped to #tabs so it never picks up the Changelog sub-tabs below, which
+  // reuse the same .tab-btn look but live in their own #changelog-tabs nav
+  // with their own click handler.
+  var tabBtns=document.querySelectorAll("#tabs .tab-btn"),
+      views={overview:document.getElementById("view-overview"),runs:document.getElementById("view-runs"),suggestions:document.getElementById("view-suggestions"),skillnotes:document.getElementById("view-skillnotes"),changelog:document.getElementById("view-changelog")};
+  for(var ti=0;ti<tabBtns.length;ti++){
+    tabBtns[ti].addEventListener("click",function(e){
+      var v=e.currentTarget.getAttribute("data-view");
+      for(var k in views){views[k].hidden=(k!==v);}
+      for(var tj=0;tj<tabBtns.length;tj++){tabBtns[tj].classList.toggle("active",tabBtns[tj]===e.currentTarget);}
+    });
+  }
+
+  // --- Changelog sub-tabs ---------------------------------------------------
+  // niv-to-phase1 is the default sub-tab whenever Changelog is opened (it's
+  // simply the one left un-hidden in the markup); phase1-encoding-review is
+  // the second. State persists if the user switches away and back, same as
+  // the main tabs above.
+  var clBtns=document.querySelectorAll("#changelog-tabs .tab-btn"),
+      clViews={niv:document.getElementById("clview-niv"),review:document.getElementById("clview-review"),ontology:document.getElementById("clview-ontology")};
+  for(var ci=0;ci<clBtns.length;ci++){
+    clBtns[ci].addEventListener("click",function(e){
+      var v=e.currentTarget.getAttribute("data-clview");
+      for(var k in clViews){clViews[k].hidden=(k!==v);}
+      for(var cj=0;cj<clBtns.length;cj++){clBtns[cj].classList.toggle("active",clBtns[cj]===e.currentTarget);}
+    });
+  }
+})();
+</script>
+</body></html>
