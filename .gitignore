@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.DS_Store
+*.log
+
+# Your own licensed copy of the NIV1984 source text goes here, for
+# skills/niv-to-phase1/scripts/get_verse.py to read from. Never committed
+# or uploaded — see README "What's deliberately not in this repo".
+/local/
