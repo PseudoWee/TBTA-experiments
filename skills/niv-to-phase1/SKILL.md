@@ -87,15 +87,28 @@ reconstructing it from memory.
    writing He1). Double check total left brackets = total right brackets,
    and no more than 4 levels of nesting (rule 0.4).
 
-5. **Check word complexity via the ontology before using any word.** For
-   each content word, call:
-   `GET https://ontology.tabitha.bible/search?q={word}&scope=all`
+5. **Check word complexity before using any word — local lookup first, then
+   the live ontology.**
+   - **Check `references/complex-terms.md` first.** It's a 1,469-entry
+     snapshot of the ontology's complex-term guidance (source: the project's
+     "How to handle complex terms" spreadsheet), organized by status
+     (in ontology / approved / suggested / not used) with the pairing or
+     explication already recorded for most entries — using it skips a live
+     API round-trip and sidesteps the stale-cache reliability caveat below.
+     It also flags ~70 words known to be complex with no recorded guidance
+     yet (the "Known-complex words with no how-to entry yet" section) —
+     treat those as level 2/3 by default even before a live lookup confirms it.
+   - If the word isn't in that file, or you need to confirm/refresh its
+     status, call:
+     `GET https://ontology.tabitha.bible/search?q={word}&scope=all`
    - Level 0/1 → usable directly.
    - Level 2/3 → cannot be used as a plain word (rule 0.2). Call
      `GET https://ontology.tabitha.bible/simplification_hints?complex_term={word}`
      to get a pairing, explication, or complex/simple alternate, and use
      that instead. Use `GET https://ontology.tabitha.bible/examples?concept={concept}&part_of_speech={pos}`
      if you need precedent for how a concept has been encoded before.
+   - If the local table and a live lookup disagree, the live lookup wins —
+     `complex-terms.md` is a snapshot, not a live mirror.
    - **Access note:** hitting these endpoints requires either the Chrome
      browser tool (connected and signed in) or a `web_fetch`-capable
      context where the URL is fetchable. If neither is available, say so
@@ -180,9 +193,11 @@ not merely warning-suppression — an untagged ambiguous word cascades into
 and adpositions. In 1 Kings 10:16 a single `gold _noun` cleared errors on
 both `make` and `with` that looked like genuine case-frame faults.
 
-8. **If something depends on a document not yet bundled with this skill**
-   (see the "Not yet available" note at the end of `references/phase1-rules.md`),
-   say so explicitly in your answer rather than silently guessing.
+8. **If something depends on grammar or notation detail beyond what's in
+   this skill's own reference files** (see the "Companion documents" note at
+   the end of `references/phase1-rules.md` for what's available as a project
+   file but not yet extracted into a dedicated reference), say so explicitly
+   in your answer rather than silently guessing.
 
 ## Worked example
 
@@ -288,6 +303,11 @@ A few more real examples worth internalizing (raw NIV / Phase 1):
 verbatim, with the He1-specific carve-outs noted inline. Read this whenever
 you need the exact wording of a rule or you're unsure whether a construction
 is allowed.
+
+`references/complex-terms.md` — the 1,469-entry complex-term pairing/
+explication lookup table (source: the project's "How to handle complex
+terms" spreadsheet). Check this before any live `/simplification_hints`
+call — see step 5.
 
 `references/feature-codes.md` — the position-coded grammatical feature
 table for the deeper `semantic_encoding` stage (source: the project's

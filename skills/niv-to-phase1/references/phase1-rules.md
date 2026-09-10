@@ -251,17 +251,32 @@ sentences and are not repeated.
 like minutes/years/days) — e.g. "for a time-long-years" may generate as "for
 many years" downstream.
 
-## Not yet available as reference material
+## Companion documents
 
-The checklist above references three companion documents that are not yet
-bundled with this skill:
-- "How to handle complex terms" (detailed guidance for rule 0.2)
-- "Intro to TBTA grammar" (background for the bracket/clause rules)
-- "Summary of specialized notation" (reference for underscore/implicit
-  notation)
+The checklist above originally referenced three companion documents that
+weren't yet bundled with this skill. All seven documents from the project's
+"***Start here*** TBTA Resource Guide" (+00 through +05) have since been
+supplied as project files and read in full:
 
-Until these are supplied, use the ontology's `/simplification_hints`
-endpoint as a partial substitute for complex-term handling, and flag to the
-user (rather than guess) any case that clearly depends on one of these docs
-and isn't resolved by the checklist above or the worked example in
-SKILL.md.
+- **"How to handle complex terms" (+05, detailed guidance for rule 0.2) is
+  now extracted into `references/complex-terms.md`** — a 1,469-entry
+  pairing/explication/status lookup table generated from that spreadsheet.
+  Check it before calling `/simplification_hints` live; see step 5 of
+  SKILL.md.
+- "Intro to TBTA grammar" (+01 — the nine noun-phrase semantic roles, nine
+  clause types, and Words→Phrases→Clauses structure behind the bracket/clause
+  rules) and "Summary of specialized notation" (+03 — the full six-type
+  implicit-information taxonomy, alternates numbering, and Notes-for-P2 tag
+  vocabulary behind rule 0.11 and the underscore notation) are both
+  available as project files, but have not yet been extracted into a
+  dedicated reference file the way +05 has — consult them directly (or ask
+  the user to attach them) for anything the rules above and
+  `phase1-encoding-review`'s cascade/pattern notes don't already cover.
+- "+00 How to learn to do semantic representations" is the reading-order map
+  for all of the above (He1/He2 distinction, pairing/explication policy).
+  "+04 Longman's Defining Vocabulary" is the ~2,000-word list defining what
+  counts as level 0/1 in the first place.
+
+`/simplification_hints` remains the source of truth if `complex-terms.md`
+ever disagrees with a live lookup — the sheet is a snapshot, not a live
+mirror of the ontology.

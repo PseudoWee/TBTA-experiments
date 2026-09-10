@@ -35,6 +35,15 @@ you have not re-run through `/check`.
    those before re-picking any verb sense.
 
 3. **Look up every word you intend to change or keep.**
+   - **Check `../niv-to-phase1/references/complex-terms.md` first** for any
+     word that looks level 2/3 — it's a 1,469-entry snapshot of the
+     ontology's complex-term guidance (source: the project's "How to handle
+     complex terms" spreadsheet), organized by status (in ontology /
+     approved / suggested / not used) with the pairing or explication
+     already recorded for most entries, plus ~70 known-complex words with no
+     recorded guidance yet. It skips a live round-trip for the common case,
+     but several entries have structure-specific variants (see note below
+     the repeat-offenders table) — confirm anything non-obvious live.
    - `GET https://ontology.tabitha.bible/search?q={word}&scope=all` — level
      and, for verbs, the **categories list, which is the theta grid**
      (Agent-like / Patient-like / Source / Destination / Instrument /
@@ -46,6 +55,8 @@ you have not re-run through `/check`.
      with `level: -1` rather than level 2/3, and then the explication is
      simply its replacement (`large` → *"Use 'big'"*) — nothing to pair or
      explicate.
+   - If the local table and a live lookup disagree, the live lookup wins —
+     `complex-terms.md` is a snapshot, not a live mirror.
 
 4. **Check the corpus for how this has been encoded before.** Query the
    project sqlite for the surrounding verses, the parallel passage, and
@@ -245,7 +256,12 @@ The repeat offenders, with the fix each takes:
 Always confirm against `/simplification_hints` rather than trusting this
 table alone — several of these have structure-specific variants (`prophet of
 X` differs from bare `prophet`; `paralyzed X` differs from `X is
-paralyzed`).
+paralyzed`). `../niv-to-phase1/references/complex-terms.md` has the full
+per-structure breakdown for every term above (e.g. `prophet-A` alone carries
+five separate entries — bare, `prophet of X`, `be-Prophet`, `False prophet`,
+`be a false prophet` — each with its own pairing/explication) and is the
+faster way to check which variant applies before falling back to a live
+`/simplification_hints` call.
 
 **Do not paste an ontology explication in verbatim — check it on its own
 first.** Several explications fail the verb case frame inside the clause
