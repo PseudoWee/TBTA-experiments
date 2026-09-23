@@ -1,6 +1,6 @@
 ---
 name: niv-to-phase1
-description: Converts raw NIV Bible verses into TBTA/TaBiThA "Phase 1" encoding — a controlled, unambiguous semantic representation used in Bible translation (with a lighter "He1" shorthand variant). Use this skill whenever the user pastes NIV verse text and asks for Phase 1 encoding, TBTA encoding, He1 encoding, or otherwise asks to "encode", "convert", or "phase-1" a verse — even if they just paste a verse reference plus "Phase 1" or "He1" with no further explanation. Also use it when checking whether an already-encoded verse follows the Phase 1 rules (bracket balance, pronoun rules, word complexity, etc.).
+description: "Converts raw NIV Bible verses into TBTA/TaBiThA \"Phase 1\" encoding — a controlled, unambiguous semantic representation used in Bible translation (with a lighter \"He1\" shorthand variant). Use this skill whenever the user pastes NIV verse text and asks for Phase 1 encoding, TBTA encoding, He1 encoding, or otherwise asks to \"encode\", \"convert\", or \"phase-1\" a verse — even if they just paste a verse reference plus \"Phase 1\" or \"He1\" with no further explanation. Also use it when checking whether an already-encoded verse follows the Phase 1 rules (bracket balance, pronoun rules, word complexity, etc.)."
 ---
 
 # NIV → Phase 1 Encoding
@@ -52,6 +52,10 @@ license here is to use it as a private reference for this conversion work,
 not to reproduce or redistribute it. If the source file isn't available in
 a given session, ask the user to paste the verse text directly instead of
 reconstructing it from memory.
+
+**When reviewing multiple verses in one sitting (a queue), print each raw
+NIV verse at the top of your message alongside its encoding**, so the user
+can compare source and output without looking it up separately.
 
 ## Workflow
 
@@ -180,10 +184,56 @@ the same clause the way an unrecognized word does. Verify each of these:
 | Space before `_` notes | `things_implicit`, `able_B` | `things _implicit`, `able-B` |
 | Literal pairings use a pipe | `People\children` | `People\|children` (i.e. `dynamic\|literal`) |
 | Only recognized clause notations | `(implicit-info)`, `(implicit)`, `(alt)` | `_implicit`, `_implicitNecessary`, or the notation named in `references/phase1-rules.md` |
-| Parentheses balanced | `(footnote ...` | `(footnote ...)` |
 
 Sense suffixes are hyphenated (`able-B`, `made-A`, `follows-B`), never
 underscored — `able_B` is read as a notes tag and errors.
+
+**`(alt)` specifically means you want a complex/simple alternate reading —
+use `(complex) ... (simple) ...`, not `(alt)`.** There is no generic "here's
+an alternate rendering" tag. The two real alternate-sentence pairs are
+`(literal) ... (dynamic) ...` (a literal vs. dynamic translation pair) and
+`(complex) ... (simple) ...` (rule 0.2's complex alternate — a level-2/3-word
+sentence paired with its plain-language explication). 1 Kings 10:12 tried to
+pair `The king also made harps and lyres...` with `The king also made
+instruments [that had strings]...` under `(alt)`; because `(alt)` isn't a
+real tag, the checker never registered the first sentence as a `(complex)`
+context at all, so `harps` and `lyres` (both L2) were flagged exactly as if
+written bare — retagging as `(complex) ... (simple) ...` cleared both errors
+with no other change. Decide which pair you actually have before writing the
+tag.
+
+**Footnotes vs. parenthetical comments — different notations, easy to
+conflate.** Both render as something in parentheses in English, but they are
+not the same tag and the checker does not treat a bare literal `(` `)` pair
+or an invented dash-prefixed token (`-Footnote`, `-CommentBegin`) as either
+one — both fail as unrecognized syntax.
+
+- A **parenthetical comment** — text that is literally inside parentheses in
+  the NIV wording itself, e.g. Genesis 13:10's *"(This was before the LORD
+  destroyed Sodom and Gomorrah.)"* — is marked `(comment-begin) ...
+  (comment-end)` (`(begin-comment)` / `(end-comment)` are also accepted).
+  This generates as `(...)` in English.
+- A **footnote** — a translator-added note that is not itself part of the
+  literal verse text (a unit-conversion aside, a textual-variant note) — is
+  marked with `(footnote)` alone, with **no closing tag**. Everything after
+  `(footnote)` is part of that footnote until the verse ends or a new
+  `(footnote)` starts elsewhere; a footnote can only go at the end of a
+  verse, never mid-verse.
+
+Confirmed failure mode: Genesis 13:10's NIV parenthetical aside was twice
+mis-tagged as a footnote (`-Footnote`, then later `(footnote)`) across two
+review passes — both attempts cleared the checker (it validates the syntax,
+not the linguistic choice), but the parenthetical-comment tag is the
+correct one for content that is literally parenthesized in the source text.
+Ask "is this literally in parentheses in the NIV, or is it a note I'm
+adding" before choosing between the two.
+
+**Numbers: use digits, not number words.** `two`, `three`, `forty`, etc. are
+not recognized ontology entries — only the numeral form (`2`, `3`, `40`)
+validates (`checker:built-in:7`, "not recognized"). This fires constantly
+across the corpus (Genesis 13:10, Joshua 24:12, Ezra 8:32, Luke 9:13 among
+others) and is a pure find-and-replace with no judgment call — spell out a
+number in the English backtranslation if needed, but encode it as a digit.
 
 **Tag an ambiguous part of speech rather than leaving it.** When a word can
 be read as more than one part of speech, append the tag as a separate
@@ -192,6 +242,25 @@ not merely warning-suppression — an untagged ambiguous word cascades into
 `does not match any sense in the Ontology` errors on the surrounding verb
 and adpositions. In 1 Kings 10:16 a single `gold _noun` cleared errors on
 both `make` and `with` that looked like genuine case-frame faults.
+
+**If the semantically obvious tag makes things worse, try the word's other
+listed sense instead of giving up.** A word can have more than one
+plausible tag, and one sense's case frame can be pickier than another's
+about what sits next to it. On 1 Kings 10:12, `more-than` has both an
+Adposition sense (case frame demands a bracket immediately after it) and an
+Adjective sense (no such demand). `more-than _adp` — the "obvious" tag,
+since it governs a bracketed clause like a preposition — broke that
+adjacency and turned the warning into a real error; `more-than _adj`
+cleared it to zero messages with the same meaning. Check the `lookup_results`
+in the `/check` response for every sense a word has before writing off a
+POS warning as unfixable.
+
+**Pairing order is always simple word first, complex word second**
+(`animal/donkey`, not `donkey/animal`; `poles/beams`, not `beams/poles`
+— confirmed on 1 Kings 10:12, where the ontology's own suggested pairing for
+`beam` is `pole`). The backtranslation still shows the complex word
+(`poles/beams` reads back as "beams"); the simple word on the left is what
+makes the pairing valid, not what shows up in the output.
 
 8. **If something depends on grammar or notation detail beyond what's in
    this skill's own reference files** (see the "Companion documents" note at
@@ -302,7 +371,10 @@ A few more real examples worth internalizing (raw NIV / Phase 1):
 `references/phase1-rules.md` — the full 54-point Phase 1 rule checklist,
 verbatim, with the He1-specific carve-outs noted inline. Read this whenever
 you need the exact wording of a rule or you're unsure whether a construction
-is allowed.
+is allowed. Note: this reference file does not yet include the footnote-vs-
+parenthetical-comment distinction, the digit-numbers rule, the `(alt)`
+notation fix, or the pairing-order rule added above — those live only in
+this SKILL.md for now.
 
 `references/complex-terms.md` — the 1,469-entry complex-term pairing/
 explication lookup table (source: the project's "How to handle complex
@@ -316,4 +388,4 @@ Phase 1 conversions.
 
 `scripts/analyze_corpus.py` — re-run this against an updated export of the
 project's sqlite file and the NIV docx to refresh the calibration stats
-above, or to pull fresh real examples for a rule that needs one.
+above, or to pull fresh real examples for a rule that needs one.

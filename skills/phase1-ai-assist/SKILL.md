@@ -158,4 +158,4 @@ For more than a couple of verses, loop client-side (there's no native batch
 endpoint) with the same modest concurrency (~4 workers) and retry-with-
 backoff approach as `tabitha-editor-api`'s batch functions -- reuse that
 skill's `_run_batch` helper, just route each call through the corrected
-`ai_assist_generate` above (the `text` key, not `message`).
+`ai_assist_generate` above (the `text` key, not `message`).
