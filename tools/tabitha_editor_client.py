@@ -1,4 +1,20 @@
 #!/usr/bin/env python3
+"""Client for the TaBiThA Editor API (https://editor.tabitha.bible).
+
+Source of the API: https://github.com/CanIL-CA/tabitha/tree/main/apps/editor
+Endpoint reference: skills/tabitha-editor-api/references/api-reference.md
+
+  GET  /check?text=...        -> check(text) / batch_check(texts)
+  GET  /analyze?text=...      -> analyze(text) / batch_analyze(texts)
+  POST /ai-assist/generate    -> ai_assist_generate(text) / batch_ai_assist_generate(texts)
+
+There is no native batch endpoint: "batch" loops client-side with limited
+concurrency (default 4 workers; production allows ~60 requests/min/IP) and
+returns results in input order, each {"input", "result"} or {"input", "error"}.
+
+Cloudflare rejects the default Python User-Agent (HTTP 403, error 1010), so
+USER_AGENT below must be kept.
+"""
 import argparse, concurrent.futures, json, sys, time, urllib.error, urllib.parse, urllib.request
 
 BASE_URL = "https://editor.tabitha.bible"
@@ -57,6 +73,17 @@ def batch_analyze(texts, max_workers=DEFAULT_MAX_WORKERS):
 
 def ai_assist_generate(text: str, temperature: float = 0.7,
                         frequency_penalty: float = 0, presence_penalty: float = 0) -> dict:
+    """POST /ai-assist/generate: AI-suggested Phase 1 encoding for raw text.
+
+    The JSON body key is "text" (NOT "message"). The server reads only "text";
+    temperature / frequency_penalty / presence_penalty are sent for
+    compatibility but are ignored by the current endpoint.
+
+    Success: {"status": "ok", "phase_1": "<encoding>", "notes": ["<comment>", ...],
+              "check": {"status": "ok|warning|error", "tokens": [...], "back_translation": "..."}}
+    Failure: {"status": "error", "phase_1": "", "notes": [], "check": {...}, "message": "<reason>"}
+    "check" is the /check result the server already ran on "phase_1".
+    """
     body = {
         "text": text,
         "temperature": temperature,
