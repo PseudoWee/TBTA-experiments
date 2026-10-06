@@ -1,28 +1,28 @@
-# claude.ai loader stubs
+# claude.ai loader
 
-Thin skills installed on claude.ai. Each stub only holds the skill's name, its
-trigger description and a Step 0 that fetches the real `SKILL.md` from this
-repo at run time:
+One thin skill, `presciencelabs/`, replaces installing six separate skills on
+claude.ai. It holds only the combined trigger description and a Step 0 that
+fetches the router from this repo:
 
-`https://raw.githubusercontent.com/PseudoWee/TBTA-experiments/main/skills/<name>/SKILL.md`
+`https://raw.githubusercontent.com/PseudoWee/TBTA-experiments/main/skills/presciencelabs/SKILL.md`
 
-So the repo is the single source of truth: pushing to `main` updates every
-claude.ai session, scheduled tasks included, with no re-upload.
+The router (`skills/presciencelabs/SKILL.md`) picks the right sub-skill
+(niv-to-phase1, phase1-encoding-review, phase1-new-verses, phase1-ai-assist,
+tabitha-editor-api, presciencelabs-skill-maintenance) and fetches its real
+`SKILL.md` and references from `skills/<name>/`.
 
-## Folders
+## Install
 
-One folder per skill, each containing only `SKILL.md`: niv-to-phase1,
-phase1-encoding-review, phase1-new-verses, phase1-ai-assist, tabitha-editor-api,
-presciencelabs-skill-maintenance.
+Install only `skills/claude-ai-loaders/presciencelabs/` on claude.ai (card or
+folder upload). Do not install the six folders under `skills/` separately.
 
 ## Updating
 
-- Edit the real skill under `skills/<name>/` and push. Nothing else needed.
-- Re-save a stub on claude.ai (card or folder upload) only when a skill's name or
-  trigger description changes, or when a new skill is added (add its stub here).
+- Edit a sub-skill under `skills/<name>/` and push to `main`. Nothing else needed.
+- Re-save the loader only when its description changes (new skill, new triggers).
 - Procedure for Claude: `skills/presciencelabs-skill-maintenance/SKILL.md`.
 
 ## Requirements
 
 The repo stays public; the session can reach `raw.githubusercontent.com`. If the
-fetch fails, the stub stops and says so rather than guessing.
+fetch fails, the loader stops and says so rather than guessing.
