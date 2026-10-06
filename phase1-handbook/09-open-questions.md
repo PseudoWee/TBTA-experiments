@@ -51,4 +51,4 @@ The source had: two items numbered **0.3**; no **0.35** or **0.46**; no **§27**
 3. ~~Extract +01 and +03 into the skills' references~~ — **done 2026-10-06**: handbook files 02 and 04 are the extractions; copies are bundled as `skills/niv-to-phase1/references/tbta-grammar.md` and `specialized-notation.md`, and the skill's step 8 and "Companion documents" section point to them. Re-copy them when the handbook files change.
 4. ~~Build a checker-ID ↔ checklist-rule table~~ — **done**: file 06 §3 (best-effort mapping).
 5. Decide the home of the NIV 1984 source (cannot be committed; keep as a project file).
-6. Consider adding this handbook's rules index to the skills so each SKILL.md links here rather than restating.
+6. ~~Add this handbook's rules index to the skills so each SKILL.md links here~~ — **done**: all five repo skills end with a "Handbook (source of truth)" section linking to the README, rules index (03), notation (04), checker/API (06), lessons and playbooks (07, 08) and open questions (09).

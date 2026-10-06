@@ -158,4 +158,18 @@ For more than a couple of verses, loop client-side (there's no native batch
 endpoint) with the same modest concurrency (~4 workers) and retry-with-
 backoff approach as `tabitha-editor-api`'s batch functions -- reuse that
 skill's `_run_batch` helper, just route each call through the corrected
-`ai_assist_generate` above (the `text` key, not `message`).
+`ai_assist_generate` above (the `text` key, not `message`).
+
+## Handbook (source of truth)
+
+Rule numbers, notation and background for Phase 1 are maintained once, in the
+TBTA-experiments repo's `phase1-handbook/` folder — this skill links there
+instead of restating them. If this file and the handbook disagree, the handbook
+wins; flag the difference to the user.
+
+- Start here (reading order): https://github.com/PseudoWee/TBTA-experiments/blob/main/phase1-handbook/README.md
+- Rules index, numbered 0.1–0.53 / §1–§35: https://github.com/PseudoWee/TBTA-experiments/blob/main/phase1-handbook/03-rules-checklist.md
+- Notation reference: https://github.com/PseudoWee/TBTA-experiments/blob/main/phase1-handbook/04-notation-reference.md
+- Checker rule IDs ↔ rules, API: https://github.com/PseudoWee/TBTA-experiments/blob/main/phase1-handbook/06-checker-and-api.md
+- Lessons learned and playbooks: https://github.com/PseudoWee/TBTA-experiments/blob/main/phase1-handbook/07-lessons-learned.md, https://github.com/PseudoWee/TBTA-experiments/blob/main/phase1-handbook/08-playbooks.md
+- Open questions: https://github.com/PseudoWee/TBTA-experiments/blob/main/phase1-handbook/09-open-questions.md

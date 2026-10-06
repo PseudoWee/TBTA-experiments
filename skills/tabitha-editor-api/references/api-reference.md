@@ -1,6 +1,6 @@
 # TaBiThA Editor API Reference
 
-Source project: https://github.com/presciencelabs/tabitha-editor
+Source project: https://github.com/CanIL-CA/tabitha/tree/main/apps/editor
 Live app: https://editor.tabitha.bible
 Base URL for API calls: `https://editor.tabitha.bible`
 

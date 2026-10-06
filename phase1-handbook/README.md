@@ -44,7 +44,7 @@ This folder consolidates:
 
 ## A note on the "+00 – +07" scope
 
-The request was to consolidate "checklist +00–07 (0.5 is in the context database)". Six numbered resources exist in the project (+00 to +05), plus the checklist's own 0.x items. This handbook therefore treats *+00 through +05* plus the checklist's items `0.1–0.53` as the intended scope, and "0.5" as the complex-terms spreadsheet (+05) held in the project knowledge store. **If a +06 or +07 document exists, it was not available in the project and is not covered** — see `09-open-questions.md` §A.
+The request was to consolidate "checklist +00–07 (0.5 is in the context database)". Six numbered resources exist in the project (+00 to +05), plus the checklist's own 0.x items. This handbook therefore treats *+00 through +05* plus the checklist's items `0.1–0.53` as the intended scope, and "0.5" as the complex-terms spreadsheet (+05) held in the project knowledge store. **If a +06 or +07 document exists, it was not available in the project and is not covered**.
 
 ## Status
 

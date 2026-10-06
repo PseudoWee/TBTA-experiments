@@ -7,7 +7,7 @@ description: "Call the TaBiThA Editor API (https://editor.tabitha.bible) to chec
 
 A thin client for the three REST endpoints exposed by the TaBiThA Editor
 (the tool behind https://editor.tabitha.bible, source at
-https://github.com/presciencelabs/tabitha-editor). Full endpoint details are
+https://github.com/CanIL-CA/tabitha/tree/main/apps/editor). Full endpoint details are
 in `references/api-reference.md` — read it if you need exact request/response
 shapes, **except for `/ai-assist/generate`: that reference file's request and
 response shape for this endpoint is stale (it still describes a
@@ -419,3 +419,17 @@ script can reach it. Distinguish the two failure modes: a network/DNS/
 connection error means the domain is blocked and the user needs to allow it;
 an HTTP 403 with `error_code 1010` means the `User-Agent` header is missing —
 not that the API is down.
+
+## Handbook (source of truth)
+
+Rule numbers, notation and background for Phase 1 are maintained once, in the
+TBTA-experiments repo's `phase1-handbook/` folder — this skill links there
+instead of restating them. If this file and the handbook disagree, the handbook
+wins; flag the difference to the user.
+
+- Start here (reading order): https://github.com/PseudoWee/TBTA-experiments/blob/main/phase1-handbook/README.md
+- Rules index, numbered 0.1–0.53 / §1–§35: https://github.com/PseudoWee/TBTA-experiments/blob/main/phase1-handbook/03-rules-checklist.md
+- Notation reference: https://github.com/PseudoWee/TBTA-experiments/blob/main/phase1-handbook/04-notation-reference.md
+- Checker rule IDs ↔ rules, API: https://github.com/PseudoWee/TBTA-experiments/blob/main/phase1-handbook/06-checker-and-api.md
+- Lessons learned and playbooks: https://github.com/PseudoWee/TBTA-experiments/blob/main/phase1-handbook/07-lessons-learned.md, https://github.com/PseudoWee/TBTA-experiments/blob/main/phase1-handbook/08-playbooks.md
+- Open questions: https://github.com/PseudoWee/TBTA-experiments/blob/main/phase1-handbook/09-open-questions.md

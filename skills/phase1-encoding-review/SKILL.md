@@ -1657,3 +1657,17 @@ back `error` on a sentence that carries no error or warning messages at all
 Judge a fix by the message list, not by the status string alone — and when
 counting a corpus sample, expect the "ok" count to run slightly below the
 "fully clean" count for this reason.
+
+## Handbook (source of truth)
+
+Rule numbers, notation and background for Phase 1 are maintained once, in the
+TBTA-experiments repo's `phase1-handbook/` folder — this skill links there
+instead of restating them. If this file and the handbook disagree, the handbook
+wins; flag the difference to the user.
+
+- Start here (reading order): https://github.com/PseudoWee/TBTA-experiments/blob/main/phase1-handbook/README.md
+- Rules index, numbered 0.1–0.53 / §1–§35: https://github.com/PseudoWee/TBTA-experiments/blob/main/phase1-handbook/03-rules-checklist.md
+- Notation reference: https://github.com/PseudoWee/TBTA-experiments/blob/main/phase1-handbook/04-notation-reference.md
+- Checker rule IDs ↔ rules, API: https://github.com/PseudoWee/TBTA-experiments/blob/main/phase1-handbook/06-checker-and-api.md
+- Lessons learned and playbooks: https://github.com/PseudoWee/TBTA-experiments/blob/main/phase1-handbook/07-lessons-learned.md, https://github.com/PseudoWee/TBTA-experiments/blob/main/phase1-handbook/08-playbooks.md
+- Open questions: https://github.com/PseudoWee/TBTA-experiments/blob/main/phase1-handbook/09-open-questions.md
