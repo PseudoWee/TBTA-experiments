@@ -435,13 +435,13 @@ Details and fixes for each are in file 07.
 
 ## Companion documents (now in the TBTA-experiments repo)
 
-The three documents this checklist refers to are on hand. Read the matching file instead of guessing:
+The three documents this checklist refers to are on hand, bundled in this skill's `references/` folder (the handbook in the repo is the source of truth). Read the matching file instead of guessing:
 
 | The checklist refers to | Read this in <https://github.com/PseudoWee/TBTA-experiments> | Use it for |
 |---|---|---|
 | "How to handle complex terms" (detail for rule 0.2) | [`skills/niv-to-phase1/references/complex-terms.md`](https://github.com/PseudoWee/TBTA-experiments/blob/main/skills/niv-to-phase1/references/complex-terms.md) (the 1,469-row lookup) and [`phase1-handbook/05-vocabulary-and-complexity.md`](https://github.com/PseudoWee/TBTA-experiments/blob/main/phase1-handbook/05-vocabulary-and-complexity.md) | Pairings, explications and `(complex)` alternates. Check the table first, then the ontology's `/simplification_hints` for anything it doesn't list (the live lookup wins on disagreement) |
-| "Intro to TBTA grammar" (background for the bracket/clause rules) | [`phase1-handbook/02-grammar-foundations.md`](https://github.com/PseudoWee/TBTA-experiments/blob/main/phase1-handbook/02-grammar-foundations.md) | Words → phrases → clauses, semantic roles, why clauses are bracketed |
-| "Summary of specialized notation" (underscore/implicit notation) | [`phase1-handbook/04-notation-reference.md`](https://github.com/PseudoWee/TBTA-experiments/blob/main/phase1-handbook/04-notation-reference.md) | Every tag, bracket and alternate notation |
+| "Intro to TBTA grammar" (background for the bracket/clause rules) | [`tbta-grammar.md`](tbta-grammar.md) (copy of `phase1-handbook/02-grammar-foundations.md`) | Words → phrases → clauses, semantic roles, why clauses are bracketed |
+| "Summary of specialized notation" (underscore/implicit notation) | [`specialized-notation.md`](specialized-notation.md) (copy of `phase1-handbook/04-notation-reference.md`) | Every tag, bracket and alternate notation |
 
 Also useful: [`phase1-handbook/README.md`](https://github.com/PseudoWee/TBTA-experiments/blob/main/phase1-handbook/README.md) (reading order), [`07-lessons-learned.md`](https://github.com/PseudoWee/TBTA-experiments/blob/main/phase1-handbook/07-lessons-learned.md) (confirmed failure patterns) and [`06-checker-and-api.md`](https://github.com/PseudoWee/TBTA-experiments/blob/main/phase1-handbook/06-checker-and-api.md) (checker rule IDs). The original PDFs/spreadsheet live in the Claude Project "Presciencelabs".
 

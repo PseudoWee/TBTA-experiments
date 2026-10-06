@@ -343,16 +343,20 @@ the seemingly-more-grammatical `an agreement/treaty` still reaches
 `status: ok` but back-translates as the wrong "an treaty." Pick `a`/`an` to
 match the complex word every time.
 
-8. **If something depends on grammar or notation detail beyond what's in
-   this skill's own reference files**, read the matching companion document
-   in the TBTA-experiments repo before guessing: complex terms →
-   `references/complex-terms.md` and `phase1-handbook/05-vocabulary-and-complexity.md`;
-   grammar/bracket background → `phase1-handbook/02-grammar-foundations.md`;
-   underscore/implicit notation → `phase1-handbook/04-notation-reference.md`
-   (all under https://github.com/PseudoWee/TBTA-experiments; see the
-   "Companion documents" section at the end of `references/phase1-rules.md`).
-   If a case still isn't resolved by those, say so explicitly in your answer
-   rather than silently guessing.
+8. **If something depends on grammar or notation detail beyond the rules file**,
+   fetch and read the matching document from the TBTA-experiments repo
+   (https://github.com/PseudoWee/TBTA-experiments) before guessing — these live
+   in GitHub, not in this skill folder, so anyone with repo access can use them:
+   - complex terms → `references/complex-terms.md` (bundled), plus
+     https://github.com/PseudoWee/TBTA-experiments/blob/main/phase1-handbook/05-vocabulary-and-complexity.md
+   - grammar / bracket background →
+     https://github.com/PseudoWee/TBTA-experiments/blob/main/phase1-handbook/02-grammar-foundations.md
+   - underscore / implicit notation →
+     https://github.com/PseudoWee/TBTA-experiments/blob/main/phase1-handbook/04-notation-reference.md
+   - reading order for everything else: https://github.com/PseudoWee/TBTA-experiments/blob/main/phase1-handbook/README.md
+
+   If the repo can't be reached, say so, and if a case still isn't resolved by
+   those documents, say so explicitly rather than silently guessing.
 
 ## Worked example
 

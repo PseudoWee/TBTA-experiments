@@ -2,12 +2,6 @@
 
 A single source of truth must say where it is *not* certain. Everything below was noticed while consolidating.
 
-## A. Scope questions about this handbook
-
-1. **"+00 – +07".** Only +00 to +05 exist in the project, plus the checklist's own items. If there is a +06 or +07, it was not available. (Candidates the original documents mention but which were never supplied: the **"Analysis Conventions"** document (pronouns and clause brackets; likely in the Drive folder "Helpful documents for semantic representations" — see file 10), the **"More Instructional Documents"** folder with exercises, the *"***Start here*** TBTA Resource Guide"* itself, and the video playlists 1–4.)
-2. **"0.5".** Interpreted as the +05 complex-terms spreadsheet. If you meant checklist rule 0.6 (placement of event clauses), that's covered in file 03 §D3.
-3. The full 1,469-row complex-terms table is **not duplicated** here to avoid two diverging copies; it lives in `skills/niv-to-phase1/references/complex-terms.md`. Decide whether you want it moved/linked from this folder.
-
 ## B. Numbering quirks in the source checklist (now resolved in this handbook)
 
 The source had: two items numbered **0.3**; no **0.35** or **0.46**; no **§27** (numbering jumps 26 → 28); and a "See item 27 below" reference in 0.33 (now 0.34) with nothing to point to. The handbook **renumbers to 0.1–0.53 and §1–§35**; crosswalk at the top of file 03. Still open:
@@ -52,9 +46,9 @@ The source had: two items numbered **0.3**; no **0.35** or **0.46**; no **§27**
 
 ## F. Suggested clean-up tasks for the repo
 
-1. Update or retire `skills/niv-to-phase1/references/phase1-rules.md` (§C.1).
+1. ~~Update or retire `skills/niv-to-phase1/references/phase1-rules.md`~~ — **done 2026-10-06**: replaced with a copy of file 03 (renumbered).
 2. Fix `tools/tabitha_editor_client.py` docs / `references/api-reference.md` AI-assist shape.
-3. Extract +01 and +03 into the skills' references (the skill's "Companion documents" note says they haven't been).
-4. Build a checker-ID ↔ checklist-rule table (§B).
+3. ~~Extract +01 and +03 into the skills' references~~ — **done 2026-10-06**: handbook files 02 and 04 are the extractions; copies are bundled as `skills/niv-to-phase1/references/tbta-grammar.md` and `specialized-notation.md`, and the skill's step 8 and "Companion documents" section point to them. Re-copy them when the handbook files change.
+4. ~~Build a checker-ID ↔ checklist-rule table~~ — **done**: file 06 §3 (best-effort mapping).
 5. Decide the home of the NIV 1984 source (cannot be committed; keep as a project file).
 6. Consider adding this handbook's rules index to the skills so each SKILL.md links here rather than restating.
