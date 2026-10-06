@@ -42,10 +42,6 @@ This folder consolidates:
 * **He1** vs **full notation (He2 / "phase 1")** — see `01-orientation.md`. Where a rule differs for He1 it says so; otherwise it applies to both.
 * Examples marked *(source)* come from the original documents. Examples marked *(corpus)* come from reviewed verses in the project corpus. Unmarked examples were written for this handbook and illustrate a rule; they have not been separately verified against the checker.
 
-## A note on the "+00 – +07" scope
-
-The request was to consolidate "checklist +00–07 (0.5 is in the context database)". Six numbered resources exist in the project (+00 to +05), plus the checklist's own 0.x items. This handbook therefore treats *+00 through +05* plus the checklist's items `0.1–0.53` as the intended scope, and "0.5" as the complex-terms spreadsheet (+05) held in the project knowledge store. **If a +06 or +07 document exists, it was not available in the project and is not covered**.
-
 ## Status
 
 Snapshot compiled 2026-10-06. The editor and ontology are live services that change; anything in `07-lessons-learned.md` about checker behaviour should be re-tested before relying on it (the lessons file explains why).
