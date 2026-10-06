@@ -23,7 +23,14 @@ can compare source and output without looking it up separately.
 1. **Get the current encoding and its check result.** Use the
    `tabitha-editor-api` skill (apply its User-Agent patch first, or every
    call 403s). Walk the message tree recursively — `messages[]` nest inside
-   `sub_tokens[]`, and a flat scan misses most of them.
+   `sub_tokens[]`, but not *only* there: a token's `pronoun` sub-object can
+   carry its own nested `messages` too (confirmed on the sentence-initial
+   capitalization rule firing on a pronoun following `(imp)`, e.g. Genesis
+   35:2's `(imp) you(people)...`). Recurse into every dict that has a
+   `messages` key, `pronoun` included — a walker that only recurses into
+   `sub_tokens` silently undercounts errors and warnings, which can make a
+   fix look complete (all messages you found are gone) when a pronoun-nested
+   one is still sitting there unseen.
 
 2. **Separate root causes from cascades before fixing anything.** The
    checker says so itself: *"because this word is not recognized, errors and
@@ -323,7 +330,7 @@ elsewhere in the clause. Fix the structure and the verb errors disappear
 untouched. Never start by re-picking a verb sense when any of them is
 present.
 
-### `where` as a relativizer (checker:32)
+### `where`/`when` as a relativizer (checker:32/33)
 
 `Cannot use 'where' as a relativizer. Use 'the place [that...]' instead.`
 The malformed relative is read as a patient clause on the preceding verb, so
@@ -347,6 +354,28 @@ under `destroy` rather than a have/be verb, and the `where` error stands
 alone with nothing behind it. Always confirm by isolation rather than
 assuming three free fixes.
 
+**`when` is the direct sibling of this fault (checker:33), same fix shape.**
+`the time [when our ancestors lived]` throws its own relativizer error and
+can mask unrelated false case-frame errors further into the sentence, the
+same way `where` does. Confirmed on Ezra 9:7: `the time [when our ancestors
+lived]` produced the relativizer error plus 2 spurious `do-A` errors two
+clauses later on "guilty of doing many bad things"; rewriting as `the time
+[that our ancestors lived during]` (stranding the preposition, same fix as
+`where`) cleared the relativizer error and both `do` errors at once.
+
+**Fixing this kind of cascade can *unmask* a new, previously-invisible
+fault rather than only clearing errors — don't assume a shrinking error
+count means nothing new can surface.** Genesis 22:2 fixed `where` → `that
+... <adposition>` cleanly, which properly re-scoped the clause boundary —
+and that revealed a genuine `Patient not immediately after the verb` fault
+on `show` (checker:built-in:1) one clause over: `I(God) will show you(Abraham)
+the mountain [that ...]` needed reordering to `show the mountain [that ...]
+to you(Abraham)` to validate. The malformed `where` clause had been
+absorbing the checker's attention such that `show`'s own argument order was
+never being checked at all. After any structural fix — not just this one —
+re-run `/check` on the **whole** verse rather than stopping once the errors
+you set out to fix are gone.
+
 ### Glued bracket — `Missing a space before [` (token:syntax)
 
 An opening bracket written flush against the preceding word (`person[who
@@ -360,6 +389,80 @@ The backtranslation is again the tell — `the person[ that who was the
 leader` — and the token in the error message carries the bracket with it
 (`'person['`). **Fix every glued bracket before re-picking any verb sense**;
 it is a pure typo and never needs a semantic decision.
+
+**The same fault occurs on the closing side too — check both sides of every
+bracket, not just before an opening one.** A closing bracket glued directly
+to the word that follows it (`...donkeys]. And...` with no space →
+`?"]Ziba`, `desert]those`) fires its own `must be followed by a space or
+punctuation` error (token:syntax) but corrupts the clause boundary the same
+way the opening-bracket case does. Confirmed on 2 Samuel 16:2: two glued
+closing brackets (`?"]Ziba`, `desert]those`) were the root cause of 6 of the
+verse's 8 errors — a missing-space error each, plus a false "first word must
+be capitalized" flag and a false case-frame/ontology error on `answered`
+cascading from the first, and a false "two verbs in the same clause"
+error (checker:5, `become`+`drink`) cascading from the second. Restoring
+both spaces alone took the verse from 8 errors to `status: ok` (apart from
+one unrelated level-2/3 pairing fix).
+
+### Glued period — `Missing a space before the next sentence` (token:syntax)
+
+A sentence-ending period glued directly to the next word (no space, e.g.
+`...Abimelech.And God...`) makes the parser read both sentences as one
+clause, throwing a false `multiple verbs in the same clause` error
+(checker:5) plus spurious case-frame messages on the first verb, on top of
+the syntax error for the missing space itself. Confirmed on 2 Samuel 22:33:
+adding the single missing space after the period cleared all 5 messages (2
+case-frame errors on `gives`, the syntax error, a stray case-frame error
+tagged to `God`, and the two-verbs error on `protects`) at once, with no
+other change. The tell is the same `Cannot have multiple verbs in the same
+clause` message the glued-bracket case above already produces, but caused
+by a glued `.` instead of a glued `[`.
+
+### Round parentheses used to wrap a full clause instead of square brackets
+
+Wrapping a whole clause in `(...)` (e.g. `(At that time the people [...]
+heard [...]).`) instead of `[...]` is invalid — round parentheses are
+reserved for short special-notation tags like `(title)` / `(imp)`, not a
+bracketed clause. Confirmed on Judges 20:3: the mis-bracketing alone
+produced 4 of the verse's 6 errors at once (`Missing a closing parenthesis`
+on the opening `(At`, `Missing an opening parenthesis` on the closing `])`,
+`Missing a closing bracket somewhere in the previous sentence`, and a false
+"first word of sentence must be capitalized" flag on the word right after,
+since the parser thought a new sentence started there); swapping `(`/`)`
+for `[`/`]` cleared all four with no other change. The tell is a "missing
+parenthesis" error paired with a "missing bracket" error on the same
+sentence — that combination usually means parens were used where brackets
+belonged, not that a character is literally missing.
+
+### Quote-clause bracket faults — missing or misordered bracket before a quote (checker:19)
+
+A quoted-speech clause needs a bracket immediately before its opening quote
+mark, in the right order (`["..."]`, not `"[...`), and either fault
+cascades unpredictably into whatever sits inside the mis-scoped clause —
+not always the same kind of downstream error, so don't expect a single
+consistent symptom.
+
+- **Missing bracket entirely**, with an imperative inside the quote: the
+  checker can misread the imperative clause as a wrongly-nested complement
+  clause, firing checker:8 (`Cannot mark complement clauses as imperative`)
+  on a perfectly valid `(imp)` tag. Confirmed on Luke 23:37: adding the
+  single missing bracket before the quote (`X said, ["..."]`) cleared both
+  the checker:19 error and the checker:8 error, plus 2 case-frame messages
+  on the verb that had been mis-scoped by the same missing bracket — 4 of 5
+  errors from one root cause.
+- **Bracket and quote mark in the wrong order** (`"[...` instead of
+  `["...`): a word *outside* the mis-scoped quote clause can get falsely
+  flagged as "not recognized in the ontology" (checker:built-in:7) rather
+  than a case-frame error inside it. Confirmed on Luke 20:5:
+  `Jesus will ask, "[Why did you(leaders) not believe John]?"` flagged `Why`
+  as unrecognized (2 warnings); swapping to `["Why...` cleared both with no
+  change to `Why` itself.
+
+Between these two, checker:19's bracket/quote-order fault looks like it can
+cascade into almost any downstream check depending on what sits inside the
+mis-scoped clause. **After fixing a missing or misordered bracket before a
+quote, re-isolate everything inside that clause, not just the words the
+original errors pointed at.**
 
 ### Distributive `each … one <noun>`
 
@@ -394,6 +497,16 @@ with perfect tense: isolated, `People have brought gold to Judah.` and
 `have + past-participle` clause to simple past on sight — clear the other
 errors in the sentence first and re-check whether it was ever broken.
 
+**A sibling fault to `(alt)`: `(implicit-info)` is also never a real clause
+tag** (the correct one is `(implicit-situational)`) **and clause notation is
+case-sensitive even when the tag name is otherwise right** —
+`(Implicit-situational)` fails exactly like a genuine misspelling, cascading
+into unrelated errors elsewhere in the sentence (confirmed on Colossians
+2:23). Both are the same shape as this `(alt)` fault: an abbreviated,
+informal-looking, or wrongly-cased clause tag that looks plausible but was
+never wired into the checker's grammar. See `niv-to-phase1`'s mechanical
+pass for the full detail and confirmed examples.
+
 ### `let` without a bracket around its embedded action
 
 `let those sick people touch the edge of Jesus's clothes/robe` (no brackets)
@@ -409,12 +522,105 @@ change to `let` itself. Check for this before re-picking a verb sense any
 time `let`, `make`, `have`, or another causative-type verb is followed
 directly by an unbracketed clause.
 
+**A companion variant: the bracket is present, but scoped too narrowly to
+exclude the embedded subject.** A causative/communication verb (`tell`,
+likely also `order`, `ask`, `command`) taking an infinitival complement
+whose subject differs from the matrix subject needs the **whole** clause —
+subject plus infinitive together — inside the brackets, not just the
+infinitive phrase. Confirmed on Genesis 30:35: `Laban told Laban's sons [to
+care for those animals]` (bracket around the infinitive only) fires `tell
+cannot be used with a same-participant patient clause`
+(checker:built-in:1) even though the two subjects are clearly different;
+rewriting as `Laban told [Laban's sons to care for those animals]` (bracket
+around subject+infinitive) validates clean with no other change. Unlike the
+`let` case above, the bracket already exists — it's just scoped too
+narrowly, excluding the embedded subject.
+
+### A `named X` postmodifier inside `give`'s destination NP
+
+A rule 0.24 `named X` postmodifier breaks `give`'s case-frame validation
+when it sits inside `give`'s destination NP, even though the same
+destination NP validates fine both without the postmodifier (`give X to the
+priest`) and with a bare proper noun instead (`give X to Eleazar`).
+Confirmed on Numbers 19:3 and reproduced independently on Joshua 13:7 (`to
+half of the tribe named Manasseh`): isolating `give that cow to the priest
+named Eleazar` alone reproduces all 3 of the verse's errors (one "does not
+match any sense", two "patient must immediately follow"); wrapping the
+postmodifier as a relative clause instead — `to the priest [who is named
+Eleazar]` / `to the tribe [that is named Manasseh]` — clears all 3 at once
+with no other change. The tell is `give`/"does not match any sense" plus
+"requires the patient to immediately follow" errors when the patient
+visibly already follows the verb, which usually means a `named X` clause is
+embedded in the destination rather than a genuine word-order fault.
+
+### `show` with a bare `that`-clause complement misread as a relative clause
+
+A verb that takes a bare bracketed complement clause as its Patient-
+proposition argument (confirmed on `show` sense B: Agent, Patient,
+Patient-proposition) throws a false "does not match any sense in the
+Ontology" error on the **verb itself** when that complement is introduced
+with `that` instead of being a bare bracket — the checker misreads
+`[that Joseph was ...]` as a relative clause modifying the preceding NP
+rather than the verb's own complement. Confirmed on Genesis 41:43: `the
+king showed all of the people [who lived in Egypt] [that Joseph was the
+chief official of the king]` errors on `showed`; dropping only the `that` —
+`[Joseph was the chief official of the king]` — clears the error with an
+identical back-translation. The checker's own advisory message
+(checker:built-in:9, *"This is being interpreted as a relative clause. If
+it's supposed to be a complement clause, remove the that"*) already names
+the fix; the tell is easy to miss only because it fires as a warning on
+`that` rather than pointing at the verb it's actually breaking. Whenever a
+verb throws a false ontology-sense error and a nearby bracketed clause
+carries this advisory warning, remove the `that` before re-picking the
+verb's sense.
+
+### An unrecognized proper noun inside a relative clause's head NP or a preposition's object poisons the surrounding verb
+
+Distinct from the `be`-verb-specific case documented under "Ambiguous part
+of speech" below: a genuine, unfixable Bible name absent from the ontology
+poisons case-frame checking on the surrounding verb whenever it sits inside
+a bracketed relative clause's head NP or as a preposition's object, not just
+right before `be`. Confirmed on 1 Kings 20:20: `Ben-Hadad [who was the king
+of Aram] escaped ...` kept throwing 2 false `escape` errors even after
+every glued bracket and stray comma was fixed; substituting a recognized
+name (David) in the identical structure returned `status: ok` immediately,
+proving the fault traces to the unrecognized name, not sentence structure.
+A second manifestation in the same verse: `escaped with Ben-Hadad` (no
+relative clause at all) also threw a false `escape` sense error and a false
+case-frame error on `with`, cleared instantly by the same name
+substitution. Since the proper noun itself can't be fixed, the workaround
+is to flip which noun carries the clause: promote a recognized common noun
+to the head via the rule-0.24 `named X` construction (`the king of Aram
+[who was named Ben-Hadad]`), then refer back with a plain pronoun-referent
+(`that king`) elsewhere per rule 0.36. This cleared all 5 of the verse's
+escape-related errors plus the `with` error at once. The tell is a verb
+throwing a false ontology-sense or case-frame error anywhere near an
+unrecognized proper noun, clearing only when the proper noun's role in the
+clause structure is worked around rather than when the verb's own sense is
+re-picked.
+
+### A bare (article-less) common noun as a preposition's object breaks the preposition's own case frame
+
+The fault lands on the **preposition**, not the noun, even when the noun is
+ordinary level 0/1 vocabulary. Confirmed by direct isolation on Luke 8:6:
+`on ground` returns `This use of on does not match any sense in the
+Ontology` (checker:built-in:2) plus an ambiguous-part-of-speech warning on
+`ground`; `on the ground` (identical otherwise) returns `status: ok` with
+zero messages. This can mask a second, genuinely independent fault in the
+same clause — in this verse, `dropped` had also been flagged as not
+matching any sense, and that part was real (`drop`'s theta grid doesn't
+cover this argument structure; `scatter` was needed) — but the
+preposition's own error only cleared once the missing article was
+restored. When a preposition throws "does not match any sense," check
+whether its object noun is missing a determiner before concluding the
+preposition's case frame itself is at fault.
+
 ## Recurring failure patterns
 
 Confirmed against the API. Check for these first — they account for most
 errors in practice.
 
-### `all` before a non-generic Noun (checker:35, handbook rule 0.18 (old checklist 0.17))
+### `all` before a non-generic Noun (checker:35, handbook rule 0.18, old checklist 0.17)
 
 `Use 'all of', unless the modified Noun is generic.` A top-10 error rule in
 every calibration sample so far (12–14 errors per 200 verses) and the most
@@ -435,6 +641,23 @@ next clause is not — `grain` is a mass noun, `things` is determined.
 Verified directly against the API: `all his(man's) grain` returns no
 checker:35 message, `all the tools` returns one. Do not sweep blindly;
 check the noun.
+
+### `some <adjective> <noun>` breaks the governing verb's case frame
+
+A recurring pattern parallel in shape to `all`/`all of` above but not tied
+to any named checker rule_id: bare `some <adjective> <noun>` (e.g. `some
+clean birds`) breaks the governing verb's case frame, even though `some
+<noun>` alone and `the <adjective> <noun>` alone both validate fine in
+isolation. Confirmed on Genesis 8:20 (`Noah killed some clean birds and some
+clean animals`): isolating the clause reproduced 2 case-frame errors on
+`killed`/`some` plus 2 ambiguous-part-of-speech warnings on `clean`
+(checker:built-in:8); rewriting as `some birds [that are clean _adj] and
+some animals [that are clean _adj]` cleared all 4 at once, confirming the
+case-frame errors were a cascade from the adjective's unresolved part of
+speech, not a genuine verb-sense fault. Easy to mistake for an ontology gap
+on the verb rather than a determiner+adjective construction issue — check
+for an untagged adjective right after `some` before concluding the verb
+itself is broken.
 
 ### Level-2/3 word used bare (rule 0.2)
 
@@ -495,7 +718,11 @@ as a bug in the explication, not in the verse you are reviewing.
 Three mechanics that trip people up:
 
 - **Pairing order is `simple/complex`.** `animal/donkey` validates;
-  `donkey/animal` still errors. The level-0/1 word goes first.
+  `donkey/animal` still errors. The level-0/1 word goes first. When the
+  pairing follows an indefinite article, pick `a`/`an` to agree with the
+  **complex** word, since that's what the backtranslation surfaces
+  (`a agreement/treaty` → "a treaty"; `an agreement/treaty` → the wrong
+  "an treaty" — both check `ok`, only one backtranslates right).
 - **A hyphenated particle verb on the simple side stays UNINFLECTED.**
   `arrest` pairs with `take-away`, and the tense goes on the complex side
   only: `take-away/arrested` validates at `ok` and still backtranslates as
@@ -527,6 +754,118 @@ When one L2 word repeats across a verse — `neighbor's` fires six times in
 Exodus 20:17 — the explication has to be written out in full at every
 occurrence. That is one table row, and the verbosity is by design; do not
 collapse it back to the bare word.
+
+### Malformed pronoun-referent parens
+
+Two distinct, confirmed-invalid shapes for the text inside a pronoun's
+referent parenthetical — both produce a misleading error signature that
+points somewhere other than the actual fault.
+
+- **A multi-word phrase, joined by a preposition or a comma list.** A
+  referent paren containing more than one word with an embedded preposition
+  (`you(daughters in law)`) breaks the parenthesis parser: the checker reads
+  the preposition as splitting the tag, producing "missing closing
+  parenthesis" + "missing opening parenthesis" + a spurious case-frame error
+  on the preposition itself — three messages per occurrence. Confirmed on
+  Ruth 1:9 (2 occurrences, 6 of the verse's 6 errors from this one fault):
+  replacing the referent with a single level-0/1 noun that still
+  distinguishes the participants (`you(women)`) cleared all 6 with no other
+  change. The same bug shows up in a comma-separated form too (`you(Ruth,
+  Orpah)`, seen in an AI-assisted draft of the same verse) — same root
+  cause, different surface shape.
+- **A simple/complex pairing written inside the referent paren**
+  (`you(men/spies)`) is also invalid, but with a *different* error
+  signature: "Missing a closing parenthesis" on the fragment before the
+  slash, plus "Complex pairings should have the form simple/complex, e.g.,
+  follower/disciple" on the fragment after it — which then cascades into a
+  spurious "imperative clause must have an explicit subject" (checker:7)
+  and a false case-frame error on the clause's final verb. Confirmed on
+  Joshua 2:12: `you(men/spies)` occurs 4 times and alone accounts for 15 of
+  the verse's 17 errors and 4 of its 6 warnings; replacing every occurrence
+  with the single word `you(men)` (bare `spies` is level 2/3 and can't be
+  used in the paren either) took the verse from 17 errors/6 warnings to 0
+  errors and 2 acceptable no-theta-grid warnings.
+
+**A pronoun referent is always exactly one level-0/1 token — never a
+phrase, and never a pairing** — whether the fault presents as a
+parenthesis-parsing error or a downstream cascade several tokens away.
+
+### Verb-specific theta-grid gaps worth naming directly
+
+A handful of confirmed argument-structure gaps, distinct from the general
+"check the categories list" guidance below, that are worth recognizing by
+name rather than re-diagnosing from scratch each time:
+
+- **`arrive-A`'s adposition mapping.** `arrive`'s case frame maps `in` and
+  `at` to an invalid patient role instead of destination, so any encoded
+  "arrived in X" / "arrived at X" fails checker:built-in:1 even though the
+  verb is otherwise used correctly. `arrived to X` is the only preposition
+  that resolves to the verb's real destination role. Confirmed directly:
+  `/check` on "arrived in Jerusalem" and "arrived at Jerusalem" both return
+  an invalid case frame (extra patient argument), while "arrived to
+  Jerusalem" validates clean with agent+destination filled.
+- **`belong`/`belongs`'s destination argument** silently fails to recognize
+  its Destination whenever that argument is an unrecognized proper name
+  inside a pronoun-referent paren, even though the identical name validates
+  fine as an Agent elsewhere in the same verse. Confirmed on 1 Kings 20:4:
+  `I(Ahab) belong to you(Ben-Hadad)` errors ("Incorrect usage of
+  belong-A"), while swapping only the referent to a recognized name —
+  `I(Ahab) belong to you(David)` — returns `status: ok`. The fix that
+  preserves the original name is the rule-0.24 `named X` construction on a
+  recognized head noun: `you(king) [who is named Ben-Hadad]` clears the
+  error at every occurrence. The tell is a `belong`/`belongs` case-frame
+  error where the Destination argument, read in isolation, looks
+  syntactically fine but names an ontology-unrecognized proper noun.
+- **`give`'s destination argument** fails whenever it is a common noun
+  modified directly by a pronoun-referent paren (`to your(X) noun`),
+  independent of any conjunction or plurality. Confirmed by isolation:
+  `to your(Noah) friend`, `to your(Noah) family`, and `to your(Noah)
+  sons/descendants` each fail with "does not match any sense" / "requires
+  the patient to immediately follow," while `to Noah` (bare proper noun)
+  and `to the friend of Noah` ("of X" phrasing) both validate clean. This
+  can hide behind another fault: it surfaced on Genesis 9:2 only after
+  fixing a bare-possessive cascade on the same phrase (`your(Noah's)
+  descendants` → `your(Noah) sons/descendants`) — the possessive's own
+  unrecognized-word cascade had been masking the `give` fault underneath
+  it, another case of a structural fix unmasking rather than only clearing
+  errors (see the `where`/Genesis 22:2 note above). Fix: rephrase `give`'s
+  destination as `<noun> of <referent>` rather than `<referent's
+  pronoun-paren> <noun>` whenever it sits directly after "give ... to."
+- **`kill-A`'s patient argument** fails whenever it is expressed as a
+  partitive "one of the N's" (or "one of the N of X") phrase, even when the
+  identical noun validates fine as a bare "one N" object. Confirmed on
+  2 Samuel 12:4: `to kill one of the rich man's sheep or one of the rich
+  man's cows` errors ("Incorrect usage of kill-A"), and swapping only the
+  possessive for "of X" phrasing still errors identically (the case-frame
+  error persists; only the possessive's own ontology warning clears) — but
+  dropping the partitive entirely (`to kill a sheep of the rich man or a
+  cow of the rich man`) validates clean with equivalent meaning. The
+  partitive "one of..." wrapper itself, not the possessive notation, is the
+  root fault; the fix is to drop the partitive and use a bare
+  singular/plural count noun instead.
+- **`choose` rejects a bare infinitival complement clause outright** — it
+  simply has no sense that takes one, unlike the bracket-scoping gaps
+  documented under `let`/`tell` above. `Yahweh chose Saul [to become the
+  king of Israel]` fails ("This use of choose does not match any sense in
+  the Ontology") no matter how the bracket is scoped, while the identical
+  complement wrapped as an explicit purpose clause — `Yahweh chose Saul
+  [in order to become the king of Israel]` — returns `status: ok` with
+  equivalent meaning (confirmed on 2 Samuel 21:6). Default to `[in order
+  to...]` rather than a bare `[to...]` complement for `choose`, and spot-
+  check other election/selection verbs for the same gap.
+
+### Reused two-word preposition misread as feeding an unrelated verb
+
+An unhyphenated two-word preposition like `next to` can get misread by the
+case-frame checker as feeding a "to X" destination argument to the adjacent
+`be` verb (which has no such sense), producing multiple cascaded case-frame
+errors that a single-word substitute avoids entirely. Confirmed on Luke
+16:22 by isolating `X was next to Y` down to a two-word change: `next to`
+threw 3 cascaded case-frame errors that `near` (`X was near Y`) avoided
+completely with the same meaning. When a `be`-clause with a multi-word
+preposition throws unexplained case-frame errors, try a single-word
+preposition with the same meaning before assuming the verb itself is at
+fault.
 
 ### Adjective that is `not used` rather than level 2/3
 
@@ -1069,6 +1408,16 @@ A hyphen makes the checker look the whole string up as one ontology entry
 `river-Habor`, `valley-Arnon` are not entries, so they come back
 unrecognized and cascade into false errors on the verbs around them.
 Unhyphenate: `man of God`, `a river named Habor`.
+
+**The reverse also happens, for a small set of two-word capitalized
+titles that genuinely are single ontology entries** — `Son-of-God` and
+`Son-of-Man` validate clean *hyphenated* (Matthew 8:29, John 12:34), and
+throw a false case-frame error on the adjacent verb plus an
+unrecognized-word error on the second word when left as two separate
+capitalized words instead (`Son of Man` in Luke 12:40 and Luke 21:34 both
+do this to `come`). Don't unhyphenate one of these on sight the way
+`man-of-God` should be — check whether the compound is a real ontology
+title first (`niv-to-phase1`'s guidance covers which ones are).
 
 ### Verb used with a role outside its theta grid
 

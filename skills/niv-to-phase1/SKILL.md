@@ -1,5 +1,5 @@
 ---
-name: niv-to-phase1
+name: "niv-to-phase1"
 description: "Converts raw NIV Bible verses into TBTA/TaBiThA \"Phase 1\" encoding — a controlled, unambiguous semantic representation used in Bible translation (with a lighter \"He1\" shorthand variant). Use this skill whenever the user pastes NIV verse text and asks for Phase 1 encoding, TBTA encoding, He1 encoding, or otherwise asks to \"encode\", \"convert\", or \"phase-1\" a verse — even if they just paste a verse reference plus \"Phase 1\" or \"He1\" with no further explanation. Also use it when checking whether an already-encoded verse follows the Phase 1 rules (bracket balance, pronoun rules, word complexity, etc.)."
 ---
 
@@ -111,6 +111,13 @@ can compare source and output without looking it up separately.
      to get a pairing, explication, or complex/simple alternate, and use
      that instead. Use `GET https://ontology.tabitha.bible/examples?concept={concept}&part_of_speech={pos}`
      if you need precedent for how a concept has been encoded before.
+     **Do this for every level-2/3 word before finalizing the encoding, not
+     just the ones that look complex** — an unpaired level-2/3 word
+     (`checker:built-in:4`, "must be within a complex alternate") has been the
+     #1 or #3 error rule by error volume across multiple review runs, and
+     every instance has the same shape: a word the API's own
+     `simplification_hints` (`how_to_entries[].pairing`) already names a fix
+     for, simply never looked up before the encoding was generated.
    - If the local table and a live lookup disagree, the live lookup wins —
      `complex-terms.md` is a snapshot, not a live mirror.
    - **Access note:** hitting these endpoints requires either the Chrome
@@ -152,8 +159,8 @@ preventable at generation time. Run this pass over the finished string
 before returning it; it is pure string inspection and needs no ontology
 lookup.
 
-**`all` before a specific noun must be `all of` (checker:35, P1 Checklist
-0.18).** Bare `all` is only legal when the noun it modifies is *generic* —
+**`all` before a specific noun must be `all of` (checker:35, handbook rule
+0.18, old checklist 0.17).** Bare `all` is only legal when the noun it modifies is *generic* —
 an unbounded class, not a definite or demonstrative set. In practice every
 `all the ...`, `all these ...`, `all those ...`, `all your(X's) ...` and
 `all X's ...` needs `of`:
@@ -183,10 +190,72 @@ the same clause the way an unrecognized word does. Verify each of these:
 | Space **after** `]` `.` `)` | `].../rape`, `.Why`, `(dynamic)John` | `] ...`, `. Why`, `(dynamic) John` |
 | Space before `_` notes | `things_implicit`, `able_B` | `things _implicit`, `able-B` |
 | Literal pairings use a pipe | `People\children` | `People\|children` (i.e. `dynamic\|literal`) |
-| Only recognized clause notations | `(implicit-info)`, `(implicit)`, `(alt)` | `_implicit`, `_implicitNecessary`, or the notation named in `references/phase1-rules.md` |
+| Only recognized clause notations | `(implicit-info)`, `(implicit)`, `(alt)` | `(implicit-situational)`, `_implicit`, `_implicitNecessary`, or the notation named in `references/phase1-rules.md` |
+| Clause notations are case-sensitive | `(Implicit-situational)` | `(implicit-situational)` |
 
 Sense suffixes are hyphenated (`able-B`, `made-A`, `follows-B`), never
 underscored — `able_B` is read as a notes tag and errors.
+
+**`(implicit-info)` is never valid — the whole-clause tag is
+`(implicit-situational)`, a different notation from the word-level
+`_implicit`/`_implicitNecessary` family above.** `(implicit-info)` fires
+`This clause notation is not recognized` (token:syntax) every time it's
+used, confirmed directly against the API (2 Samuel 6:6). `(implicit-situational)`
+is the real tag for a whole clause that spells out causation the NIV leaves
+implicit (its backtranslation wraps the clause in `<<...>>`); `_implicit` /
+`_implicitNecessary` mark a single implicit *argument* inline on a word, not
+a clause. Don't conflate the two — swapping `(implicit-info)` for
+`(implicit-situational)` clears the error with no other change.
+
+**A clause notation tag is rejected if its capitalization is wrong, even
+when the tag name itself is otherwise correct.** `(Implicit-situational)`
+(capitalized) throws the same `This clause notation is not recognized`
+error as a genuinely misspelled tag — confirmed on Colossians 2:23, where
+that single capitalization cascaded into two unrelated false "two verbs in
+the same clause" errors and a false "stop is not in the Ontology" error
+later in the sentence; the identically-worded lowercase
+`(implicit-situational)` cleared all of it. Always emit clause notation
+tags in lowercase.
+
+**A sentence- or quote-initial `(imp)` marker doesn't count as a word for
+the capitalization rule** — the pronoun immediately after it is still the
+true first word of the sentence and must be capitalized: `(imp) You(people)
+destroy...`, never `(imp) you(people) destroy...`. 9 of 200 verses (4.5%) in
+one calibration run used the lowercase form and failed `checker:built-in:0`
+(confirmed on Genesis 35:2 among others). This is corpus-wide and mechanical
+— always capitalize the pronoun right after a sentence/quote-initial
+`(imp)`.
+
+**First/second-person exclusive and inclusive plural pronouns take the tag
+AFTER the closing parenthesis, separated by a space, lowercase:
+`<pronoun>(referent) _excl` / `_incl`.** Do not glue the tag onto the
+pronoun itself or capitalize it — `us_exclusive(men)`, `we_Exclusive(men)`
+and similar glued/capitalized forms are wrong on two counts (glued
+underscore, and `_exclusive`/`_inclusive` instead of `_excl`/`_incl`).
+Confirmed on Judges 12:1 and 13:15: the malformed form doesn't just draw its
+own token:syntax error — the parser fails to recognize the pronoun as a
+valid argument at all, which cascaded into spurious "does not match any
+sense in the Ontology" case-frame errors on the verbs taking that pronoun
+as agent/patient (`call`, `help`, `burn` in Judges 12:1); fixing the
+notation alone cleared all three. Always emit `we(men) _excl`, never
+`we_exclusive(men)`.
+
+**A two-word capitalized title/epithet needs hyphenating, unlike an
+ad hoc descriptive phrase.** This is the opposite instruction from the
+"Hyphenated pseudo-ontology nouns" caution in `phase1-encoding-review` — that
+one is about *inventing* a hyphenated string for a phrase that isn't a real
+ontology entry (`man-of-God`, `river-Habor`). A small set of two-word
+capitalized titles genuinely *are* single ontology entries and must be
+hyphenated to be recognized as one: confirmed on Matthew 8:29 (`Son-of-God`)
+and John 12:34 (`The Son-of-Man`), both of which validate clean as written.
+Leaving the same title unhyphenated is a real, confirmed failure mode, not
+just a style choice — Luke 12:40 and Luke 21:34's unhyphenated `Son of Man`
+both throw a false case-frame error on the clause's verb (`come`) as well as
+an unrecognized-word error on `Man` itself; hyphenating to `Son-of-Man`
+(or lowercasing the second word, `Son of man`) clears both with no other
+change. Always hyphenate `Son-of-God` / `Son-of-Man` and similar
+recognized two-word titles; only an arbitrary descriptive phrase that isn't
+itself an ontology entry needs unhyphenating instead.
 
 **`(alt)` specifically means you want a complex/simple alternate reading —
 use `(complex) ... (simple) ...`, not `(alt)`.** There is no generic "here's
@@ -261,6 +330,18 @@ POS warning as unfixable.
 `beam` is `pole`). The backtranslation still shows the complex word
 (`poles/beams` reads back as "beams"); the simple word on the left is what
 makes the pairing valid, not what shows up in the output.
+
+**When a pairing follows an indefinite article, the article has to agree
+with the complex (second) word, not the simple one — even though that
+makes the raw encoding text read ungrammatically on the simple side.**
+Confirmed on Genesis 21:27's `treaty` (level-2, no ready-made ontology
+pairing, so paired manually with its own gloss-synonym `agreement`): the
+back-translation always surfaces the complex word (`treaty`), so the
+article in the raw encoding has to match its phonetics — `a
+agreement/treaty` back-translates clean as "a treaty" (`status: ok`), while
+the seemingly-more-grammatical `an agreement/treaty` still reaches
+`status: ok` but back-translates as the wrong "an treaty." Pick `a`/`an` to
+match the complex word every time.
 
 8. **If something depends on grammar or notation detail beyond what's in
    this skill's own reference files**, read the matching companion document
