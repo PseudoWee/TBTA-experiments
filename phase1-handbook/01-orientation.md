@@ -91,10 +91,28 @@ The original author recommends this order; the handbook mirrors it.
 |---|---|---|
 | Ontology app | <https://ontology.tabitha.bible> | Look up words, complexity level, senses, theta grids. REST: `/search`, `/simplification_hints`, `/examples` |
 | Editor | <https://editor.tabitha.bible> | Check encodings: `/check`, `/analyze`, `/ai-assist/generate` |
-| Editor source | <https://github.com/presciencelabs/tabitha-editor> | Open-source code of the checker |
+| TaBiThA monorepo | <https://github.com/CanIL-CA/tabitha> (read its `README.md` first) | All TaBiThA apps in one MIT-licensed repo: Ontology, Targets, Sources, Editor, Copilot, www, Scheduler |
+| Editor source | <https://github.com/CanIL-CA/tabitha/tree/main/apps/editor> | Open-source code of the checker, back-translator and AI-assist |
 | Corpus | <https://github.com/presciencelabs/tabitha-databases> (`databases/`, Git LFS) | The 18,830 verified encodings (`Sources_…tabitha.sqlite`) |
 | Longman dictionary | <https://www.ldoceonline.com/> | Check a sense of an LDV word |
 | This repo | `PseudoWee/TBTA-experiments` | Skills, scripts, dashboard, run data |
+
+## How the TaBiThA apps fit together
+
+From the TaBiThA monorepo README. TaBiThA is CanIL's research and innovation arm, building Bible-translation software for languages without a translation. Each app is a web app on Cloudflare Workers with its own database (D1/SQLite):
+
+| App | URL | Role for a Phase 1 analyst |
+|---|---|---|
+| Ontology | ontology.tabitha.bible | Look up concepts, levels, senses, theta grids (file 05) |
+| Editor | editor.tabitha.bible | Grammar and rule checker, back-translator, AI-assist (file 06) |
+| Sources | sources.tabitha.bible | Source-text explorer and semantic encodings (the corpus) |
+| Targets | targets.tabitha.bible | Target-language lexicon, grammar and generated text |
+| Copilot | copilot.tabitha.bible | Translation notes and consultant briefs per verse |
+| www | tabitha.bible | Public site, FAQs, contact |
+
+Ontology, Sources, Targets and Copilot expose public read-only APIs (no key; 60 requests per 60 s per IP; no stability guarantee). The README's own end-to-end smoke test is a good first exercise: open the Editor, check `Paul write-A a letter.`, click the `write-A` token, follow its link into the Ontology.
+
+The README also gives a four-stage picture of what the system does — source text → **Phase 1 encoded form** (this handbook) → simplified semantic form (bracketed clause/phrase tree) → generation into the target language — using Mark 1:2 as its example. Further reading in that repo: `docs/tbta-to-tabitha.md` (a September 2026 "thinking out loud" note on moving the original TBTA generation engine toward TaBiThA; not a plan of record) and `docs/decisions/` (architecture decision records).
 
 ## What the repo's automation does (so you recognise it when you see it)
 

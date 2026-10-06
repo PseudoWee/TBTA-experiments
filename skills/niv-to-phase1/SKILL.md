@@ -80,16 +80,16 @@ can compare source and output without looking it up separately.
 3. **Resolve apposition and "of"-meaning-"named" constructions.** A name
    directly following a noun ("his sons Jonathan, Abinadab...") is
    apposition, which is disallowed outside addressees (rule 0.40) — convert
-   it to "named X" (rule 0.23), e.g. "Saul's sons named Jonathan, named
+   it to "named X" (rule 0.24), e.g. "Saul's sons named Jonathan, named
    Abinadab, and named Malki-Shua".
 
 4. **Split into one-verb clauses.** Every clause has exactly one verb.
    Independent clauses from a single English sentence become separate
    Phase 1 sentences joined by "And ..." at the start of the next one
-   (never a bracketed clause for an independent thought — see rule 0.22).
+   (never a bracketed clause for an independent thought — see rule 0.23).
    Subordinate clauses get square brackets (omit brackets entirely if
    writing He1). Double check total left brackets = total right brackets,
-   and no more than 4 levels of nesting (rule 0.4).
+   and no more than 4 levels of nesting (rule 0.5).
 
 5. **Check word complexity before using any word — local lookup first, then
    the live ontology.**
@@ -153,7 +153,7 @@ before returning it; it is pure string inspection and needs no ontology
 lookup.
 
 **`all` before a specific noun must be `all of` (checker:35, P1 Checklist
-0.17).** Bare `all` is only legal when the noun it modifies is *generic* —
+0.18).** Bare `all` is only legal when the noun it modifies is *generic* —
 an unbounded class, not a definite or demonstrative set. In practice every
 `all the ...`, `all these ...`, `all those ...`, `all your(X's) ...` and
 `all X's ...` needs `of`:
@@ -263,10 +263,15 @@ POS warning as unfixable.
 makes the pairing valid, not what shows up in the output.
 
 8. **If something depends on grammar or notation detail beyond what's in
-   this skill's own reference files** (see the "Companion documents" note at
-   the end of `references/phase1-rules.md` for what's available as a project
-   file but not yet extracted into a dedicated reference), say so explicitly
-   in your answer rather than silently guessing.
+   this skill's own reference files**, read the matching companion document
+   in the TBTA-experiments repo before guessing: complex terms →
+   `references/complex-terms.md` and `phase1-handbook/05-vocabulary-and-complexity.md`;
+   grammar/bracket background → `phase1-handbook/02-grammar-foundations.md`;
+   underscore/implicit notation → `phase1-handbook/04-notation-reference.md`
+   (all under https://github.com/PseudoWee/TBTA-experiments; see the
+   "Companion documents" section at the end of `references/phase1-rules.md`).
+   If a case still isn't resolved by those, say so explicitly in your answer
+   rather than silently guessing.
 
 ## Worked example
 
@@ -286,10 +291,10 @@ What happened here, rule by rule:
 - "they" / "his" (third-person pronouns) → "the Philistines" / "Saul's"
   written out in full every time (rule 0.1, 0.36).
 - "his sons Jonathan, Abinadab and Malki-Shua" (apposition) → "Saul's sons
-  named Jonathan, named Abinadab, and named Malki-Shua" (rules 0.40, 0.23).
+  named Jonathan, named Abinadab, and named Malki-Shua" (rules 0.40, 0.24).
 - One independent English sentence with two verb-phrases ("pressed hard
   after ... and killed") → three separate one-verb Phase 1 sentences joined
-  by "And" (rule 0.3, 0.22).
+  by "And" (rule 0.4, 0.23).
 - Oxford comma before "and Malki-Shua" (rule 0.42).
 
 ## Worked example 2 — decomposing a level-2/3 instrument noun
@@ -356,25 +361,27 @@ A few more real examples worth internalizing (raw NIV / Phase 1):
   body"* → *"For you(friends) were bought by God _implicitActiveAgent for a
   price. Therefore, you(friends) (imp) honor/glorify God through-B
   your(friends') body."* — the implicit passive agent ("by God") is
-  supplied per rule 0.13, and "friends" is supplied as the addressee
+  supplied per rule 0.14, and "friends" is supplied as the addressee
   referent for "you" since it's the first mention in this stretch.
 - **Rhetorical question + statement pair** (2 Corinthians 3:8): raw *"will
   not the ministry of the Spirit be even more glorious?"* →
   *"(yesrhetorical) Will the work of the Spirit be more great/glorious?
   (statement) The work of the Spirit will certainly be more
-  great/glorious!"* per rule 0.14 — always follow a rhetorical question with
+  great/glorious!"* per rule 0.15 — always follow a rhetorical question with
   its statement form, and note "ministry" was resolved to a pairing
   ("work") rather than used directly.
 
 ## Reference
 
-`references/phase1-rules.md` — the full 54-point Phase 1 rule checklist,
-verbatim, with the He1-specific carve-outs noted inline. Read this whenever
-you need the exact wording of a rule or you're unsure whether a construction
-is allowed. Note: this reference file does not yet include the footnote-vs-
-parenthetical-comment distinction, the digit-numbers rule, the `(alt)`
-notation fix, or the pairing-order rule added above — those live only in
-this SKILL.md for now.
+`references/phase1-rules.md` — the Phase 1 rule checklist (rules 0.1–0.53,
+sections §1–§35), grouped by theme with examples and He1 carve-outs noted
+inline. This is a copy of `phase1-handbook/03-rules-checklist.md`; **rule
+numbers in this skill use that numbering**, which differs from the original
+"+02 Phase 1 Checklist" PDF (old second 0.3 → 0.4; see the crosswalk at the
+top of the file). Read it whenever you need the exact rule or you're unsure
+whether a construction is allowed. The footnote-vs-comment distinction, the
+digit-numbers rule, the `(alt)` fix and the pairing-order rule are also
+covered in the handbook's notation and vocabulary files.
 
 `references/complex-terms.md` — the 1,469-entry complex-term pairing/
 explication lookup table (source: the project's "How to handle complex
@@ -388,4 +395,4 @@ Phase 1 conversions.
 
 `scripts/analyze_corpus.py` — re-run this against an updated export of the
 project's sqlite file and the NIV docx to refresh the calibration stats
-above, or to pull fresh real examples for a rule that needs one.
+above, or to pull fresh real examples for a rule that needs one.

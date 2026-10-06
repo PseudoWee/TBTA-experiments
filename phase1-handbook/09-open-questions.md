@@ -16,7 +16,7 @@ The source had: two items numbered **0.3**; no **0.35** or **0.46**; no **§27**
 |---|---|
 | Were 0.35, 0.46 and §27 retired, or missing from the PDF? | Confirm with the document owner. The dangling "See item 27" is likely stale. |
 | §2.1 (can/able) vs "P1 Checklist 2.1" in the review skill | Likely the same item (the "XXXCan" item); reconcile. |
-| Repo skills, `phase1-rules.md` and checker messages use **source** numbers | Either renumber them to match, or keep the crosswalk. No master table of checker IDs ↔ rules (file 06 §3 has those seen so far). |
+| Repo skills, `phase1-rules.md`, **and the Editor's own `phase1_rules.md`/AI prompt** use **source** numbers | Either renumber them to match, or keep the crosswalk. Checker IDs ↔ rules table now exists in file 06 §3 (from `checker_rules.ts`); mapping to checklist items is best-effort. |
 | Page numbers (1–30) vs section numbers in the PDF | Different things. |
 
 ## C. Content that differs between sources
@@ -26,8 +26,9 @@ The source had: two items numbered **0.3**; no **0.35** or **0.46**; no **§27**
 3. **Paragraph notation.** +02 §11: `_paragraph` in P1; +03 and +02 0.52 writes `(paragraph)`. Treat `(paragraph)` as the external marker (the 0.52 text distinguishes internal/external markers) and `_paragraph` as the older note form. Confirm against the checker.
 4. **`_explainName` vs `_implicitExplainName`; `_explainMetonymy` vs `_dynamicExpansion`.** Renamed over time (+03 notes). Which spelling the checker prefers is untested here.
 5. **Rhetorical `(norhetorical)`** is mentioned in +03 and +02 but the +02 §33 survey of rhetorical types only covers "yes"-expected questions.
-6. **Corpus entries and the live checker disagree frequently** (only 57 of 200 sampled corpus verses were fully clean). The corpus predates rules or the checker is stricter; no one has documented which.
-7. **Level definitions disagree slightly.** +02 says blue = level 0 = "supposed to be available in every language"; +03 warns blue can also mean "nobody set the level". Treat a blue word with suspicion.
+6. **Checker rule IDs are positional** (`checker:35` = the 36th JSON rule in `checker_rules.ts`), so they shift if rules are added or reordered. File 06 §3 reflects the source as read on 2026-10-06.
+7. **Corpus entries and the live checker disagree frequently** (only 57 of 200 sampled corpus verses were fully clean). The corpus predates rules or the checker is stricter; no one has documented which.
+8. **Level definitions disagree slightly.** +02 says blue = level 0 = "supposed to be available in every language"; +03 warns blue can also mean "nobody set the level". Treat a blue word with suspicion.
 
 ## D. Genuinely unsettled judgement calls
 
@@ -46,7 +47,7 @@ The source had: two items numbered **0.3**; no **0.35** or **0.46**; no **§27**
 * Back-translator doesn't render `_past` on `come-out`.
 * The `status` field can read `error` with no error messages.
 * Sense-letter-tag outage on 2026-09-12 ~08:03 (resolved).
-* `references/api-reference.md` still shows the stale AI-assist shape (`message`, `finish_reason`).
+* `references/api-reference.md` still shows the stale AI-assist shape (`message`, `finish_reason`). The Editor README documents the current shape (`text` → `phase_1`, `notes`, `check`).
 * Analyzer currently ignores `/Y` in pairings and doesn't auto-interpret `-B` tags — P2 handles them.
 
 ## F. Suggested clean-up tasks for the repo

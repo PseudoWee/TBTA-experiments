@@ -390,7 +390,7 @@ The same run also carried two `checker:5` "multiple verbs" errors — `have
 brought`, `have not seen` — elsewhere in the same verse. Both were pure
 cascade from the `(alt)` fault and nearby glued brackets, not a real problem
 with perfect tense: isolated, `People have brought gold to Judah.` and
-`John has gone.` (rule 0.15's own example) both check clean. Don't rewrite a
+`John has gone.` (rule 0.16's own example) both check clean. Don't rewrite a
 `have + past-participle` clause to simple past on sight — clear the other
 errors in the sentence first and re-check whether it was ever broken.
 
@@ -414,7 +414,7 @@ directly by an unbracketed clause.
 Confirmed against the API. Check for these first — they account for most
 errors in practice.
 
-### `all` before a non-generic Noun (checker:35, P1 Checklist 0.17)
+### `all` before a non-generic Noun (checker:35, handbook rule 0.18 (old checklist 0.17))
 
 `Use 'all of', unless the modified Noun is generic.` A top-10 error rule in
 every calibration sample so far (12–14 errors per 200 verses) and the most
@@ -542,7 +542,7 @@ this word is"* or suggests adding `_noun` / `_verb` / `_adj` / `_adv` /
 `_adp` / `_conj`, **take the suggestion.** It is a real fix, not noise.
 `[that was born first]` warns on `first`; `[that was born first _adv]`
 validates clean, taking Exodus 13:13 to `status: ok`. Try the tag on any
-such warning — including `named` in the rule 0.23 construction — before
+such warning — including `named` in the rule 0.24 construction — before
 concluding it is unavoidable. The one known exception is the distributive
 above, where no tag helps and the clause has to be restructured.
 
@@ -653,7 +653,7 @@ re-verification.**
 another clause of the same verse, for the same recurring word.** Real corpus
 example: 1 Kings 20:4's suggested encoding uses the unrecognized name
 `Ben-Hadad` four times — twice as a bare referent (`you(Ben-Hadad) say`,
-`You(Ben-Hadad) are the king`) and twice already wrapped in the rule-0.23
+`You(Ben-Hadad) are the king`) and twice already wrapped in the rule-0.24
 `named` construction (`you(king) [who is named Ben-Hadad]`). The prior
 pass's note described fixing exactly one cascade — a `belong`/`belongs`
 theta-grid gap on the two `named`-construction occurrences — and called the
@@ -1088,7 +1088,7 @@ right, check the order before changing any words.
 
 ### Unknown proper noun directly after an adposition
 
-`in Halah` breaks `in` itself. Use the rule 0.23 `named` form with a generic
+`in Halah` breaks `in` itself. Use the rule 0.24 `named` form with a generic
 head noun: `in a town named Halah`. Order matters — `Halah named a town`
 still fails.
 
@@ -1223,7 +1223,7 @@ left unresolved."**
 ### Judgment-call residual warnings are not "acceptable residual warnings"
 
 Some warnings only clear by changing the sentence's structure or meaning in
-a way that trades one problem for another — e.g. rule 0.33 / `checker:48`
+a way that trades one problem for another — e.g. rule 0.34 / `checker:48`
 ("Don't allow negatives with 'purpose' adverbial clauses") allows an
 exception when *"context makes the meaning clear regardless"* or *"avoiding
 the construction would be too awkward otherwise."* Real corpus example:
@@ -1307,4 +1307,4 @@ back `error` on a sentence that carries no error or warning messages at all
 (`That man will put all his(man's) grain into those buildings.` does this).
 Judge a fix by the message list, not by the status string alone — and when
 counting a corpus sample, expect the "ok" count to run slightly below the
-"fully clean" count for this reason.
+"fully clean" count for this reason.
