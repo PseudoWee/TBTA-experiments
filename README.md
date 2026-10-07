@@ -50,9 +50,9 @@ https://claude.ai/code/artifact/1cd587fd-95af-4303-b727-72970a21ffd3
 ## Corpus data
 
 The full 18,830-row corpus (`Sources_2026-07-27.tabitha.sqlite`) is **not**
-mirrored in this repo. It already lives in the public
-[`presciencelabs/tabitha-databases`](https://github.com/presciencelabs/tabitha-databases)
-repository; `data/corpus-sample/chunk_36.json` here is just the one
+mirrored in this repo. It now lives in the
+[`CanIL-CA/tabitha`](https://github.com/CanIL-CA/tabitha/tree/main/tools/databases)
+repository (`tools/databases/`; migrated from `presciencelabs/tabitha-databases`, same sqlite format and schema); `data/corpus-sample/chunk_36.json` here is just the one
 471-verse slice this session happened to sample from, kept as a concrete
 worked example rather than a redundant copy of the whole corpus.
 

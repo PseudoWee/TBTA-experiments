@@ -42,7 +42,7 @@ Everything that changed is a rule at work:
 | **Explication** | A phrase of simple words standing in for a complex word, e.g. `hard hat` for "helmet". |
 | **Alternate** | A second version of a sentence — literal/dynamic, complex/simple, rhetorical/statement, meaning alternates. |
 | **Implicit information** | Meaning that is not literally in the verse but helps the reader. Marked so a translator can switch it on or off. |
-| **Corpus** | ~18,830 professionally reviewed Phase 1 encodings (of roughly 31,000 verses) held in the public repo `presciencelabs/tabitha-databases`. The calibration set for this project. |
+| **Corpus** | ~18,830 professionally reviewed Phase 1 encodings (of roughly 31,000 verses) held in the repo `CanIL-CA/tabitha` (`tools/databases/`; migrated from `presciencelabs/tabitha-databases`). The calibration set for this project. |
 | **TND / TNN** | Translator's notes sources used to settle interpretation (SIL Translator's Notes are the authoritative reference when available; the UBS Translator's Handbook is second). |
 | **LDV** | Longman Defining Vocabulary (the ~2,000-word list used as the definition of "simple"). |
 
@@ -93,7 +93,7 @@ The original author recommends this order; the handbook mirrors it.
 | Editor | <https://editor.tabitha.bible> | Check encodings: `/check`, `/analyze`, `/ai-assist/generate` |
 | TaBiThA monorepo | <https://github.com/CanIL-CA/tabitha> (read its `README.md` first) | All TaBiThA apps in one MIT-licensed repo: Ontology, Targets, Sources, Editor, Copilot, www, Scheduler |
 | Editor source | <https://github.com/CanIL-CA/tabitha/tree/main/apps/editor> | Open-source code of the checker, back-translator and AI-assist |
-| Corpus | <https://github.com/presciencelabs/tabitha-databases> (`databases/`, Git LFS) | The 18,830 verified encodings (`Sources_…tabitha.sqlite`) |
+| Corpus | <https://github.com/CanIL-CA/tabitha/tree/main/tools/databases> (`tools/databases/`) | The 18,830 verified encodings (`Sources_…tabitha.sqlite`) |
 | Longman dictionary | <https://www.ldoceonline.com/> | Check a sense of an LDV word |
 | This repo | `PseudoWee/TBTA-experiments` | Skills, scripts, dashboard, run data |
 
@@ -118,4 +118,4 @@ The README also gives a four-stage picture of what the system does — source te
 
 * **Four Claude skills** (`skills/`): `niv-to-phase1` (raw verse → encoding), `phase1-encoding-review` (existing encoding → Was/Now/Reason table), `phase1-ai-assist` (ask the editor's own AI for a first draft), `tabitha-editor-api` (the HTTP client the other three use).
 * **A scheduled task** (about every three hours): samples 200 not-yet-checked verses from the corpus, runs `/check`, ranks the rules that fire most, proposes verified fixes for a few verses, and stores everything in an artifact database shown on the "Phase 1 Encoding Watch" dashboard. See `docs/scheduled-task-prompt.md`.
-* **Deliberate omissions:** the NIV 1984 text itself is not in the repo (copyright), nor is the full corpus (it already lives in `tabitha-databases`).
+* **Deliberate omissions:** the NIV 1984 text itself is not in the repo (copyright), nor is the full corpus (it already lives in `CanIL-CA/tabitha`).

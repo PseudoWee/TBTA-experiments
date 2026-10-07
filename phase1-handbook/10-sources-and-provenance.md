@@ -55,7 +55,7 @@ It is not a file in the project or repo. It is referenced only by +00 (the Drive
 ## Not covered (and why)
 
 * `skills/niv-to-phase1/references/feature-codes.md` — the position-coded `semantic_encoding` feature table (877 rows): background for the stage *after* Phase 1; not needed to write Phase 1.
-* The corpus itself — public at `presciencelabs/tabitha-databases`.
+* The corpus itself — now at `CanIL-CA/tabitha` (`tools/databases/`), migrated from `presciencelabs/tabitha-databases`.
 * Videos, the Paratext setup, the "Analysis Conventions" document (not supplied).
 
 ## Reference source: the TaBiThA monorepo
@@ -75,7 +75,7 @@ It is not a file in the project or repo. It is referenced only by +00 (the Drive
 * Ontology: <https://ontology.tabitha.bible>
 * Monorepo: <https://github.com/CanIL-CA/tabitha>
 * Editor: <https://editor.tabitha.bible> · source <https://github.com/CanIL-CA/tabitha/tree/main/apps/editor>
-* Corpus/databases: <https://github.com/presciencelabs/tabitha-databases>
+* Corpus/databases: <https://github.com/CanIL-CA/tabitha/tree/main/tools/databases>
 * Longman dictionary: <https://www.ldoceonline.com/>
 * Live dashboard: <https://claude.ai/code/artifact/1cd587fd-95af-4303-b727-72970a21ffd3>
 
