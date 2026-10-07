@@ -32,6 +32,7 @@ The source had: two items numbered **0.3**; no **0.35** or **0.46**; no **§27**
 * **Perfect tense** — "recently AND previously both adequate" is a judgement.
 * **Level 3 words** — Tod's intention is to restrict them to complex alternates eventually; today they're treated like level 2. Policy may change.
 * **`way`** — "limited uses"; no definitive list.
+* **Comparative `than` as a relativizer** — *Analysis Conventions* allows `than` for comparatives "if allowed for an adjective" but gives no example and does not say which adjectives allow it. Untested against the checker.
 * **He1 specifics** — the full He1 → He2 conversion process (and playlist 4) was not available; only the notation differences are documented.
 
 ## D. Known upstream bugs / gaps (not this project's to fix)

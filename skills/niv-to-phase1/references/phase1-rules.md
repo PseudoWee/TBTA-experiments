@@ -48,6 +48,7 @@ Source: "+02 Phase 1 Checklist of Essential Information", with the repo's `phase
 * Pairing as referent is now allowed: ✅ `you(followers/disciples)`. But if the complex pairing was used earlier in the verse, use the simple term in the parentheses (§3): `Jesus said to Jesus's followers/disciples, ["You(followers) are my(Jesus's) followers/disciples"]`.
 * Do not put a sense letter in the parentheses: ✅ `you(son)`, not `you(son-C)` (if needed: `you(son) _C`).
 * First-person plural: `_incl` (including the hearer, **default — never required**) or `_excl`: `Peter replied to the Pharisees, ["We(Peter) _excl are not stupid/foolish"]`.
+* **Possessives, reflexives and reciprocals** *(Analysis Conventions, file 04 §12)*: first/second-person possessives, reflexives and reciprocals carry a referent — `My(John's) book`, `Your(students') books`, `We(students) saw ourselves(students)`, `each-other(people)`. Third-person ones never appear: ❌ `his book`, `their books`, `himself`, `themselves` → ✅ `John's book`, `John saw John`, `The people saw the people`.
 * **The pronoun-generation rule.** TBTA decides when to turn nouns into pronouns; you never do.
 * **He1:** write the first pronoun in the verse the full way so the AI knows the referent; afterwards pronouns are fine.
 
@@ -191,6 +192,7 @@ Omit the complementizer `that`; open the bracket right after the main verb; do n
 | the sense of the verb allows an arbitrary patient | ✅ `John told Paul [John will go to the town]`, `Mary showed John [John was wrong]` |
 
 Reason for omitting `that`: the analyzer reads it as a demonstrative.
+**Attributive complements** (clauses that are arguments of an adjective) are bracketed the same way: `John is afraid [to read that book]`, `John is afraid [Mary will read that book]`. *(Analysis Conventions, file 04 §12)*
 **He1:** write it naturally: `John knew that Paul was eating food.`
 
 ### D7. "and" before a subordinate clause — **0.23, §25, §31**
@@ -302,7 +304,7 @@ The first sentence is the *patient clause* of `said`:
 * single: `Richard said, ["I(Richard) love you(Mary)"].`
 * multi-sentence: `Richard said, ["I(Richard) love you(Mary)]. So I(Richard) want [to hold your(Mary's) hand]."`
 * One opening quote mark at the very start and one closing mark at the very end of a multi-paragraph quote; always double quotes, even when nested; no single quotes (TBTA adds them for `called`, `means`).
-* Place the period at the end of the whole sentence (outside the `"`); `?` and `!` go inside.
+* Place the period at the end of the whole sentence (outside the `"`); `?` and `!` go inside — for a single-sentence quote they stay inside the bracket too: `John asked, ["Did Mary read that book?"]`, `John shouted, ["Mary read this book!"]`.
 * Indented text in the NIV that is really a quotation must be written as a quotation.
 * Quote openings need a comma before: `that person said, ["I(person) will …`.
 
@@ -332,6 +334,7 @@ The first sentence is the *patient clause* of `said`:
 ### G1. Imperatives — **0.19, §15, 0.50**
 
 `You(John) (imp) go to that town` → "Go to that town". To address by name: `John, you(John) (imp) go to the town` (name twice). He1: write as the English output.
+An imperative begins with a second-person pronoun — singular or plural — and has `(imp)` somewhere in the proposition: `You(students) (imp) read these books.` *(Analysis Conventions)*
 Imperatives with epistemic verbs (know, understand, realize) and emotions (`You(people) (imp) be happy`) are now allowed.
 
 ### G2. "Let's", jussive, prayer — **§15**
@@ -435,12 +438,13 @@ Details and fixes for each are in file 07.
 
 ## Companion documents (now in the TBTA-experiments repo)
 
-The three documents this checklist refers to are on hand, bundled in this skill's `references/` folder (the handbook in the repo is the source of truth). Read the matching file instead of guessing:
+The four documents this checklist refers to are on hand, bundled in this skill's `references/` folder (the handbook in the repo is the source of truth). Read the matching file instead of guessing:
 
 | The checklist refers to | Read this in <https://github.com/PseudoWee/TBTA-experiments> | Use it for |
 |---|---|---|
 | "How to handle complex terms" (detail for rule 0.2) | [`skills/niv-to-phase1/references/complex-terms.md`](https://github.com/PseudoWee/TBTA-experiments/blob/main/skills/niv-to-phase1/references/complex-terms.md) (the 1,469-row lookup) and [`phase1-handbook/05-vocabulary-and-complexity.md`](https://github.com/PseudoWee/TBTA-experiments/blob/main/phase1-handbook/05-vocabulary-and-complexity.md) | Pairings, explications and `(complex)` alternates. Check the table first, then the ontology's `/simplification_hints` for anything it doesn't list (the live lookup wins on disagreement) |
 | "Intro to TBTA grammar" (background for the bracket/clause rules) | [`tbta-grammar.md`](tbta-grammar.md) (copy of `phase1-handbook/02-grammar-foundations.md`) | Words → phrases → clauses, semantic roles, why clauses are bracketed |
+| "Analysis Conventions" (quotes, punctuation, pronoun and clause-bracket conventions) | [`phase1-handbook/04-notation-reference.md`](https://github.com/PseudoWee/TBTA-experiments/blob/main/phase1-handbook/04-notation-reference.md) §12 | One-page summary with an example for each convention, cross-referenced to this file |
 | "Summary of specialized notation" (underscore/implicit notation) | [`specialized-notation.md`](specialized-notation.md) (copy of `phase1-handbook/04-notation-reference.md`) | Every tag, bracket and alternate notation |
 
 Also useful: [`phase1-handbook/README.md`](https://github.com/PseudoWee/TBTA-experiments/blob/main/phase1-handbook/README.md) (reading order), [`07-lessons-learned.md`](https://github.com/PseudoWee/TBTA-experiments/blob/main/phase1-handbook/07-lessons-learned.md) (confirmed failure patterns) and [`06-checker-and-api.md`](https://github.com/PseudoWee/TBTA-experiments/blob/main/phase1-handbook/06-checker-and-api.md) (checker rule IDs). The original PDFs/spreadsheet live in the Claude Project "Presciencelabs".

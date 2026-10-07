@@ -11,6 +11,7 @@ This folder consolidates:
 | `+01 Introduction to TBTA grammar` | Words → phrases → clauses, semantic roles, signal words | `02-grammar-foundations.md` |
 | `+02 Phase 1 Checklist of Essential Information` | Checklist items -1.x, 0.1–0.53, and numbered sections 1–35 | `03-rules-checklist.md` |
 | `+03 Summary of Specialized Notation for TBTA` | Every tag, bracket and alternate notation | `04-notation-reference.md` |
+| `Analysis Conventions` | One-page summary of quote, punctuation, pronoun and clause-bracket conventions | `04-notation-reference.md` §12, plus cross-references in `03-rules-checklist.md` |
 | `+04 Longman Defining Vocabulary` | The ~2,000-word list that defines "simple" | `05-vocabulary-and-complexity.md` |
 | `+05 How to handle Complex Terms` (spreadsheet) | 1,469-row pairing / explication lookup | `05-vocabulary-and-complexity.md` + the full table at `skills/niv-to-phase1/references/complex-terms.md` |
 | Everything learned by running the pipeline (editor API, review passes, scheduled-task runs, user corrections) | Failure patterns, cascades, corrected misconceptions | `07-lessons-learned.md` |
@@ -44,4 +45,4 @@ This folder consolidates:
 
 ## Status
 
-Snapshot compiled 2026-10-06. The editor and ontology are live services that change; anything in `07-lessons-learned.md` about checker behaviour should be re-tested before relying on it (the lessons file explains why).
+Snapshot compiled 2026-10-06; *Analysis Conventions* added 2026-10-07. The editor and ontology are live services that change; anything in `07-lessons-learned.md` about checker behaviour should be re-tested before relying on it (the lessons file explains why).

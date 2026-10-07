@@ -98,7 +98,7 @@ Why not `the soldiers _implicit of Herod`? Because `soldiers` would be the head;
 
 `_implicitNecessary` is for any syntactic category that is implicit but required. It is *not* for optional items. Verbs and non-passive subjects need this notation to be considered implicit.
 
-## 3. Pronouns and referents — see file 03 §B1
+## 3. Pronouns and referents — see file 03 §B1 and §12 below
 
 Extra from +03: when "we" has several people (`Jesus, Peter, and John`), list one: `we(Jesus) _incl`. Third-person forms standing in for first/second person: `the Son-of-Man _1stAs3rd` → BT `<<I, who am the>> Son of Man`; `my(David's) Lord _2ndAs3rd` → `<<you,>> my Lord`.
 
@@ -237,3 +237,31 @@ Optionally add a note for P2, e.g. `_regionOfAuthority`. Most relations act **ad
 ## 11. Metaphor, idiom, `be-X`
 
 Metaphors are allowed if they would probably be understood; add an alternate if it might not be (often literal/dynamic). **Idioms** (understood only in one culture) are not used. For a speaker who says something *is* something metaphorically (Jesus: "I am the light"), use the new metaphorical `be` sense. In titles and footnotes, explaining the meaning, use `be-U` ("be like").
+
+## 12. Analysis Conventions (from the "Analysis Conventions" document)
+
+The document is titled *Analysis Conventions*; its introduction says these conventions exist "when editing Easy English text into **TBTAese**" (the TBTA-flavoured English of a Phase 1 encoding), to simplify both manual editing and the semi-automatic semantic analysis. It is a short, example-driven summary; the full rules are in file 03 (cross-referenced below). Where it adds detail the other documents lack, that detail is marked **new**.
+
+| Topic | Convention | Example | File 03 |
+|---|---|---|---|
+| Direct quote, one sentence | Whole sentence inside `["…"]`; `?` and `!` stay inside the bracket | `John said, ["Mary read that book"].` `John asked, ["Did Mary read that book?"]` `John shouted, ["Mary read this book!"]` | §F2 |
+| Direct quote, several sentences | Bracket closes after the first sentence; the closing `"` goes at the very end | `John said, ["Mary read that book]. Then Peter read this book."` | §F2 |
+| Addressee comma | An addressee NP is followed by a comma | `John, Mary read this book.` | 0.42 |
+| Coordinate NP commas | Commas between items, `and` before the last | `John saw Mary, Peter, Steve, and Susan.` | §D12 |
+| Question marks | Yes/no questions and content questions both end in `?` | `Did John read that book?` `Why did John read that book?` | §G3 |
+| Exclamation marks | May end a proposition | `John read this book!` | §F2 |
+| Imperatives | Begin with a second-person pronoun (singular **or plural**) and carry `(imp)` somewhere in the proposition **(new: plural form and placement)** | `You(John) (imp) read this book.` `You(students) (imp) read these books.` | §G1 |
+| Personal pronouns | First and second person always carry a referent in parentheses; third person never appears | `I(John) read this book.` `You(Mary) read this book.` `[After John read this book] John read that book.` (no `he` in the main clause) | §B1 |
+| Possessive pronouns | First and second person carry a referent; third person (`his`, `their`) is not allowed — repeat the noun with `'s` | `My(John's) book is there.` `Your(students') books are there.` `John read John's book.` | §B1, 0.1 |
+| Reciprocal pronouns | Carry a referent | `The women asked each-other(women), ["Is this woman Naomi?"]` `The people talked to each-other(people).` | §B1 |
+| Reflexive pronouns | First and second person carry a referent; third person (`himself`, `themselves`) is not allowed — repeat the noun **(new)** | `We(students) saw ourselves(students).` `You(students) saw yourselves(students).` `John saw John.` `The people saw the people.` | §B1 |
+| Subordinate clauses | Every subordinate clause (relative, object complement, attributive complement, adverbial) is bracketed | see below | §D1 |
+| Relative clauses | Begin with a relativizer (`that`, or `than` for comparatives **if the adjective allows it — new**) or a relative pronoun (`who`, `whom`); `whom` and `who` are equivalent to `that`. Use `[that … at]` instead of `where`/`when` | `The man [that John saw] read this book.` `The people [who live in Dallas] read many books.` `The people [whom John saw] live in Dallas.` `the place [that John was at]` `the time [that Mary left at]` | §D5 |
+| Object complements (patient clauses) | No complementizer `that` (the analyzer reads it as a demonstrative adjective); keep the clause's own agent when it differs; verb fully inflected when it has its own subject, non-finite (`to …`) when the subject is shared or is the main clause's patient | `John thinks [Mary might read this book].` `John told [Mary to read this book].` `John wants [to read this book].` | §D6 |
+| Attributive complements | Clausal arguments of adjectives, bracketed **(new: now named explicitly)** | `John is afraid [to read that book].` `John is afraid [Mary will read that book].` | §D1, file 02 §9 |
+| Adverbial clauses | Bracketed | `[Before John read this book] John read that book.` `[After Mary read this book] John read that book.` | §D3 |
+
+Notes:
+
+* Nothing in this document contradicts files 02–04; it restates their core mechanics in one place. The wording "relative clauses **always** begin with a relativizer or relative pronoun" is the same as rule 0.8–0.9.
+* The comparative `than` relativizer is not demonstrated in the document and has not been tested against the checker — see file 09 §C.

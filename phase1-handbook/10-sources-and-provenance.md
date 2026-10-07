@@ -5,7 +5,7 @@
 | `01-orientation.md` | +00 *How to learn to do semantic representations*; TaBiThA monorepo `README.md`; repo `README.md`; `docs/scheduled-task-prompt.md`; project memory overview | Worked before/after taken from `niv-to-phase1/SKILL.md` |
 | `02-grammar-foundations.md` | +01 *Introduction to TBTA Grammar* | Examples (`able-B`, Proverbs 26:6, §10 mistakes) from the source |
 | `03-rules-checklist.md` | +02 *Phase 1 Checklist of Essential Information* (checklist −1.x, source 0.1–0.54 / §1–§36, renumbered here to 0.1–0.53 / §1–§35); repo `references/phase1-rules.md` | Regrouped by theme; crosswalk to source numbers at top of file |
-| `04-notation-reference.md` | +03 *Summary of Specialized Notation for TBTA* + notation sections of +02 | |
+| `04-notation-reference.md` | +03 *Summary of Specialized Notation for TBTA* + notation sections of +02; §12 from *Analysis Conventions* (supplied 2026-10-07) | §12 is a condensed table of the document, with items marked **new** where it adds detail |
 | `05-vocabulary-and-complexity.md` | +04 *Longman Defining Vocabulary*; +05 *How to handle Complex Terms* (via `references/complex-terms.md`); +02 §1 | Fix table from review skill |
 | `06-checker-and-api.md` | TaBiThA monorepo `apps/editor/README.md` and `apps/editor/src/lib/rules/checker_rules.ts` (rule-ID table, rate limit, AI-assist pipeline); `skills/tabitha-editor-api/SKILL.md`, `references/api-reference.md`, `skills/phase1-ai-assist/SKILL.md`, `tools/*`, run `summary.json` | AI-assist request/response shape corrected per live call 2026-09-10 |
 | `07-lessons-learned.md` | `skills/phase1-encoding-review/SKILL.md` (≈84 KB of confirmed patterns), `skills/niv-to-phase1/SKILL.md` "mechanical pass", dashboard "Corrected understanding" | Verse references are the real corpus cases cited there |
@@ -29,10 +29,11 @@
 
 ## Where "Analysis Conventions" comes from
 
-It is not a file in the project or repo. It is referenced only by +00 (the Drive folder "shows some ways of doing things") and +03 ("conventions for pronouns and clause brackets are described there"). It most likely lives in the same Google Drive folder, "Helpful documents for semantic representations". Not found in earlier conversation material either; supply the link or file to add it.
+Supplied by Yu Hui on 2026-10-07 as `Analysis Conventions.docx` (exported to PDF, 2 pages). It was previously referenced only by +00 (the Drive folder "shows some ways of doing things") and +03 ("conventions for pronouns and clause brackets are described there"), and most likely lives in the Drive folder "Helpful documents for semantic representations". Condensed into `04-notation-reference.md` §12, with cross-references in file 03 §B1, §D6, §F2 and §G1. Add the Drive link here if it is shared.
 
 ## Original documents (in the Claude Project "Presciencelabs")
 
+* `Analysis Conventions.docx` (PDF copy supplied 2026-10-07; not yet in the Claude Project)
 * `00 How to learn to do semantic representations.pdf`
 * `01 Introduction to TBTA grammar.pdf`
 * `02 Phase 1 Checklist of Essential Information.pdf`
@@ -56,7 +57,7 @@ It is not a file in the project or repo. It is referenced only by +00 (the Drive
 
 * `skills/niv-to-phase1/references/feature-codes.md` — the position-coded `semantic_encoding` feature table (877 rows): background for the stage *after* Phase 1; not needed to write Phase 1.
 * The corpus itself — now at `CanIL-CA/tabitha` (`tools/databases/`), migrated from `presciencelabs/tabitha-databases`.
-* Videos, the Paratext setup, the "Analysis Conventions" document (not supplied).
+* Videos and the Paratext setup (not supplied).
 
 ## Reference source: the TaBiThA monorepo
 
