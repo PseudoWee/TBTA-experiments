@@ -26,61 +26,34 @@ that.
 
 ## Sourcing the raw NIV text
 
-When the user gives a reference (e.g. "1 Chronicles 10:2") rather than
-pasting the verse text themselves, pull it from their own NIV source file
-using `scripts/get_verse.py`:
-
-```
-python scripts/get_verse.py <path-to-their-NIV-docx> "<Book> <chapter>:<verse>"
-```
-
-The source file (`NIV1984_-_original.doc`, converted to `.docx`) is kept as
-a project file for this project, not bundled with the skill itself — look
-for it among the project's available files first. If it isn't there in a
-given session (e.g. the skill has been exported/shared outside this
-project), ask the user for its path, or ask them to paste the verse text
-directly rather than reconstructing it from memory.
-
-(Legacy `.doc` files need converting to `.docx` first — see the `docx`
-skill.) This script reads only the one requested verse into memory/output;
-it does not dump the surrounding text.
-
-### Alternative source: API.Bible (NIV and NASB)
-
-When the local docx isn't available, or the user wants the NASB (e.g. as the
-comparison text for Song of Songs), fetch the verse from API.Bible instead:
+**API.Bible is the default and main source** for verse text. Do not use the local
+NIV docx (`get_verse.py`) — it is not a source for this skill. When the user gives a
+reference (e.g. "1 Chronicles 10:2") rather than pasting the verse, fetch it:
 
 ```
 export API_BIBLE_KEY=<key>      # supplied by the user at run time; never write it into a file or commit it
 python scripts/get_verse_api.py NIV  "<Book> <chapter>:<verse>[-<verse2>]"
-python scripts/get_verse_api.py NASB "<Book> <chapter>:<verse>[-<verse2>]"
+python scripts/get_verse_api.py NASB "<Book> <chapter>:<verse>[-<verse2>]"   # e.g. comparison text for Song of Songs
 python scripts/get_verse_api.py --list-bibles --lang eng   # verify ids / what the key can access
 ```
 
-- Bible ids: NIV `78a9f6124f344018-01`, NASB `a761ca71e0b3ddcf-01`.
+- Bible ids: NIV `78a9f6124f344018-01` (NIV 2011), NASB `a761ca71e0b3ddcf-01`.
   API reference: https://api.bible/api-reference
   (`GET /v1/bibles/{bibleId}/passages/{passageId}`, passage ids like `SNG.2.1-SNG.2.3`).
-- **Text version:** API.Bible's NIV is the **NIV 2011**, and the user has decided to use it
-  as the NIV source for API-fetched verses. The local docx is the older NIV 1984, so wording
-  can differ between the two sources. Say which source a verse came from, and if the user
-  compares against a verified-corpus encoding that was built on the 1984 text, flag any
-  wording difference rather than silently reconciling it.
-- The key is secret: the repo is public. If `API_BIBLE_KEY` isn't set, ask the user for it;
-  don't store it in the repo, the skill, or project docs.
-- A 401/403 means the key isn't licensed for that Bible; a network error means the
-  sandbox doesn't allow `rest.api.bible` — say so and ask the user to paste the verse.
-- Same copyright rule as above: fetch only the verse(s) being converted.
-
-**Do not bundle a copy of the user's NIV file inside this skill's own
-files, and do not print more of the source text than the verse(s) being
-converted in any given turn.** The NIV translation is copyrighted; the
-license here is to use it as a private reference for this conversion work,
-not to reproduce or redistribute it. If the source file isn't available in
-a given session, ask the user to paste the verse text directly instead of
-reconstructing it from memory.
+- The NIV is the **2011** text. Older verified-corpus encodings may have been built on
+  other wording; if a verse's text differs from a corpus encoding being compared, flag the
+  difference rather than silently reconciling it.
+- **The key is secret** (the repo is public). If `API_BIBLE_KEY` isn't set, ask the user for
+  it; never store it in the repo, the skill, project docs or memory, and never echo it back.
+- A 401/403 means the key isn't licensed for that Bible. A network error means the sandbox
+  doesn't allow `rest.api.bible`: say so and ask the user to paste the verse text directly.
+  Never reconstruct verse text from memory.
+- **Copyright:** NIV and NASB are copyrighted. Fetch only the verse(s) being converted,
+  use them as a private reference for this conversion work, and do not print more source
+  text than that or write it out as a merged file.
 
 **When reviewing multiple verses in one sitting (a queue), print each raw
-NIV verse at the top of your message alongside its encoding**, so the user
+verse at the top of your message alongside its encoding**, so the user
 can compare source and output without looking it up separately.
 
 ## Workflow

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Fetch ONE verse (or a short range) of NIV or NASB from API.Bible by reference.
-Alternative to get_verse.py (which reads the user's local NIV1984 docx).
+Default verse source for the skill (the local docx / get_verse.py is not used).
 
 Usage:
     export API_BIBLE_KEY=<key>          # never commit or paste the key into files
@@ -15,8 +15,7 @@ Notes:
 - Requires only the `requests` package.
 - Prints only the verse(s) asked for (copyright: private reference use, no bulk dumps).
 - API.Bible's NIV (78a9f6124f344018-01) is the NIV 2011 text; the project has chosen to use it
-  for API-fetched verses. The project's local docx (get_verse.py) is the older NIV 1984, so
-  wording can differ between the two sources.
+  for API-fetched verses.
 - A 401/403 means the key lacks access to that Bible (licensed versions such as NIV and
   NASB must be enabled for the key in the API.Bible dashboard).
 """
