@@ -1,0 +1,12 @@
+(begin-poetry)
+[v1] (literal) God does good things for a person [who does not walk in the advice of evil people]. That person does not stand on the path [that bad-B people/sinners walk on]. And that person does not sit on the seat of people [who laugh at other people].
+(dynamic) God does good things for a person [who does not follow the advice of evil people]. That person does not do the same bad-B things [that bad-B people/sinners do]. And that person does not sit with people [who laugh at other people].
+[v2] But Yahweh's law pleases/delights that person. And that person thinks/meditates about Yahweh's law during the day and during the night.
+[v3] (literal) That person will be like a tree [that was planted near streams of water by a person _implicitActiveAgent].
+(dynamic) That person is like a tree [that was planted near streams of water by a person _implicitActiveAgent].
+The tree produces fruit in the right season. And the leaves of that tree do not die/wither. That person succeeds/prospers in all of the things [that person does].
+[v4] Evil people are not like that. Evil people are like grain covers/chaff [that the wind blows to another place].
+[v5] Therefore, evil people will not stand _verb in the decision/judgment. And bad-B people/sinners will not stand _verb with good-B/righteous people in the group/assembly.
+[v6] (literal) For _conj Yahweh knows good-B/righteous people [while those people live]. But the lives of evil people will die/perish.
+(dynamic) For _conj Yahweh takes care of good-B/righteous people [while those people live]. But evil people will die/perish [because of how those people live].
+(end-poetry)

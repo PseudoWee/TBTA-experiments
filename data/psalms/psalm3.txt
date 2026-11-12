@@ -1,0 +1,14 @@
+(begin-poetry)
+[v1] Yahweh, I(David) have many enemies! Many people oppose me(David)!
+[v2] Many people say about me(David), ["God will not save David"].
+[v3] But you(Yahweh), Yahweh, protect me(David). You(Yahweh) honor me(David). And you(Yahweh) encourage me(David).
+[v4] (literal) I(David) cried to Yahweh. And Yahweh [who is on Yahweh's special/holy mountain] answered me(David).
+(dynamic) I(David) cry to Yahweh. And Yahweh [who is on Yahweh's special/holy mountain] answers me(David).
+[v5] (literal) I(David) lie-down _past. And I(David) slept. Then I(David) wake-up _past [because Yahweh supports me(David)].
+(dynamic) I(David) lie-down _present. And I(David) sleep. Then I(David) wake-up _present again [because Yahweh supports me(David)].
+[v6] I(David) will not be afraid [even-though many thousands of people stand around me(David) [in order to fight me(David)]].
+[v7] Yahweh, you(Yahweh) (imp) stand-up! My(David's) God, you(God) (imp) save me(David)!
+(literal) For _conj you(Yahweh) hit all of my(David's) enemies on the cheek. And you(Yahweh) broke the teeth of evil people.
+(dynamic) You(Yahweh) (imp) hit all of my(David's) enemies on the jaw! You(Yahweh) (imp) break the teeth of evil people!
+[v8] Yahweh saves people. I(David) pray-hope [you(Yahweh) will do good things for your(Yahweh's) people].
+(end-poetry)

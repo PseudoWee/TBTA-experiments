@@ -8,11 +8,11 @@ function setAll(msg){cells.forEach(function(c){c.firstChild.textContent=msg;});}
 if(!key){setAll("Scripture text unavailable: API.Bible key not configured (see config.js).");return;}
 // group cells by version + chapter
 var groups={};
-cells.forEach(function(c){var g=c.dataset.bible+"|"+c.dataset.ch;(groups[g]=groups[g]||[]).push(c);});
+cells.forEach(function(c){var g=c.dataset.bible+"|"+(c.dataset.book||"SNG")+"|"+c.dataset.ch;(groups[g]=groups[g]||[]).push(c);});
 function clean(t){return t.replace(/\s+/g," ").trim();}
 function load(g){
-  var p=g.split("|"),ver=p[0],ch=p[1],cs=groups[g],
-      url=BASE+"/bibles/"+IDS[ver]+"/chapters/SNG."+ch+"?content-type=json&include-notes=false&include-titles=false&include-chapter-numbers=false&include-verse-numbers=true&include-verse-spans=false&fums-version=3";
+  var p=g.split("|"),ver=p[0],bk=p[1],ch=p[2],cs=groups[g],
+      url=BASE+"/bibles/"+IDS[ver]+"/chapters/"+bk+"."+ch+"?content-type=json&include-notes=false&include-titles=false&include-chapter-numbers=false&include-verse-numbers=true&include-verse-spans=false&fums-version=3";
   return fetch(url,{headers:{"api-key":key}}).then(function(r){if(!r.ok)throw new Error(r.status);return r.json();})
   .then(function(j){
     var d=j.data||{},verses={};
