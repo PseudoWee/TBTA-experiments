@@ -45,6 +45,31 @@ directly rather than reconstructing it from memory.
 skill.) This script reads only the one requested verse into memory/output;
 it does not dump the surrounding text.
 
+### Alternative source: API.Bible (NIV and NASB)
+
+When the local docx isn't available, or the user wants the NASB (e.g. as the
+comparison text for Song of Songs), fetch the verse from API.Bible instead:
+
+```
+export API_BIBLE_KEY=<key>      # supplied by the user at run time; never write it into a file or commit it
+python scripts/get_verse_api.py NIV  "<Book> <chapter>:<verse>[-<verse2>]"
+python scripts/get_verse_api.py NASB "<Book> <chapter>:<verse>[-<verse2>]"
+python scripts/get_verse_api.py --list-bibles --lang eng   # verify ids / what the key can access
+```
+
+- Bible ids: NIV `78a9f6124f344018-01`, NASB `a761ca71e0b3ddcf-01`.
+  API reference: https://api.bible/api-reference
+  (`GET /v1/bibles/{bibleId}/passages/{passageId}`, passage ids like `SNG.2.1-SNG.2.3`).
+- **Text-version caveat:** the project's local file is the **NIV 1984**; API.Bible's NIV is
+  most likely the **2011** text, which differs in places. The script prints the version it
+  fetched. For verses already in the verified corpus, or whenever 1984 wording matters, the
+  docx stays the source of truth — if the two disagree, say so and use the docx.
+- The key is secret: the repo is public. If `API_BIBLE_KEY` isn't set, ask the user for it;
+  don't store it in the repo, the skill, or project docs.
+- A 401/403 means the key isn't licensed for that Bible; a network error means the
+  sandbox doesn't allow `rest.api.bible` — say so and ask the user to paste the verse.
+- Same copyright rule as above: fetch only the verse(s) being converted.
+
 **Do not bundle a copy of the user's NIV file inside this skill's own
 files, and do not print more of the source text than the verse(s) being
 converted in any given turn.** The NIV translation is copyrighted; the
