@@ -14,10 +14,9 @@ Reference docs: https://api.bible/api-reference (GET /v1/bibles/{bibleId}/passag
 Notes:
 - Requires only the `requests` package.
 - Prints only the verse(s) asked for (copyright: private reference use, no bulk dumps).
-- API.Bible's NIV (78a9f6124f344018-01) is most likely the 2011 NIV text, NOT the NIV 1984
-  used by the project's local docx. Wording can differ -- the script prints the Bible's
-  own name/abbreviation so the difference is visible. When the 1984 text is required,
-  use get_verse.py with the docx instead.
+- API.Bible's NIV (78a9f6124f344018-01) is the NIV 2011 text; the project has chosen to use it
+  for API-fetched verses. The project's local docx (get_verse.py) is the older NIV 1984, so
+  wording can differ between the two sources.
 - A 401/403 means the key lacks access to that Bible (licensed versions such as NIV and
   NASB must be enabled for the key in the API.Bible dashboard).
 """

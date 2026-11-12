@@ -60,10 +60,11 @@ python scripts/get_verse_api.py --list-bibles --lang eng   # verify ids / what t
 - Bible ids: NIV `78a9f6124f344018-01`, NASB `a761ca71e0b3ddcf-01`.
   API reference: https://api.bible/api-reference
   (`GET /v1/bibles/{bibleId}/passages/{passageId}`, passage ids like `SNG.2.1-SNG.2.3`).
-- **Text-version caveat:** the project's local file is the **NIV 1984**; API.Bible's NIV is
-  most likely the **2011** text, which differs in places. The script prints the version it
-  fetched. For verses already in the verified corpus, or whenever 1984 wording matters, the
-  docx stays the source of truth — if the two disagree, say so and use the docx.
+- **Text version:** API.Bible's NIV is the **NIV 2011**, and the user has decided to use it
+  as the NIV source for API-fetched verses. The local docx is the older NIV 1984, so wording
+  can differ between the two sources. Say which source a verse came from, and if the user
+  compares against a verified-corpus encoding that was built on the 1984 text, flag any
+  wording difference rather than silently reconciling it.
 - The key is secret: the repo is public. If `API_BIBLE_KEY` isn't set, ask the user for it;
   don't store it in the repo, the skill, or project docs.
 - A 401/403 means the key isn't licensed for that Bible; a network error means the
