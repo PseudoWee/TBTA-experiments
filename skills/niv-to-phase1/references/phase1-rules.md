@@ -129,6 +129,7 @@ TBTA picks the lowest-lettered sense whose argument structure fits. Only add a l
 | `even`, `any`, `own` | **0.17, §17** | Omit. `John did not eat any apples` → `John did not eat an apple`. For emphasis: `_emphasized`. `even-if` and `even-though` *do* exist as relations. |
 | `all` | **0.18, §19** | `all of` unless generic: `all of those people`, `All of Jesus's followers were at that place`; but ✅ `God loves all people` (generic). |
 | `only` (adverb) | **0.33** | Allowed now as `only-A` (exclusivity): `John only prayed in the temple`. Low-esteem "only" still needs the adjective: `helped only-B a few people`. |
+| `only` before a noun phrase (exclusivity) | **0.33** + linguist rule (Jeremiah 2026-11-17) | Use the **adjective `only-B`** (exclusivity), not the adverb. If the noun phrase is a theta-grid argument introduced by a function word (e.g. the Destination of `send`/`give`), the function word comes **before** `only-B`: ✅ `My(leader's) master did not send me(leader) to only-B your(Eliakim's) master and to you(Eliakim) [in order to speak these words]`; ❌ `… send me(leader) only-A to your(Eliakim's) master …`. Sense glosses seen in `/check` (2026-11-17): `only-A` identity ("the only person that…"), `only-B` exclusivity, `only-C` not highly esteemed ("only a carpenter"), `only-D` modifies numbers ("only 25 people"). The older `helped only-B a few people` example above conflicts with these glosses (file 09 #9). |
 | `now` | §23 | Only the adverb "at the present time" (`Let's look at the function of verbs now`). Not the discourse marker "Now, let's…". |
 | `way` | §35 | Avoid. In relatives it fails (`the way [that the lilies grow]` has no grammatical function for `way` inside). |
 | `obey` vs `follow-B` | **0.48** | `obey` / `obey/submit` for laws and instructions; `follow-B` for following people. |
@@ -355,9 +356,20 @@ Always followed by a statement version:
 ```
 
 * `(yesrhetorical)`: expected answer yes (Greek *ouch*); write the verb **positive** even though English often negates it.
-* `(norhetorical)`: expected answer no (Greek *me*).
+* `(norhetorical)`: expected answer no (Greek *me*). Write the question **positive**; the `(statement)` that follows is its **negative** (see below).
 * `(rhetorical)`: debatable.
 * Optional sub-type note after `(yesrhetorical)`: `_persuasive` (Matt 7:22 "Lord, Lord, didn't we prophesy…"), `_accusatory` (Gen 3:11), `_assertive` (Luke 22:49), `_reflective` (Gen 18:17), `_emphatic` (1 Sam 1:8), `_instructional` (Matt 6:25). Context decides; skip if unsure.
+* **Marker position (linguist rule, Jeremiah 2026-11-17).** The marker goes at the very **beginning of the TBTA sentence** that contains the question, not just before the question words. When the question sits inside a speech report, the marker comes before the whole sentence, i.e. before its first word (`But`, `And`, `Then`, …):
+  * ✅ `(norhetorical) But the army leader of Assyria said, ["Did my(leader's) master send me(leader) …?"]`
+  * ❌ `But the army leader of Assyria said, ["(norhetorical) Did my(leader's) master send me(leader) …?"]`
+* **`(norhetorical)` → draft a corresponding NEGATIVE `(statement)`.** Do not write a positive statement or a free paraphrase: the statement is the question turned into a negative. The `(statement)` repeats the same sentence frame as the question sentence (our working convention, see file 09 #10), then any following sentences of the quote are written once, after it, with **no** further `(statement)` tag.
+* Purpose clauses still need brackets inside the pair: `[in order to speak these words]`. Unbracketed `in order to` / `in-order-to` after `send` errors (`Cannot have multiple verbs in the same clause`).
+
+Example (Isaiah 36:12, literal; checker `warning` only, for the negative-verb scope):
+
+```
+(norhetorical) But the army leader of Assyria said, ["Did my(leader's) master send me(leader) to only-B your(Eliakim's) master and to you(Eliakim) [in order to speak these words]?"] (statement) But the army leader of Assyria said, ["My(leader's) master did not send me(leader) to only-B your(Eliakim's) master and to you(Eliakim) [in order to speak these words]]. My(leader's) master sent me(leader) also to the men [who sit on the wall]. …"
+```
 
 ### G4. "which" — **0.41**: `What` → `which thing-A`; prefer `which thing` with the intended sense. `which` is now also permitted in non-questions: `John did not know [which house Mary was living in]`.
 

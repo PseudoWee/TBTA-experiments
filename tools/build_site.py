@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the single docs/index.html (Song of Songs + Psalms, vertical book tabs) from tools/templates/song-of-songs.html and data/psalms/psalmN.txt.
+"""Build the single docs/index.html (Song of Songs + Psalms + Isaiah, vertical book tabs) from tools/templates/song-of-songs.html and data/psalms/psalmN.txt and data/isaiah/isaiahN.txt.
 Run from the repo root:  python3 tools/build_site.py
 Input format: '[vN] sentences', untagged lines are shared; '(literal)' / '(dynamic)' lines are one reading each."""
 import glob, html, os, re
@@ -18,7 +18,7 @@ def alts(w):
     parts = re.split(r"([/|])", w)
     return "".join(f'<span class="sep">{x}</span>' if x in "/|" else word(x) for x in parts)
 
-TOK = re.compile(r"""(?P<ref>\((?P<rv>[^)]*)\))|(?P<note>\([a-z-]+\))|(?P<tag>_\w+)|(?P<br>[\[\]])|(?P<q>")|(?P<pu>[.,;:?!])|(?P<w>[A-Za-z][A-Za-z'’/|-]*)""")
+TOK = re.compile(r"""(?P<ref>\((?P<rv>[^)]*)\))|(?P<note>\([a-z-]+\))|(?P<tag>_\w+)|(?P<br>[\[\]])|(?P<q>")|(?P<pu>[.,;:?!])|(?P<w>[A-Za-z0-9][A-Za-z0-9'’/|-]*)""")
 
 def encode(text):
     out = []; q_open = False; i = 0; prev = None
@@ -98,6 +98,25 @@ def psalms_fragment(tpl_key):
               f'<nav aria-label="Psalms" role="tablist">{"".join(nav)}</nav>{tpl_key}</header>')
     return header + "".join(secs)
 
+def isaiah_fragment(tpl_key):
+    files = sorted(glob.glob("data/isaiah/isaiah[0-9]*.txt"), key=lambda p: int(re.search(r"(\d+)\.txt", p).group(1)))
+    nav, secs, names = [], [], []
+    for p in files:
+        n = int(re.search(r"(\d+)\.txt", p).group(1))
+        vs = parse(p); rows = []
+        for v in vs:
+            lit, dyn, paired = readings(v)
+            raw = lambda ver: f'<td class="raw" data-book="ISA" data-bible="{ver}" data-ch="{n}" data-v="{v["n"]}"><span class="scr">Loading scripture from API.Bible…</span></td>'
+            second = cell(dyn) if paired else '<td class="ec"><div class="same">Same encoding as the literal column.</div></td>'
+            rows.append(f'<tr id="v{n}-{v["n"]}"><th scope="row" class="vn">{n}:{v["n"]}</th>{raw("NIV")}{raw("NASB")}{cell(lit)}{second}</tr>')
+        first, last = vs[0]["n"], vs[-1]["n"]
+        label = f"Isaiah {n}:{first}\u2013{last}"; names.append(label)
+        nav.append(f'<a href="#ch{n}" role="tab" data-ch="ch{n}">{label}</a>')
+        secs.append(f'<section id="ch{n}"><h2>{label}</h2><p class="sub">{len(vs)} verses</p><div class="scroll"><table><thead><tr><th class="vn">Verse</th><th>Raw NIV</th><th>Raw NASB</th><th>Literal</th><th>Dynamic</th></tr></thead><tbody>{"".join(rows)}</tbody></table></div></section>')
+    header = (f'<header><h1>Isaiah Phase 1 Encoding</h1><p class="lead">For each finished passage: the raw NIV and raw NASB, then the literal (NASB) and dynamic (Easy English) encodings. Done so far: {", ".join(names)}.</p>'
+              f'<nav aria-label="Isaiah" role="tablist">{"".join(nav)}</nav>{tpl_key}</header>')
+    return header + "".join(secs)
+
 def namespace(frag, pre):
     frag = re.sub(r'\bid="ch(\d+)"', rf'id="{pre}-ch\1"', frag)
     frag = re.sub(r'\bid="v(\d+-\d+)"', rf'id="{pre}-v\1"', frag)
@@ -120,7 +139,7 @@ EXTRA_CSS = """
 
 ROUTER = r"""<script>
 (function(){
-var books={sos:document.getElementById('book-sos'),ps:document.getElementById('book-ps')},
+var books={sos:document.getElementById('book-sos'),ps:document.getElementById('book-ps'),is:document.getElementById('book-is')},
     sides=[].slice.call(document.querySelectorAll('.side a[data-book]'));
 function show(book,id,scrollTo){
   if(!books[book])book='sos';
@@ -134,7 +153,7 @@ function show(book,id,scrollTo){
   else window.scrollTo(0,0);
 }
 function route(){
-  var h=location.hash.slice(1),m=/^(sos|ps)-(?:(ch\d+)|v(\d+)-\d+)$/.exec(h);
+  var h=location.hash.slice(1),m=/^(sos|ps|is)-(?:(ch\d+)|v(\d+)-\d+)$/.exec(h);
   if(!m){show('sos','sos-ch1');return;}
   if(m[2])show(m[1],m[1]+'-'+m[2]);else show(m[1],m[1]+'-ch'+m[3],h);
 }
@@ -149,8 +168,9 @@ def build():
     key = tpl[tpl.index('<div class="key"'):tpl.index("</header>")]
     sos = tpl[tpl.index("<header>"):tpl.index("<footer>")]  # header + all chapter sections; drops the old private-use footer
     ps = psalms_fragment(key)
+    isa = isaiah_fragment(key)
     side = ('<aside class="side" aria-label="Books"><div class="t">Book</div>'
-            '<a href="#sos-ch1" data-book="sos">Song of Songs</a><a href="#ps-ch1" data-book="ps">Psalms</a></aside>')
+            '<a href="#sos-ch1" data-book="sos">Song of Songs</a><a href="#ps-ch1" data-book="ps">Psalms</a><a href="#is-ch36" data-book="is">Isaiah</a></aside>')
     foot = ('<footer id="scripture-credits"><div id="credits-body">Scripture text is loaded live from <a href="https://api.bible">API.Bible</a> and is not stored on this site. Copyright notices appear here once the text has loaded.</div></footer>')
     scripts = ('<script src="https://pkg.api.bible/fumsV3.min.js"></script>'
                '<script>window.fums=window.fums||function(){(window.fums.q=window.fums.q||[]).push(arguments)};</script>'
@@ -159,6 +179,7 @@ def build():
             + '<div class="app">' + side + '<div class="main">'
             + '<div class="book" id="book-sos">' + namespace(sos, "sos") + '</div>'
             + '<div class="book off" id="book-ps">' + namespace(ps, "ps") + '</div>'
+            + '<div class="book off" id="book-is">' + namespace(isa, "is") + '</div>'
             + foot + '</div></div>\n' + scripts + "\n" + ROUTER + "\n</body>\n</html>\n")
     open("docs/index.html", "w", encoding="utf-8").write(page)
     print("built docs/index.html")

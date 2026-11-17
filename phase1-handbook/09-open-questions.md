@@ -19,10 +19,12 @@ The source had: two items numbered **0.3**; no **0.35** or **0.46**; no **§27**
 2. **Doc +03 vs +02 on `(comment-begin)`.** +03 lists `(comment-begin)/(comment-end)` with `(begin-comment)/(end-comment)` as OK; +02 0.52 uses `(begin-poetry)/(end-poetry)` and §11 says `(poetry-begin)`… both orders are accepted by the checker (+03 says so).
 3. **Paragraph notation.** +02 §11: `_paragraph` in P1; +03 and +02 0.52 writes `(paragraph)`. Treat `(paragraph)` as the external marker (the 0.52 text distinguishes internal/external markers) and `_paragraph` as the older note form. Confirm against the checker.
 4. **`_explainName` vs `_implicitExplainName`; `_explainMetonymy` vs `_dynamicExpansion`.** Renamed over time (+03 notes). Which spelling the checker prefers is untested here.
-5. **Rhetorical `(norhetorical)`** is mentioned in +03 and +02 but the +02 §33 survey of rhetorical types only covers "yes"-expected questions.
+5. **Rhetorical `(norhetorical)`** is mentioned in +03 and +02 but the +02 §33 survey of rhetorical types only covers "yes"-expected questions. Partly answered 2026-11-17 by the linguist (marker at sentence start; `(norhetorical)` pairs with a negative `(statement)`) — see file 03 §G3; the full +02 §33 survey of "no"-expected types is still missing.
 6. **Checker rule IDs are positional** (`checker:35` = the 36th JSON rule in `checker_rules.ts`), so they shift if rules are added or reordered. File 06 §3 reflects the source as read on 2026-10-06.
 7. **Corpus entries and the live checker disagree frequently** (only 57 of 200 sampled corpus verses were fully clean). The corpus predates rules or the checker is stricter; no one has documented which.
 8. **Level definitions disagree slightly.** +02 says blue = level 0 = "supposed to be available in every language"; +03 warns blue can also mean "nobody set the level". Treat a blue word with suspicion.
+9. **`only-B` example vs ontology glosses.** File 03 §E/`only` still carries the older `helped only-B a few people` (low esteem). The `/check` lookup glosses `only-B` as exclusivity and `only-C` as low esteem (`only-D` numbers). Confirm with the linguist which example is right before changing it.
+10. **`(statement)` after `(norhetorical)` in a speech report — whole sentence or quote only?** We repeat the full sentence frame (`(statement) But the army leader … said, ["My master did not …"]`) because the marker opens the TBTA sentence. The linguist's note only gave the inner clause (`My(officer's) master did not send me(officer) to only-B …`). Confirm; also whether later sentences of the same quote belong after the `(statement)` once (our reading).
 
 ## C. Genuinely unsettled judgement calls
 

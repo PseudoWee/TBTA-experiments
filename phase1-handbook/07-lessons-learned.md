@@ -204,6 +204,13 @@ Corpus notes claimed "possessive 's isn't recognised" as a corpus-wide gap. Re-t
 
 ---
 
+### 4.14 Rhetorical pairs and `only` (Isaiah 36:12, 2026-11-17)
+
+* `(norhetorical)` goes before the *sentence* (`(norhetorical) But the army leader … said, ["Did …?"]`), and the `(statement)` is the **negative** of the question (linguist rule, file 03 §G3).
+* `send … only-A to X and to Y` was the wrong shape: exclusivity of a destination is the adjective `only-B`, with the function word first (`send me to only-B X and to Y`).
+* The purpose clause must be bracketed (`[in order to speak these words]`); bare `in-order-to` is not a valid word (`Incorrect usage of in-order-to-A`) and `speak` then clashes with `send`.
+* `Rabshakeh` is not in the ontology and cascades errors; the passage uses `the army leader of Assyria`.
+
 ## 5. When every sense of a verb fights you — check the source
 
 Sometimes the verb doesn't belong there.

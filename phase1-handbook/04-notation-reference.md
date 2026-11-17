@@ -149,7 +149,7 @@ If the level-3 word exists in the target language, the complex version is genera
 
 For disputed interpretation or hard wording: `(primary)`, `(alternate-1)`, `(alternate-2)` … up to five. Use only where the difference matters.
 
-### 5.4 Rhetorical alternates — `(yesrhetorical)` / `(norhetorical)` / `(rhetorical)` + `(statement)`. See file 03 §G3. In the English back translation use the same tags and explain the expected answer to the consultant in a comment where it first appears.
+### 5.4 Rhetorical alternates — `(yesrhetorical)` / `(norhetorical)` / `(rhetorical)` + `(statement)`. See file 03 §G3. In the English back translation use the same tags and explain the expected answer to the consultant in a comment where it first appears. **Placement:** the marker opens the TBTA *sentence* (before `But`/`And`/`Then`, before any speech-report clause), not the question inside the quote. **`(norhetorical)`:** the paired `(statement)` is the corresponding negative statement. Details and example in file 03 §G3.
 
 ### 5.5 Units alternates
 

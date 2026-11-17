@@ -454,6 +454,13 @@ A few more real examples worth internalizing (raw NIV / Phase 1):
   great/glorious!"* per rule 0.15 — always follow a rhetorical question with
   its statement form, and note "ministry" was resolved to a pairing
   ("work") rather than used directly.
+- **Negative rhetorical question** (Isaiah 36:12): the marker opens the whole
+  TBTA sentence — `(norhetorical) But the army leader of Assyria said,
+  ["Did my(leader's) master send me(leader) to only-B your(Eliakim's) master
+  and to you(Eliakim) [in order to speak these words]?"]` — and the
+  `(statement)` is the **negative** version of the same sentence (`… ["My
+  master did not send me …"]`). Exclusivity of a noun phrase is `only-B`,
+  with the function word before it. Details: handbook 03 §G3.
 
 ## Reference
 
