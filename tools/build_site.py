@@ -108,12 +108,12 @@ def isaiah_fragment(tpl_key):
             lit, dyn, paired = readings(v)
             raw = lambda ver: f'<td class="raw" data-book="ISA" data-bible="{ver}" data-ch="{n}" data-v="{v["n"]}"><span class="scr">Loading scripture from API.Bible…</span></td>'
             second = cell(dyn) if paired else '<td class="ec"><div class="same">Same encoding as the literal column.</div></td>'
-            rows.append(f'<tr id="v{n}-{v["n"]}"><th scope="row" class="vn">{n}:{v["n"]}</th>{raw("NIV")}{raw("NASB")}{cell(lit)}{second}</tr>')
+            rows.append(f'<tr id="v{n}-{v["n"]}"><th scope="row" class="vn">{n}:{v["n"]}</th>{raw("NASB")}{cell(lit)}{second}</tr>')
         first, last = vs[0]["n"], vs[-1]["n"]
         label = f"Isaiah {n}:{first}\u2013{last}"; names.append(label)
         nav.append(f'<a href="#ch{n}" role="tab" data-ch="ch{n}">{label}</a>')
-        secs.append(f'<section id="ch{n}"><h2>{label}</h2><p class="sub">{len(vs)} verses</p><div class="scroll"><table><thead><tr><th class="vn">Verse</th><th>Raw NIV</th><th>Raw NASB</th><th>Literal</th><th>Dynamic</th></tr></thead><tbody>{"".join(rows)}</tbody></table></div></section>')
-    header = (f'<header><h1>Isaiah Phase 1 Encoding</h1><p class="lead">For each finished passage: the raw NIV and raw NASB, then the literal (NASB) and dynamic (Easy English) encodings. Done so far: {", ".join(names)}.</p>'
+        secs.append(f'<section id="ch{n}"><h2>{label}</h2><p class="sub">{len(vs)} verses</p><div class="scroll"><table><thead><tr><th class="vn">Verse</th><th>Raw NASB</th><th>Literal (NASB)</th><th>Dynamic (Easy English)</th></tr></thead><tbody>{"".join(rows)}</tbody></table></div></section>')
+    header = (f'<header><h1>Isaiah Phase 1 Encoding</h1><p class="lead">For each finished passage: the raw NASB (loaded from API.Bible), then the literal encoding (from the NASB) and the dynamic encoding (from the Easy English text, which is not shown here). NIV was not used. Done so far: {", ".join(names)}.</p>'
               f'<nav aria-label="Isaiah" role="tablist">{"".join(nav)}</nav>{tpl_key}</header>')
     return header + "".join(secs)
 
