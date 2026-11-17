@@ -209,7 +209,7 @@ Corpus notes claimed "possessive 's isn't recognised" as a corpus-wide gap. Re-t
 * `(norhetorical)` goes before the *sentence* (`(norhetorical) But the army leader … said, ["Did …?"]`), and the `(statement)` is the **negative** of the question (linguist rule, file 03 §G3).
 * `send … only-A to X and to Y` was the wrong shape: exclusivity of a destination is the adjective `only-B`, with the function word first (`send me to only-B X and to Y`).
 * The purpose clause must be bracketed (`[in order to speak these words]`); bare `in-order-to` is not a valid word (`Incorrect usage of in-order-to-A`) and `speak` then clashes with `send`.
-* `Rabshakeh` is not in the ontology and cascades errors; the passage uses `the army leader of Assyria`.
+* `Rabshakeh` is not in the ontology and cascades errors. I first invented `the army leader of Assyria`; the team had already rendered it `important officer` in earlier drafts. **Look for precedent before inventing** (file 11 checklist: glossary, NIV/NASB comparison, `/examples`, corpus search) and record what you use in file 11.
 
 ## 5. When every sense of a verb fights you — check the source
 

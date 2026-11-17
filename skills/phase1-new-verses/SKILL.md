@@ -66,6 +66,11 @@ For each verse in the batch:
  direct `/search?q=<word>`), or an existing sense doesn't cover the way
  this verse uses it (e.g. only a person-name sense when the verse needs a
  place-name sense), that's a genuine ontology gap — log it in Step 4.
+   **Before** choosing your own rendering for an unrecognized title or
+   transliteration (e.g. *Rabshakeh*), check
+   `phase1-handbook/11-drafter-glossary.md` and look for earlier TBTA usage
+   (`/examples?concept=`, corpus, parallel books); reuse it and note it in the
+   verse log so other drafters see it.
 
 ## Step 2a — Reviewer conventions and literal/dynamic pairs
 

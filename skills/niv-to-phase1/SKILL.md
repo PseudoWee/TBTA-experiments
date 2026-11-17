@@ -454,6 +454,10 @@ A few more real examples worth internalizing (raw NIV / Phase 1):
   great/glorious!"* per rule 0.15 — always follow a rhetorical question with
   its statement form, and note "ministry" was resolved to a pairing
   ("work") rather than used directly.
+- **Transliterated title** (Isaiah 36, NASB *Rabshakeh* / NIV *field
+  commander*): not in the ontology, so don't invent a rendering — check
+  `phase1-handbook/11-drafter-glossary.md` and earlier TBTA usage first. The
+  team's rendering is `the important officer` (referent `you(officer)`).
 - **Negative rhetorical question** (Isaiah 36:12): the marker opens the whole
   TBTA sentence — `(norhetorical) But the army leader of Assyria said,
   ["Did my(leader's) master send me(leader) to only-B your(Eliakim's) master

@@ -18,6 +18,8 @@ Worked example — implied subject (1 Samuel 1:14): the verse alone is *"and sai
 
 > `Then Eli said to Hannah, ["You(Hannah) (imp) do not become drunk! You(Hannah) (imp) throw-away your(Hannah's) wine!"]`
 
+**Unfamiliar titles/names:** if NASB transliterates a title (*Rabshakeh*) or the checker doesn't recognize a word, check `11-drafter-glossary.md` and look for earlier TBTA usage (`/examples`, corpus, parallel books) before choosing a rendering; reuse it exactly and add it to the glossary.
+
 Read for **meaning, not wording**. Idioms and compressed predicates are decomposed (*pressed hard after* → *chased* + *came near*).
 
 ### Step 2 — list referents; kill third-person pronouns
