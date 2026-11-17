@@ -101,21 +101,19 @@ def psalms_fragment(tpl_key):
 def isaiah_fragment(tpl_key):
     files = sorted(glob.glob("data/isaiah/isaiah[0-9]*.txt"), key=lambda p: int(re.search(r"(\d+)\.txt", p).group(1)))
     nav, secs, names = [], [], []
-    ee_path = lambda n: f"data/isaiah/ee{n}.txt"
     for p in files:
         n = int(re.search(r"(\d+)\.txt", p).group(1))
         vs = parse(p); rows = []
-        ee = {v["n"]: " ".join(v["lines"]) for v in parse(ee_path(n))}
         for v in vs:
             lit, dyn, paired = readings(v)
             raw = lambda ver: f'<td class="raw" data-book="ISA" data-bible="{ver}" data-ch="{n}" data-v="{v["n"]}"><span class="scr">Loading scripture from API.Bible…</span></td>'
             second = cell(dyn) if paired else '<td class="ec"><div class="same">Same encoding as the literal column.</div></td>'
-            rows.append(f'<tr id="v{n}-{v["n"]}"><th scope="row" class="vn">{n}:{v["n"]}</th>{raw("NASB")}<td class="raw ee">{e(ee[v["n"]])}</td>{cell(lit)}{second}</tr>')
+            rows.append(f'<tr id="v{n}-{v["n"]}"><th scope="row" class="vn">{n}:{v["n"]}</th>{raw("NASB")}{cell(lit)}{second}</tr>')
         first, last = vs[0]["n"], vs[-1]["n"]
         label = f"Isaiah {n}:{first}\u2013{last}"; names.append(label)
         nav.append(f'<a href="#ch{n}" role="tab" data-ch="ch{n}">{label}</a>')
-        secs.append(f'<section id="ch{n}"><h2>{label}</h2><p class="sub">{len(vs)} verses</p><div class="scroll"><table><thead><tr><th class="vn">Verse</th><th>Raw NASB</th><th>Easy English text</th><th>Literal (NASB)</th><th>Dynamic (Easy English)</th></tr></thead><tbody>{"".join(rows)}</tbody></table></div></section>')
-    header = (f'<header><h1>Isaiah Phase 1 Encoding</h1><p class="lead">For each finished passage: the raw NASB (loaded from API.Bible), then the Easy English text, then the literal encoding (from the NASB) and the dynamic encoding (from the Easy English text). NIV was not used. The Easy English text is shown as supplied by the project team; its copyright remains with its owner, so confirm permission before sharing this page more widely. Done so far: {", ".join(names)}.</p>'
+        secs.append(f'<section id="ch{n}"><h2>{label}</h2><p class="sub">{len(vs)} verses</p><div class="scroll"><table><thead><tr><th class="vn">Verse</th><th>Raw NASB</th><th>Literal (NASB)</th><th>Dynamic (Easy English)</th></tr></thead><tbody>{"".join(rows)}</tbody></table></div></section>')
+    header = (f'<header><h1>Isaiah Phase 1 Encoding</h1><p class="lead">For each finished passage: the raw NASB (loaded from API.Bible), then the literal encoding (from the NASB) and the dynamic encoding (from the Easy English text, which is not shown here). NIV was not used. Done so far: {", ".join(names)}.</p>'
               f'<nav aria-label="Isaiah" role="tablist">{"".join(nav)}</nav>{tpl_key}</header>')
     return header + "".join(secs)
 
