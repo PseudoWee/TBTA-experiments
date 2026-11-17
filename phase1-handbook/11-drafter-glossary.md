@@ -14,7 +14,7 @@ Purpose: when a transliterated title/name or an unusual word has already been re
 
 | Source word (NASB / NIV) | Use in Phase 1 | Referent form | Precedent / source | Checker |
 |---|---|---|---|---|
-| Rabshakeh — a title, not a personal name (NASB *Rabshakeh*; NIV *field commander*) | `the important officer` | `you(officer)`, `my(officer's)` | Earlier TBTA drafting already rendered it `important officer` (found by Yu Hui, 2026-11-17, in an earlier Kings draft; exact verse not confirmed here). The ontology `/examples?concept=officer` lists the concept in 2 Kings 18:17, 19, 23-28, 35-37 (the Rabshakeh passage). Same wording appears as `the 30 important officers` in 2 Samuel 23:23 (corpus sample). Isaiah 36:11-22 uses it (replaces my earlier `army leader of Assyria`). | `important` and `officer` are both level-1 ontology words; no errors |
+| Rabshakeh — a title, not a personal name (NASB *Rabshakeh*; NIV *field commander*) | `the important officer of Assyria` (`important officer` is the precedent core) | `you(officer)`, `my(officer's)` | Earlier TBTA drafting already rendered it `important officer` (found by Yu Hui, 2026-11-17, in an earlier Kings draft; exact verse not confirmed here). The ontology `/examples?concept=officer` lists the concept in 2 Kings 18:17, 19, 23-28, 35-37 (the Rabshakeh passage). Same wording appears as `the 30 important officers` in 2 Samuel 23:23 (corpus sample). Isaiah 36:11-22 uses it (replaces my earlier `army leader of Assyria`; the team keeps `of Assyria`). | `important` and `officer` are both level-1 ontology words; no errors |
 
 ## Notes
 

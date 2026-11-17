@@ -29,7 +29,7 @@ This folder consolidates:
 8. **`08-playbooks.md`** — step-by-step procedures (encode a new verse, review an existing one, use AI-assist), with full worked examples.
 9. **`09-open-questions.md`** — known inconsistencies, unsettled judgment calls, and gaps in the sources. Read before you trust anything as final.
 10. **`10-sources-and-provenance.md`** — where each fact came from, for when you need to check.
-11. **`11-drafter-glossary.md`** — shared renderings for transliterated titles/names and other words the ontology doesn't cover (e.g. *Rabshakeh* → `important officer`), plus how to find precedent before inventing one. Check it first.
+11. **`11-drafter-glossary.md`** — shared renderings for transliterated titles/names and other words the ontology doesn't cover (e.g. *Rabshakeh* → `important officer of Assyria`), plus how to find precedent before inventing one. Check it first.
 
 ## Two reading tracks
 
