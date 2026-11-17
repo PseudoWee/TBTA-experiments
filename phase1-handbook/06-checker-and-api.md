@@ -174,3 +174,21 @@ Notes the AI gave: `was` → `stayed-A` (avoid `be-Y` grid issues); `where` → 
 ## 6. Sizing what "good" looks like
 
 Calibration run of 2026-09-10 (200 random corpus verses): 55 `ok`, 50 `warning`, 95 `error`; 57 fully clean; 282 errors and 287 warnings in total. So even *professionally reviewed corpus entries* mostly do not pass the current checker — which has two implications: (a) "the corpus says so" is not a reason to copy a construction; (b) the checker keeps getting stricter or the corpus pre-dates rules. Both mean you must **verify against `/check`, not against neighbours.**
+
+## Editor colour legend (as rendered by editor.tabitha.bible and the Pages site)
+
+Read from the editor's own stylesheet and front-end code (2026-11-17). A **Word** token takes the colour of the ontology level of its first lookup result; every other token type has a fixed style.
+
+| Look | Meaning |
+|---|---|
+| Blue fill, light text (`L0`, #0b66ff) | level 0, semantic primitive (`said`, `people`, `hear`) |
+| Pale yellow fill, dark-blue text and border (`L1`, #fcffc5) | level 1, simple word |
+| Magenta fill, yellow text (`L2`, #fb00ff) | level 2, complex (needs a pairing/explication, rule 0.2) |
+| Green fill (`L3`, #0f7000) | level 3, very complex (treated like level 2 for now) |
+| Maroon fill (`L4`, #6b2f30) | level 4, names and key terms (`Eliakim`, `Assyria`, `Judah`) |
+| Outline only, no fill | word not found in the ontology (level -1), e.g. `Shebna` |
+| Plain text, no box | function word (`the`, `to`, `of`, `that`, `would`), notation (`_noun`, `(imp)`, `_excl`), punctuation |
+| Outlined box, then `(` referent `)` | pronoun and its referent; the referent is coloured by its own level |
+| Joined icon box (⚠ amber, ✕ red, ✦ amber for suggest, i blue) | the token has checker messages; the first message decides the icon |
+
+Gap tokens (`GAP_REL`) are not drawn. `X|Y` and `X/Y` pairings show two badges, each coloured by its own level. The Pages site (`tools/build_site.py`) colours its encodings from the live `/check` result, cached in `data/levels.json`; rerun the build after changing any encoding.
